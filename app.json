@@ -1,0 +1,84 @@
+{
+  "expo": {
+    "name": "YourVibes",
+    "slug": "yourvibes",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/adaptive-icon.png",
+    "scheme": "com.tranquockhang18102004.yourvibes",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "userInterfaceStyle": "automatic",
+    "entryPoint": "./node_modules/expo-router/entry.js",
+    "jsEngine": "hermes",
+    "splash": {
+      "image": "./assets/images/yourvibes_splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tranquockhang18102004.yourvibes"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
+      "package": "com.tranquockhang18102004.yourvibes",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.webapp.io",
+              "pathPrefix": "/records"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bfa9ab76-c551-4f68-b26f-f1c888ef9f2c"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/bfa9ab76-c551-4f68-b26f-f1c888ef9f2c"
+    }
+  }
+}
