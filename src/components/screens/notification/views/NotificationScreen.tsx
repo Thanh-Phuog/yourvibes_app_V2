@@ -23,6 +23,30 @@ const NotificationScreen = () => {
       fetchNotifications();
     }, [])
   )
+
+  const isToday = (create_at: string) => {
+    const today = new Date();
+    const date = new Date(create_at);
+    return today.getDate() === date.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
+  }
+
+  const todayNotifi = notifications.filter((item) => item.created_at && isToday(item.created_at));
+  const yesterdayNotifi = notifications.filter((item) => item.created_at && !isToday(item.created_at));
+
+
+  // const groupByDate = [];
+
+  // if (todayNotifi.length > 0) {
+  //   groupByDate.push({type:"header", title:"Hôm nay"});
+  //   groupByDate.push(...todayNotifi);
+  // }
+
+  // if (yesterdayNotifi.length > 0) {
+  //   groupByDate.push({type:"header", title:"Hôm qua"});
+  //   groupByDate.push(...yesterdayNotifi);
+  // }
+
+
   // Render footer (Hiển thị loading ở cuối danh sách nếu đang tải)
   const renderFooter = () => {
     if (!loading) return null;
@@ -59,11 +83,29 @@ const NotificationScreen = () => {
       {/* content */}
       {notifications.length > 0 ? (
         <FlatList
-          data={notifications}
-          renderItem={({ item }) => <NotificationItem notification={item}
-            onUpdate={() => updateNotification(item)}
-          />}
-          keyExtractor={(item) => item?.id as string}
+        data={[{ type: "today", data: todayNotifi }, { type: "previous", data: yesterdayNotifi }]}
+        keyExtractor={(item) => item.type}
+        renderItem={({ item }) => {
+          if (item.data.length === 0) return null;
+          return (
+            <View style={{ backgroundColor: '#f0f0f0', padding: 10 }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 5 }}>
+                {item.type === "today" ? "Hôm nay" : "Trước đó"}
+              </Text>
+              <FlatList
+                data={item.data}
+                renderItem={({ item }) => (
+                  <NotificationItem
+                    notification={item}
+                    onUpdate={() => updateNotification(item)}
+                  />
+                )}
+                keyExtractor={(noti) => noti.id as string}
+                ListFooterComponent={renderFooter}
+              />
+            </View>
+          );
+        }}
           ListFooterComponent={renderFooter}
           onEndReached={loadMoreNotifi}
           onEndReachedThreshold={0.5}
