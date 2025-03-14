@@ -55,6 +55,9 @@ export const ApiPath = {
   //Forgot Password
   GET_OTP_FORGOOT_PASSWORD: getApiPath("users/get_otp_forgot_user_password"),
   FORGOT_PASSWORD: getApiPath("users/forgot_user_password"),
+
+  //Messages
+  
 };
 
 function getApiPath(path: string) {

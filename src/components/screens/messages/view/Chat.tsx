@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import useColor from "@/src/hooks/useColor";
 import { useAuth } from "@/src/context/auth/useAuth";
 import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { Form, Input } from "@ant-design/react-native";
 import useMessagesViewModel from "../viewModel/MessagesViewModel";
 import { MessagesResponse } from "@/src/api/features/messages/models/Messages";
@@ -19,15 +19,24 @@ const Chat = () => {
   const { backgroundColor, brandPrimary } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const friendId = params.friendId as string;
+  const friendName = params.friendName as string;
+  
   const [messagerForm] = Form.useForm();
   const { messages, setNewMessage, newMessage, handleSendMessage } =
-    useMessagesViewModel({ getMessages: () => user?.id || "" });
+    useMessagesViewModel({ getMessages: () => friendId || "" });
+    
   const handleSendMessages = () => {
-    handleSendMessage({ contextChat: newMessage, sender: user?.name });
+    if (newMessage.trim() === '') return;
+    
+    handleSendMessage({ 
+      contextChat: newMessage, 
+      sender: user?.name,
+      timestamp: new Date().toISOString()
+    });
     messagerForm.setFieldsValue({ message: "" });
   };
-
-
       
   return (
     <KeyboardAvoidingView
@@ -62,7 +71,7 @@ const Chat = () => {
               flex: 1,
             }}
           >
-            {user?.family_name} {user?.name || localStrings.Public.Username}
+            {friendName || localStrings.Public.Username}
           </Text>
         </View>
 
