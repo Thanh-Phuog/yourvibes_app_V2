@@ -110,7 +110,7 @@ const HomeScreen = () => {
             }}
           />
 
-          <AntDesign size={35} name="wechat" style={{marginRight: 15}} onPress={() => router.push(`/messages`)}/>
+          <AntDesign size={35} name="wechat" style={{marginRight: 15}} onPress={() => user && router.push(`/messages?userId=${user.id}`)}/>
         </View>
       </View>
       {/* Content */}

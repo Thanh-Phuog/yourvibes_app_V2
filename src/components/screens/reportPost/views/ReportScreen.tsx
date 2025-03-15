@@ -5,25 +5,37 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAuth } from '@/src/context/auth/useAuth';
 import ReportViewModel from '../viewModel/ReportViewModel';
-import { defaultPostRepo } from '@/src/api/features/post/PostRepo';
 import { Button } from '@ant-design/react-native';
 import Toast from 'react-native-toast-message';
+import { defaultReportRepo } from '@/src/api/features/report/ReportRepo';
 
 const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?: string; commentId?: string }) => {
   const { brandPrimary, backgroundColor } = useColor();
   const [reportReason, setReportReason] = useState('');
   const { localStrings } = useAuth();
-  const { reportPost, reportLoading, reportUser, reportComment } = ReportViewModel(defaultPostRepo);
+  const { reportLoading, report  } = ReportViewModel(defaultReportRepo);
 
   const handleReport = () => {
+    // if (postId) {
+    //   reportPost({ report_post_id: postId, reason: reportReason });
+    // } else if (userId) {
+    //   reportUser({ reported_user_id: userId, reason: reportReason });
+    // }
+    // else if (commentId) {
+    //   reportComment({ report_comment_id: commentId, reason: reportReason });
+    // }
+
     if (postId) {
-      reportPost({ report_post_id: postId, reason: reportReason });
-    } else if (userId) {
-      reportUser({ reported_user_id: userId, reason: reportReason });
+      report({ type: 1, reason: reportReason, reported_id: postId });
+    }
+    else if (userId) {
+      report({ type: 0, reason: reportReason, reported_id: userId });
     }
     else if (commentId) {
-      reportComment({ report_comment_id: commentId, reason: reportReason });
+      report({ type: 2, reason: reportReason, reported_id: commentId });
     }
+    setReportReason('');
+    
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

@@ -1,5 +1,5 @@
-import { View, Text, Platform, StatusBar, TouchableOpacity, FlatList } from 'react-native'
-import React from 'react'
+import { View, Text, Platform, StatusBar, TouchableOpacity, FlatList, Image } from 'react-native'
+import React, { useCallback, useEffect } from 'react'
 import { useAuth } from '@/src/context/auth/useAuth';
 
 import { ListView } from '@ant-design/react-native';
@@ -10,15 +10,21 @@ import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { create } from 'react-test-renderer';
 import { MessagesResponse } from '@/src/api/features/messages/models/Messages';
+import useListFriendsViewModel from '../../listFriends/viewModel/ListFriendsViewModel';
 
-const MessagesFeature = () => {
+const MessagesFeature = ({ userId }: { userId: string }) => {
     const {user} = useAuth();
     const {backgroundColor, brandPrimary} = useColor();
     const {localStrings} = useAuth();
-    const friends = [
-        {id: '1', name: 'Nguyễn Văn A', avatar: 'https://thumbs.dreamstime.com/b/avatar-icon-avatar-flat-symbol-isolated-white-avatar-icon-avatar-flat-symbol-isolated-white-background-avatar-simple-icon-124920496.jpg', lastOnline: new Date(), },
-        {id:'2', name: 'Trần Thị B', avatar: 'https://thumbs.dreamstime.com/b/avatar-icon-avatar-flat-symbol-isolated-white-avatar-icon-avatar-flat-symbol-isolated-white-background-avatar-simple-icon-124920496.jpg', lastOnline: new Date(Date.now() - 5 * 60000), } // 5 minutes ago
-    ];
+    const {
+      loading,
+      friends,
+      handleEndReached,
+      hasMore,
+      page,
+      handleMoreOptions,
+      fetchFriends,
+    } = useListFriendsViewModel();
 
     const fakeMessages: MessagesResponse[] = [
       {
@@ -38,6 +44,61 @@ const MessagesFeature = () => {
         timestamp: new Date().toISOString(),
       }
     ];
+    const renderFriend = useCallback(() => {
+      return (
+        <View style={{ paddingVertical: 20, overscrollBehavior: 'auto' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              // flexWrap: "wrap",
+              // justifyContent: "space-between",
+            }}
+          >
+            {friends?.map((friend, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  width: "23%",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  marginRight: 4,
+                  marginLeft: 4,
+                }}
+                onPress={() => {
+                  router.push(`/(tabs)/user/${friend.id}`);
+                }}
+              >
+                <Image
+                  source={{
+                    uri: friend.avatar_url,
+                  }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 25,
+                    backgroundColor: "#e0e0e0",
+                    marginRight: 10,
+                  }}
+                />
+                <Text style={{ marginTop: 5 }}>
+                  {friend.name}
+                </Text>
+              </TouchableOpacity>))}
+          </View>
+          
+        </View>
+      )
+    }, [friends, user]);
+    
+
+useEffect(() => {
+    if (userId) {
+      fetchFriends(page, userId);
+    }
+  }, [userId]);
+
+  
+
   return (
     <View style={{ flex: 1 }}>
       {/* Header */}
@@ -58,6 +119,8 @@ const MessagesFeature = () => {
         </View>
       </View>
       <View style={{ borderBottomWidth: 1, borderColor: '#000' }} />
+
+      {renderFriend()}
       {/* <MessagerItem messages={fakeMessages} /> */}
       <FlatList 
         data={fakeMessages}
