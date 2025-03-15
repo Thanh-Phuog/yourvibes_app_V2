@@ -9,7 +9,6 @@ export const ApiPath = {
   PROFILE: getApiPath("users/"),
   SEARCH: getApiPath("users/"),
   CHANGE_PASSWORD: getApiPath("users/change_password"),
-  REPORT_USER: getApiPath("users/report/"),
 
   //Friend
   FRIEND_REQUEST: getApiPath("users/friends/friend_request/"),
@@ -27,7 +26,9 @@ export const ApiPath = {
   SHARE_POST: getApiPath("posts/share_post/"),
   ADVERTISE_POST: getApiPath("advertise/"),
 
-  REPORT_POST: getApiPath("posts/report/"),
+
+    //Report
+    REPORT: getApiPath("report/"),
 
   //Comment
   CREATE_COMMENT: getApiPath("comments/"),
@@ -35,8 +36,6 @@ export const ApiPath = {
   GET_COMMENTS: getApiPath("comments/"),
   DELETE_COMMENT: getApiPath("comments/"),
   GET_COMMENT_REPLIES: getApiPath("comments/"),
-
-  REPORT_COMMENT: getApiPath("comments/report/"),
 
   //Like Comment
   GET_LIKE_COMMENT: getApiPath("comments/like_comment/"),
@@ -55,6 +54,21 @@ export const ApiPath = {
   //Forgot Password
   GET_OTP_FORGOOT_PASSWORD: getApiPath("users/get_otp_forgot_user_password"),
   FORGOT_PASSWORD: getApiPath("users/forgot_user_password"),
+
+  //Conversation
+  GET_CONVERSATION: getApiPath("/conversations/"),
+  CREATE_CONVERSATION: getApiPath("/conversations/"),
+  DELETE_CONVERSATION: getApiPath("/conversations/"),
+  GET_CONVERSATION_BY_ID: getApiPath("/conversations/"),
+
+  //Message
+  GET_MESSAGES: getApiPath("/messages/"),
+  CREATE_MESSAGE: getApiPath("/messages/"),
+  GET_MESSAGE_BY_ID: getApiPath("/messages/"),
+
+  //Conversation_Detail
+  GET_CONVERSATION_DETAIL: getApiPath("/conversation_details/get_by_user_id/"),
+  CREATE_CONVERSATION_DETAIL: getApiPath("/conversation_details/"),
 };
 
 function getApiPath(path: string) {

@@ -31,7 +31,7 @@ const NotificationScreen = () => {
   }
 
   const todayNotifi = notifications.filter((item) => item.created_at && isToday(item.created_at));
-  const yesterdayNotifi = notifications.filter((item) => item.created_at && !isToday(item.created_at));
+  const oldNotifi = notifications.filter((item) => item.created_at && !isToday(item.created_at));
 
 
   // const groupByDate = [];
@@ -83,7 +83,7 @@ const NotificationScreen = () => {
       {/* content */}
       {notifications.length > 0 ? (
         <FlatList
-        data={[{ type: "today", data: todayNotifi }, { type: "previous", data: yesterdayNotifi }]}
+        data={[{ type: "today", data: todayNotifi }, { type: "previous", data: oldNotifi }]}
         keyExtractor={(item) => item.type}
         renderItem={({ item }) => {
           if (item.data.length === 0) return null;
