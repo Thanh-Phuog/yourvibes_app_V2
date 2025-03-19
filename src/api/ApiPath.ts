@@ -42,10 +42,10 @@ export const ApiPath = {
   POST_LIKE_COMMENT: getApiPath("comments/like_comment/"),
 
   // Notification
-  GET_WS_PATH: getWSPath("users/notifications/ws/"),
-  GET_NOTIFICATIONS: getApiPath("users/notifications"),
-  READ_NOTIFICATION: getApiPath("users/notifications/"),
-  READ_ALL_NOTIFICATION: getApiPath("users/notifications/"),
+  GET_WS_PATH_NOTIFICATION: getWSPath("notification/ws/"),
+  GET_NOTIFICATIONS: getApiPath("notification"),
+  READ_NOTIFICATION: getApiPath("notification/"),
+  READ_ALL_NOTIFICATION: getApiPath("notification/"),
 
   //New Feeds
   GET_NEW_FEEDS: getApiPath("posts/new_feeds/"),
@@ -56,19 +56,24 @@ export const ApiPath = {
   FORGOT_PASSWORD: getApiPath("users/forgot_user_password"),
 
   //Conversation
-  GET_CONVERSATION: getApiPath("/conversations/"),
-  CREATE_CONVERSATION: getApiPath("/conversations/"),
-  DELETE_CONVERSATION: getApiPath("/conversations/"),
-  GET_CONVERSATION_BY_ID: getApiPath("/conversations/"),
+  GET_CONVERSATION: getApiPath("conversations/"),
+  CREATE_CONVERSATION: getApiPath("conversations/"),
+  DELETE_CONVERSATION: getApiPath("conversations/"),
+  GET_CONVERSATION_BY_ID: getApiPath("conversations/"),
 
   //Message
-  GET_MESSAGES: getApiPath("/messages/"),
-  CREATE_MESSAGE: getApiPath("/messages/"),
-  GET_MESSAGE_BY_ID: getApiPath("/messages/"),
+  GET_WS_PATH_MESSAGE: getWSPath("messages/ws/"),
+  GET_MESSAGES_BY_CONVERSATION_ID: getApiPath("messages/get_by_conversation_id/"),
+  CREATE_MESSAGE: getApiPath("messages/"),
+  GET_MESSAGE_BY_ID: getApiPath("messages/message/"),
+  DELETE_MESSAGE: getApiPath("messages/message/"),
+
 
   //Conversation_Detail
-  GET_CONVERSATION_DETAIL: getApiPath("/conversation_details/get_by_user_id/"),
-  CREATE_CONVERSATION_DETAIL: getApiPath("/conversation_details/"),
+  GET_CONVERSATION_DETAIL: getApiPath("conversation_details/get_by_id/"),
+  CREATE_CONVERSATION_DETAIL: getApiPath("conversation_details/"),
+  DELETE_CONVERSATION_DETAIL: getApiPath("conversation_details/"),
+
 };
 
 function getApiPath(path: string) {
