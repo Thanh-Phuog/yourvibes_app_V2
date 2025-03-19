@@ -20,6 +20,8 @@ const AddPostViewModel = (repo: PostRepo) => {
     try {
       setCreateLoading(true);
       const response = await repo.createPost(data);
+      console.log("AddPostViewModel -> createPost -> response", response);
+      
       if (!response?.error) {
         setPostContent('');
         setSelectedImageFiles([]);

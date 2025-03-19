@@ -8,11 +8,12 @@ import useColor from '@/src/hooks/useColor';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
-import { create } from 'react-test-renderer';
-import { MessagesResponse } from '@/src/api/features/messages/models/Messages';
 import useListFriendsViewModel from '../../listFriends/viewModel/ListFriendsViewModel';
+import { defaultMessagesRepo } from '@/src/api/features/messages/MessagesRepo';
+import { ConversationDetailResponseModel } from '@/src/api/features/messages/models/ConversationDetail';
+import useConversationDetailViewModel from '../viewModel/ConversationDetailsViewModel';
 
-const MessagesFeature = ({ userId }: { userId: string }) => {
+const MessagesFeature = () => {
     const {user} = useAuth();
     const {backgroundColor, brandPrimary} = useColor();
     const {localStrings} = useAuth();
@@ -26,24 +27,10 @@ const MessagesFeature = ({ userId }: { userId: string }) => {
       fetchFriends,
     } = useListFriendsViewModel();
 
-    const fakeMessages: MessagesResponse[] = [
-      {
-        id: '1',
-        sender: 'Nguyễn Văn A',
-        contextChat: 'Hello!',
-        lastOnline: new Date().toISOString(),
-        avatar_url: 'https://thumbs.dreamstime.com/b/avatar-icon-avatar-flat-symbol-isolated-white-avatar-icon-avatar-flat-symbol-isolated-white-background-avatar-simple-icon-124920496.jpg',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: '2',
-      sender: 'Trần Thị B',
-        contextChat: 'Hello!',
-        lastOnline: new Date(Date.now() - 5 * 60000).toISOString(), // 5 phút trước
-        avatar_url: 'https://thumbs.dreamstime.com/b/avatar-icon-avatar-flat-symbol-isolated-white-avatar-icon-avatar-flat-symbol-isolated-white-background-avatar-simple-icon-124920496.jpg',
-        timestamp: new Date().toISOString(),
-      }
-    ];
+    const {conversationsDetail, fetchConversationsDetail, pageDetail } = useConversationDetailViewModel(defaultMessagesRepo);
+
+    
+
     const renderFriend = useCallback(() => {
       return (
         <View style={{ paddingVertical: 20, overscrollBehavior: 'auto' }}>
@@ -92,10 +79,12 @@ const MessagesFeature = ({ userId }: { userId: string }) => {
     
 
 useEffect(() => {
-    if (userId) {
-      fetchFriends(page, userId);
+    if (user) {
+      fetchFriends(page, user.id);
+      fetchConversationsDetail(pageDetail, user.id, undefined);
+
     }
-  }, [userId]);
+  }, [user]);
 
   
 
@@ -123,10 +112,11 @@ useEffect(() => {
       {renderFriend()}
       {/* <MessagerItem messages={fakeMessages} /> */}
       <FlatList 
-        data={fakeMessages}
-        renderItem={({item}) => <MessagerItem messages={item} />}
-        // keyExtractor={item => item.id} 
+        data={conversationsDetail}
+        renderItem={({ item }) => <MessagerItem conversationDetail={item} />}
+        keyExtractor={(item, index) => item.conversation.id?.toString() || index.toString()} 
       />
+
 
       <Toast />
     </View>

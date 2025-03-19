@@ -6,29 +6,106 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import useColor from "@/src/hooks/useColor";
 import { useAuth } from "@/src/context/auth/useAuth";
-import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { Form, Input } from "@ant-design/react-native";
-import useMessagesViewModel from "../viewModel/MessagesViewModel";
-import { MessagesResponse } from "@/src/api/features/messages/models/Messages";
+import { Entypo, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Form, Input, Modal } from "@ant-design/react-native";
+import useMessagesViewModel from "../../messages/viewModel/MessagesViewModel";
+import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
+import useConversationViewModel from "../../messages/viewModel/ConversationViewModel";
+import useConversationDetailViewModel from "../../messages/viewModel/ConversationDetailsViewModel";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import MemberMessage from "../component/MemberMessage";
+import Toast from "react-native-toast-message";
+import { useWebSocket } from "@/src/context/socket/useSocket";
 
 const Chat = () => {
   const { backgroundColor, brandPrimary } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const [showMember, setShowMember] = React.useState(false);
   const [messagerForm] = Form.useForm();
-  const { messages, setNewMessage, newMessage, handleSendMessage } =
-    useMessagesViewModel({ getMessages: () => user?.id || "" });
+  const {
+    messages} = useWebSocket();
+    
+  const {
+    // messages,
+    setNewMessage,
+    newMessage,
+    handleSendMessage,
+    fetchMessages,
+    page,
+  } = useMessagesViewModel(defaultMessagesRepo);
+  const { conversation_id: rawConversationId } = useLocalSearchParams();
+  const conversation_id = Array.isArray(rawConversationId)
+    ? rawConversationId[0]
+    : rawConversationId;
+
   const handleSendMessages = () => {
-    handleSendMessage({ contextChat: newMessage, sender: user?.name });
+    handleSendMessage({
+      content: newMessage,
+      conversation_id: conversation_id,
+      user: {
+        id: user?.id,
+        avatar_url: user?.avatar_url,
+        family_name: user?.family_name,
+        name: user?.name,
+      },
+    });
+    
     messagerForm.setFieldsValue({ message: "" });
   };
+  const { conversationsDetail, fetchConversationsDetail, pageDetail } =
+    useConversationDetailViewModel(defaultMessagesRepo);
 
+  useEffect(() => {
+    if (conversation_id) {
+      if (typeof conversation_id === "string") {
+        fetchConversationsDetail(pageDetail, undefined, conversation_id);
+        fetchMessages(page, conversation_id);
+      }
+    }
+  }, [conversation_id]);
 
-      
+  const flatListRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    flatListRef.current?.scrollToEnd({ animated: true });
+  }, [messages]);
+
+    const showFriendAction = useCallback(() => {
+      const options = [
+        localStrings.Messages.Member,
+
+        localStrings.Public.Cancel,
+      ];
+  
+      showActionSheetWithOptions(
+        {
+          title: localStrings.Public.Action,
+          options: options,
+          cancelButtonIndex: options.length - 1,
+          cancelButtonTintColor: "#F95454"
+        },
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 0:
+              setShowMember(true);
+
+              break;
+            case 1:
+              // TODO: block user
+              break;
+            default:
+              break;
+          }
+        }
+      );
+    }, [localStrings]);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "#f9f9f9", width: "100%" }}
@@ -62,34 +139,33 @@ const Chat = () => {
               flex: 1,
             }}
           >
-            {user?.family_name} {user?.name || localStrings.Public.Username}
+            {conversationsDetail[0]?.conversation?.name || "Tên hội thoại"}
           </Text>
+          <TouchableOpacity
+            style={{ width: '8%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+            onPress={showFriendAction}
+          >
+            <Entypo name="dots-three-vertical" size={16} />
+          </TouchableOpacity>
         </View>
 
         {/* Body */}
         <View style={{ flex: 1, padding: 10 }}>
           {/* Chat */}
           <FlatList
+            ref={flatListRef}
             data={messages}
-            extraData={messages} 
-            keyExtractor={(item, index) =>
-              item.id ? item.id.toString() : index.toString()
-            }
+            extraData={messages}
+            // keyExtractor={(item, index) =>
+            //   item.id ? item.id.toString() : index.toString()
+            // // }
             renderItem={({ item }) => (
-              // <
-              //   style={{
-              //    display: "flex",
-              //     flexDirection: "row",
-              //     justifyContent: isUserMessage(item) ? "flex-end" : "flex-start",
-              //     marginBottom: 5,
-              //   }}>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: item.sender === user?.name
-                    ? "flex-end"
-                    : "flex-start",
+                  justifyContent:
+                    item.user.id === user?.id ? "flex-end" : "flex-start",
                   marginBottom: 5,
                   alignItems: "center",
                 }}
@@ -110,7 +186,7 @@ const Chat = () => {
                     shadowRadius: 3.84,
                   }}
                 >
-                  <Text style={{ fontSize: 16 }}>{item.contextChat}</Text>
+                  <Text style={{ fontSize: 16 }}>{item.content}</Text>
                 </View>
               </View>
             )}
@@ -172,18 +248,30 @@ const Chat = () => {
                     handleSendMessages();
                   }}
                 >
-                  {/* {loading ? (
-                      <ActivityIndicator size="small" color={brandPrimary} />
-                    ) : ( */}
                   <FontAwesome name="send-o" size={30} color={brandPrimary} />
-                  {/* )} */}
                 </TouchableOpacity>
               </View>
             </View>
           </Form>
         </View>
       </View>
-      {/* <Toast /> */}
+      <Modal
+             popup
+              visible={showMember}
+              animationType="slide-up"
+              maskClosable
+              onClose={() => {setShowMember(false)}}
+              title={localStrings.Messages.Member}
+            >
+              <FlatList
+                data={conversationsDetail}
+                renderItem={({ item }) => 
+                <MemberMessage conversationDetail={item} />
+                }
+                // keyExtractor={(item, index) => item.user.id?.toString() || index.toString()}
+              />
+            </Modal>
+      <Toast />
     </KeyboardAvoidingView>
   );
 };

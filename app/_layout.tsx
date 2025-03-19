@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "@/src/context/auth/useAuth";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { PostProvider } from "@/src/context/post/usePostContext";
+import { WebSocketProvider } from "@/src/context/socket/useSocket";
 
 export default function RootLayout() {
   const screens = ["index", "login", "signUp", "forgotPassword", "(tabs)"];
@@ -14,6 +15,7 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
+      <WebSocketProvider>
       <PostProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ActionSheetProvider>
@@ -47,6 +49,7 @@ export default function RootLayout() {
           </ActionSheetProvider>
         </GestureHandlerRootView>
       </PostProvider>
+      </WebSocketProvider>
     </AuthProvider>
   );
 }

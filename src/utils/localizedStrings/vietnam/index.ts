@@ -304,6 +304,6 @@ export const VnLocalizedStrings = {
 Messages:{
   Messages: "Tin nhắn",
   EnterMessage: "Nhập tin nhắn",
-  
+  Member: "Thành viên",
 },
 };
