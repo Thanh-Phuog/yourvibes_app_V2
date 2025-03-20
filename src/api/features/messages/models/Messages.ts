@@ -33,6 +33,7 @@ export interface MessageResponseModel {
         image?: string;
     }
     parentId?: string;
+    parent_content?: string;
     content?: string;
     created_at?: string;
     user: {
@@ -43,7 +44,7 @@ export interface MessageResponseModel {
     };
 }
 
-export interface MessageWebSOcketResponseModel {
+export interface MessageWebSocketResponseModel {
     content ?: string
     user_id ?: string
     conversation_id : string

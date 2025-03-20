@@ -1,5 +1,5 @@
 import { MessagesRepo } from "@/src/api/features/messages/MessagesRepo";
-import { ConversationResponseModel } from "@/src/api/features/messages/models/Conversation";
+import { ConversationResponseModel, CreateConversationModel } from "@/src/api/features/messages/models/Conversation";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 
@@ -29,7 +29,31 @@ const useConversationViewModel = (repo : MessagesRepo) => {
         }
     }
 
-    return {conversations, loading, fetchConversationsById};
+    const createConversation = async (data : CreateConversationModel) => {
+        try {
+            setLoading(true);
+            const response = await repo.createConversation(data);   
+            if (!response?.error) {
+                Toast.show({
+                    type: 'success',
+                    text1: "Create Conversation Success",
+                });
+                return response?.data;
+            }else{
+                Toast.show({
+                    type: 'error',
+                    text1: "Create Conversation Failed",
+                    text2: response?.error?.message,
+                });
+            }
+        } catch (error: any) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return {conversations, loading, fetchConversationsById, createConversation};
 
 }
 

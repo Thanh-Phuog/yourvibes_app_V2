@@ -1,5 +1,5 @@
 import { MessagesRepo } from "@/src/api/features/messages/MessagesRepo";
-import { ConversationDetailResponseModel } from "@/src/api/features/messages/models/ConversationDetail";
+import { ConversationDetailResponseModel, CreateConversationDetail } from "@/src/api/features/messages/models/ConversationDetail";
 import { useState } from "react";
 
 const useConversationDetailViewModel = (repo: MessagesRepo) => {
@@ -16,7 +16,7 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
                 conversation_id: conversation_id ?? undefined,
                 user_id: user_id ?? undefined,
                 page: newPage,
-                limit: 20,
+                limit: 10,
             })
 
             if (response?.message === 'Success') {
@@ -39,7 +39,31 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
         }
     }
 
-    return { conversationsDetail, loading, pageDetail, total, hasMore, fetchConversationsDetail };
+    const createConversationDetail = async (data: CreateConversationDetail) => {
+        try {
+            setLoading(true);
+            const response = await repo.createConversationDetail(data);
+            if (!response?.error) {
+                fetchConversationsDetail();
+            }
+        } catch (error: any) {
+            console.error(error);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
+    const loadMoreConversationsDetail = (user_id ?: string, conversation_id ?: string) => {
+        if (!loading && hasMore) {
+            setPageDetail((prevPage) => prevPage + 1);
+            fetchConversationsDetail(pageDetail + 1, user_id, conversation_id);
+        }
+    }
+
+
+
+    return { conversationsDetail, loading, pageDetail, total, hasMore, fetchConversationsDetail, createConversationDetail, loadMoreConversationsDetail, setConversationsDetail };
 }
 
 export default useConversationDetailViewModel;

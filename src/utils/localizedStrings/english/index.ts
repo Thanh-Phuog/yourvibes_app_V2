@@ -303,5 +303,7 @@ export const ENGLocalizedStrings = {
   Messages: {
     Messages: "Messages",
     EnterMessage: "Enter message",
-    Member: "Members", },
+    Member: "Members", 
+    Reply: "Reply",
+  },
 }

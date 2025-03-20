@@ -1,21 +1,23 @@
 import { MessagesRepo } from '@/src/api/features/messages/MessagesRepo';
 import { CreateMessageModel, MessageResponseModel } from '@/src/api/features/messages/models/Messages';
+import { useWebSocket } from '@/src/context/socket/useSocket';
 import { useState, useEffect } from 'react';
 
 const useMessagesViewModel = (repo: MessagesRepo) => {
   const [messages, setMessages] = useState<MessageResponseModel[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
+  const {socketMessages} = useWebSocket();
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<MessageResponseModel | null>(null);
  
 
   const fetchMessages = async (newPage: number = 1, conversation_id: string) => {
     try {
-      setLoading(true);
+      setLoadingMessages(true);
       const response = await repo.getMessagesByConversationId({
         conversation_id: conversation_id,
         page: newPage,
@@ -38,7 +40,7 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
     } catch (error: any) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingMessages(false);
     }
   };
 
@@ -48,10 +50,10 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
     
       const response = await repo.createMessage(message);
       if (!response?.error) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { ...message, conversation: replyTo?.conversation || '' } as MessageResponseModel,
-        ]);
+        // setMessages((prevMessages) => [
+        //   ...prevMessages,
+        //   { ...message, conversation: replyTo?.conversation || '' } as MessageResponseModel,
+        // ]);
         setNewMessage('');
       }else{
         console.log(response?.error?.message);
@@ -71,20 +73,20 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
     setMessages((prevMessages) => prevMessages.filter((msg) => msg.id !== messageId));
   };
 
-  // const handleAddReaction = (messageId: string, reaction: string) => {
-  //   setMessages((prevMessages) =>
-  //     prevMessages.map((msg) =>
-  //       msg.id === messageId
-  //         ? { ...msg, reactions: { ...msg.reactions, [reaction]: (msg.reactions?.[reaction] || 0) + 1 } }
-  //         : msg
-  //     )
-  //   );
-  // };
+ const loadMoreMessages = (conversation_id: string) => {
+  console.log("loadMoreMessages", page);
+  
+    if (!loadingMessages && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+      fetchMessages(page + 1, conversation_id);
+    }
+  }
 
   
   return {
     messages,
-    loading,
+    setMessages,
+    loadingMessages,
     hasMore,
     newMessage,
     replyTo,
@@ -95,7 +97,7 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
     handleReplyMessage,
     handleDeleteMessage,
     page,
-    // handleAddReaction,
+    loadMoreMessages
   };
 };
 

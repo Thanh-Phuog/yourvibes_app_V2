@@ -305,5 +305,6 @@ Messages:{
   Messages: "Tin nhắn",
   EnterMessage: "Nhập tin nhắn",
   Member: "Thành viên",
+  Reply: "Trả lời",
 },
 };
