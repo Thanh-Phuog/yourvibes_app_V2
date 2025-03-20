@@ -4,15 +4,13 @@ import { ApiPath } from "@/src/api/ApiPath";
 import { useAuth } from "../auth/useAuth";
 import useTypeNotification from "@/src/hooks/useTypeNotification";
 import Toast from "react-native-toast-message";
-import { MessageWebSOcketResponseModel } from "@/src/api/features/messages/models/Messages";
+import { MessageResponseModel, MessageWebSocketResponseModel } from "@/src/api/features/messages/models/Messages";
 
 const WebSocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const {user, localStrings} = useAuth();
-    // console.log('user', user);
-    const [message, setMessage] = useState<MessageWebSOcketResponseModel | null>(null);
-    const [messages, setMessages] = useState<any[]>([]);
+    const [socketMessages, setSocketMessages] = useState<MessageWebSocketResponseModel[]>([]);
   
     
     const {LIKE_POST, NEW_SHARE, NEW_COMMENT, FRIEND_REQUEST, ACCEPT_FRIEND_REQUEST, NEW_POST, LIKE_COMMENT} = useTypeNotification();
@@ -36,7 +34,7 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children 
                 return 'notifications';
         }
     }
-    const connetSoccketMessage = () => {
+    const connetSocketMessage = () => {
         if (!user?.id) return; // Chỉ kết nối khi có user.id
 
         const ws = new WebSocket(`${ApiPath.GET_WS_PATH_MESSAGE}${user?.id}`);
@@ -46,7 +44,7 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children 
         ws.onmessage = (e) => {
             const message = JSON.parse(e.data);
             console.log("Nhận tin nhắn:", message);
-            setMessages((prev) => [...prev, message]); // Cập nhật danh sách tin nhắn
+            setSocketMessages((prev) => [...prev, message]); // Cập nhật danh sách tin nhắn
 
             if (message.user.id !== user?.id) {
                 Toast.show({
@@ -118,16 +116,16 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children 
   useEffect(() => {
     if (user?.id)
     connetSocketNotification();
-    connetSoccketMessage();
+    connetSocketMessage();
   }
     , [user?.id]);
 	return (
 		<WebSocketContext.Provider value={
             {
-           
-                connetSoccketMessage,
-                connetSocketNotification,
-                messages,
+                socketMessages,
+                setSocketMessages,
+                connetSocketMessage,
+                connetSocketNotification
             }
         }>
 			{children}

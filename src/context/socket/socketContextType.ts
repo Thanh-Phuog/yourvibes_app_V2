@@ -1,9 +1,10 @@
-import { MessageWebSOcketResponseModel } from "@/src/api/features/messages/models/Messages";
+import { MessageResponseModel, MessageWebSocketResponseModel } from "@/src/api/features/messages/models/Messages";
 
 export interface SocketContextType {
-    connetSoccketMessage: ()=> void;
+    connetSocketMessage: ()=> void;
     // sendSocketMessage: (message: string) => void;
     connetSocketNotification: () => void;
-    // message: MessageWebSOcketResponseModel | null;
-    messages: MessageWebSOcketResponseModel[];
+    socketMessages: MessageWebSocketResponseModel[];
+    setSocketMessages: (messages: MessageWebSocketResponseModel[]) => void;
+  
 }

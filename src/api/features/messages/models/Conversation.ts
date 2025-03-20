@@ -1,10 +1,10 @@
 export interface CreateConversationModel {
     name ?: string
-    // image ?: {
-    //     uri ?: string
-    //     name ?: string
-    //     type ?: string
-    // }
+    image ?: {
+        uri ?: string
+        name ?: string
+        type ?: string
+    }
 }
 
 // export interface DeleteConversationModel {
