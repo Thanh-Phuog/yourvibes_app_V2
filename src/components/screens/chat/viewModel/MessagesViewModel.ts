@@ -20,6 +20,8 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
       setLoadingMessages(true);
       const response = await repo.getMessagesByConversationId({
         conversation_id: conversation_id,
+        sort_by: "created_at",
+        is_descending: true,
         page: newPage,
         limit: 20,
         
@@ -46,7 +48,6 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
 
   const handleSendMessage = async (message: CreateMessageModel) => {
    try {
-    console.log("message", message);
     
       const response = await repo.createMessage(message);
       if (!response?.error) {
@@ -74,8 +75,6 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
   };
 
  const loadMoreMessages = (conversation_id: string) => {
-  console.log("loadMoreMessages", page);
-  
     if (!loadingMessages && hasMore) {
       setPage((prevPage) => prevPage + 1);
       fetchMessages(page + 1, conversation_id);

@@ -1,3 +1,4 @@
+import AddUserGroup from "@/src/components/screens/chat/component/AddUserGroup";
 
 export const ENGLocalizedStrings = {
   Public: {
@@ -304,6 +305,8 @@ export const ENGLocalizedStrings = {
     Messages: "Messages",
     EnterMessage: "Enter message",
     Member: "Members", 
+    DeleteMember: "Delete member",
     Reply: "Reply",
+    AddUserGroup: "Add user to group",
   },
 }

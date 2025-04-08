@@ -1,15 +1,14 @@
 export interface CreateConversationDetail {
     conversation_id ?: string
-    user_id ?: string
+    user_ids ?: string | string[]
 }
 
-export interface DeleteConversationDetail {
+export interface ConversationDetailRequestModel {
     user_id ?: string
     conversation_id ?: string
 }
 
 export interface GetConversationDetailById {
-    user_id ?: string
     conversation_id ?: string
     limit : number
     page : number
@@ -27,4 +26,6 @@ export interface ConversationDetailResponseModel {
         family_name?: string;
         name?: string;
     };
+    last_message?: string;
+    last_message_status?: boolean;
 }

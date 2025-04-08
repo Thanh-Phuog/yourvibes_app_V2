@@ -18,7 +18,7 @@ import {
   Input,
   Modal,
 } from "@ant-design/react-native";
-import useMessagesViewModel from "../../messages/viewModel/MessagesViewModel";
+import useMessagesViewModel from "../viewModel/MessagesViewModel";
 import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import useConversationViewModel from "../../messages/viewModel/ConversationViewModel";
 import useConversationDetailViewModel from "../../messages/viewModel/ConversationDetailsViewModel";
@@ -27,6 +27,7 @@ import MemberMessage from "../component/MemberMessage";
 import Toast from "react-native-toast-message";
 import { useWebSocket } from "@/src/context/socket/useSocket";
 import UserProfileViewModel from "../../profile/viewModel/UserProfileViewModel";
+import AddUserGroup from "../component/AddUserGroup";
 
 const Chat = () => {
   const { backgroundColor, brandPrimary } = useColor();
@@ -34,6 +35,7 @@ const Chat = () => {
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
   const [showMember, setShowMember] = React.useState(false);
+  const [showUserGroupModel, setShowUserGroupModel] = React.useState(false);
   const [messagerForm] = Form.useForm();
   const { socketMessages, setSocketMessages } = useWebSocket();
   const [initialized, setInitialized] = useState(false);
@@ -60,7 +62,7 @@ const Chat = () => {
     fetchConversationsDetail,
     pageDetail,
     createConversationDetail,
-    setConversationsDetail,
+    total,
   } = useConversationDetailViewModel(defaultMessagesRepo);
   const [currentConversationId, setCurrentConversationId] =
     useState(conversation_id);
@@ -69,61 +71,18 @@ const Chat = () => {
     content: string;
     user: { id: string; family_name: string; name: string };
   } | null>(null);
-
-
-  console.log("mergerMessages", mergerMessages);
-  
   const { fetchUserProfile, userInfo } = UserProfileViewModel();
   const handleReplyMessage = (message: {
     id: string;
     content: string;
     user: { id: string; family_name: string; name: string };
   }) => {
-    setSelectedMessage(message); // Lưu tin nhắn được chọn
+    setSelectedMessage(message);
   };
-
+  
+  
+  
   const handleSendMessages = async () => {
-    if (!currentConversationId && friend_id) {
-      try {
-        // Tạo cuộc trò chuyện mới
-        const newConversation = await createConversation({
-          name: `${userInfo?.family_name} ${userInfo?.name}`,
-        });
-
-        if (newConversation?.id) {
-          // Cập nhật state để dùng conversation_id mới
-          setCurrentConversationId(newConversation.id);
-
-          const allMembers = [user?.id, friend_id];
-          // Tạo chi tiết cuộc trò chuyện
-          const newConversationDetail = await Promise.all(
-            allMembers.map((friendId) =>
-              createConversationDetail({
-                conversation_id: newConversation.id,
-                user_id: friendId,
-              })
-            )
-          );
-          // Gửi tin nhắn với conversation_id mới
-          await handleSendMessage({
-            content: newMessage,
-            conversation_id: newConversation.id,
-            parent_id: selectedMessage?.id || undefined,
-            user: {
-              id: user?.id,
-              avatar_url: user?.avatar_url,
-              family_name: user?.family_name,
-              name: user?.name,
-            },
-          });
-          setSelectedMessage(null);
-          messagerForm.setFieldsValue({ message: "" });
-        }
-      } catch (error) {
-        console.error("Lỗi khi tạo cuộc trò chuyện:", error);
-      }
-    } else if (currentConversationId) {
-      // Nếu đã có conversation_id, gửi tin nhắn luôn
       handleSendMessage({
         content: newMessage,
         conversation_id: currentConversationId,
@@ -138,13 +97,15 @@ const Chat = () => {
       setSelectedMessage(null);
       messagerForm.setFieldsValue({ message: "" });
     }
-  };
-
+    useEffect(() => {
+      console.log('Cập nhật socketMessages:', socketMessages);
+  }, [socketMessages]); 
+  
   useEffect(() => {
     if (conversation_id) {
       if (typeof conversation_id === "string") {
         if (!initialized) {
-          fetchConversationsDetail(pageDetail, undefined, conversation_id);
+          fetchConversationsDetail(pageDetail, conversation_id);
           fetchMessages(page, conversation_id);
           setInitialized(true);
         }
@@ -166,8 +127,11 @@ const Chat = () => {
   //   flatListRef.current?.scrollToEnd({ animated: true });
   // }, [messages]);
 
-  const showFriendAction = useCallback(() => {
-    const options = [localStrings.Messages.Member, localStrings.Public.Cancel];
+  const showMessAction = useCallback(() => {
+    const options = [
+      localStrings.Messages.Member, 
+      localStrings.Messages.AddUserGroup,
+      localStrings.Public.Cancel];
 
     showActionSheetWithOptions(
       {
@@ -183,7 +147,10 @@ const Chat = () => {
 
             break;
           case 1:
-            // TODO: block user
+            setShowUserGroupModel(true);
+            break;
+          case 2:
+            // Cancel action
             break;
           default:
             break;
@@ -208,7 +175,6 @@ const Chat = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        console.log("Rời khỏi trang, xóa socketMessages!");
         setSocketMessages([]); // Xóa tin nhắn khi rời trang
       };
     }, [])
@@ -246,8 +212,11 @@ const Chat = () => {
               flex: 1,
             }}
           >
-            {conversationsDetail[0]?.conversation?.name ||
-              `${userInfo?.family_name} ${userInfo?.name}`}
+            {/* {conversationsDetail[0]?.conversation?.name ||
+              } */}
+              {total === 2 ? (
+                conversationsDetail[0]?.user?.id === user?.id ? (conversationsDetail[1]?.user?.family_name + " " + conversationsDetail[1]?.user?.name) : (conversationsDetail[0]?.user?.family_name + " " + conversationsDetail[0]?.user?.name)
+              ) : (conversationsDetail[0]?.conversation?.name || `${userInfo?.family_name} ${userInfo?.name}`)}
           </Text>
           <TouchableOpacity
             style={{
@@ -256,7 +225,7 @@ const Chat = () => {
               justifyContent: "flex-start",
               alignItems: "center",
             }}
-            onPress={showFriendAction}
+            onPress={showMessAction}
           >
             <Entypo name="dots-three-vertical" size={16} />
           </TouchableOpacity>
@@ -399,19 +368,18 @@ const Chat = () => {
                           onLongPress={() => handleReplyMessage(item)}
                         >
                           <View>
-                          <View
-            style={{
-              backgroundColor: "#f0f0f0",
-              padding: 5,
-              borderRadius: 8,
-              marginBottom: 5,
-            }}
-          >
-            <Text style={{ fontSize: 14, color: "#666" }}>
-              {localStrings.Messages.Reply}: {item.parent_id}
-
-            </Text>
-          </View>
+                            <View
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                padding: 5,
+                                borderRadius: 8,
+                                marginBottom: 5,
+                              }}
+                            >
+                              <Text style={{ fontSize: 14, color: "#666" }}>
+                                {localStrings.Messages.Reply}: {item.parent_id}
+                              </Text>
+                            </View>
                             <Text>{item.content}</Text>
                           </View>
                         </TouchableOpacity>
@@ -523,6 +491,17 @@ const Chat = () => {
           renderItem={({ item }) => <MemberMessage conversationDetail={item} />}
           // keyExtractor={(item, index) => item.user.id?.toString() || index.toString()}
         />
+      </Modal>
+      <Modal
+      popup
+        maskClosable
+        visible={showUserGroupModel}
+        animationType="slide-up"
+        onClose={() => {
+          setShowUserGroupModel(false);
+        }}
+      >
+        <AddUserGroup conversationsDetail={conversationsDetail} />
       </Modal>
       <Toast />
     </KeyboardAvoidingView>

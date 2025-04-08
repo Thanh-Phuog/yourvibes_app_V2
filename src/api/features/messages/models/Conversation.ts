@@ -5,15 +5,8 @@ export interface CreateConversationModel {
         name ?: string
         type ?: string
     }
+    user_ids ?: string[]
 }
-
-// export interface DeleteConversationModel {
-//     id ?: string
-// }
-
-// export interface GetConversationByIdModel {
-//     id ?: string
-// }
 
 export interface GetConversationModel {
     limit : number
@@ -21,7 +14,12 @@ export interface GetConversationModel {
 }
 
 export interface ConversationResponseModel {
-    id?: string;
-    name?: string;
-    image?: string;
+    id?: string
+    name?: string
+    image?: string
+    avatar?: string
+    user_id?: string
+    family_name?: string
+    last_message?: string
+    last_message_status?: boolean
 }

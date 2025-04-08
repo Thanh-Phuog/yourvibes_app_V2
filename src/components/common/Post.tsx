@@ -233,35 +233,42 @@ const Post: React.FC<IPost> = React.memo(({
       ): (likedPost?.content &&
         likedPost?.parent_id ? (
         <View>
-          <View style={{ paddingLeft: 10 }}>
-          <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
-             <Text>{likedPost?.content}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ paddingLeft: 5, paddingRight: 5 }}>
-            <View style={{ padding: 10, borderColor: "#000", borderWidth: 1, borderRadius: 5 }}>
-              <Text style={{ textAlign: 'center', fontWeight: "bold", fontSize: 16 }}>
-                {localStrings.Post.NoContent}
-              </Text>
-            </View>
-          </View>
-          </View>
+                  <View style={{ paddingLeft: 10 }}>
+                  <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
+                    <Text>{likedPost?.content}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{padding: 5}}>
+                    <View style={{ padding: 30, borderColor: "#000", borderWidth: 1, borderRadius: 5 }}>
+                      <Text style={{ textAlign: 'center', fontWeight: "bold", fontSize: 16 }}>
+                        {localStrings.Post.NoContent}
+                      </Text>
+                      <Text style={{ textAlign: 'center', color: "gray" }}>
+                       <Entypo name="emoji-sad" size={24} color="gray" />
+                      </Text>
+                      <Text style={{ textAlign: 'center', fontSize: 14, color: "gray" }}>
+                        Nội dung đã bị xoá hoặc cài đặt quyền riêng tư bởi người dùng
+                      </Text>
+                    </View>
+                  </View>
+                </View>
         ):(
           (
-            <View style={{ paddingLeft: 65, paddingRight: 35 }}>
+            <View style={{ paddingHorizontal: 20 }}>
             {likedPost?.content && (
-              <View style={{ paddingBottom: 12, paddingLeft: 0 }}>
-                    <TouchableOpacity onPress={() => {
-    console.log(`Navigating to /postDetails?postId=${likedPost?.id}`);
-    console.log("Navigating with postId:", likedPost?.id);
-
-    router.push(`/postDetails?postId=${likedPost?.id}`);
-  }}>
-             <Text>{likedPost?.content}</Text>
-            </TouchableOpacity>
+              <View style={{ paddingBottom: 5, paddingLeft: 0 }}>
+                 <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
+                  <Text>{likedPost?.content}</Text>
+                 </TouchableOpacity>
+                
               </View>
             )}
-            {likedPost?.media && likedPost?.media?.length > 0 && <MediaView mediaItems={likedPost?.media} />}
+            {likedPost?.media && likedPost?.media?.length > 0 &&
+              <MediaView
+                mediaItems={likedPost?.media}
+                isVisible={isVisible}
+              />
+            }
           </View>
     
           )
@@ -341,12 +348,12 @@ const Post: React.FC<IPost> = React.memo(({
         maskClosable
         onClose={() => setShowCommentPopup(false)}
       >
-        <View style={{height:600 }}>
+        {/* <View style={{height:600 }}> */}
         <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center" }}> 
             {localStrings.Public.Comment}
           </Text>
         <PostDetails postId={likedPost?.id as string} isModal={true} />
-        </View>
+        {/* </View> */}
       </Modal>
 
       {/* Share popup */}

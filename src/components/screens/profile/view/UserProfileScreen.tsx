@@ -122,7 +122,7 @@ const UserProfileScreen = ({ id }: { id: string }) => {
               <ProfileHeader
                 total={total}
                 friendCount={friendCount}
-                user={userInfo as UserModel}
+                userInfo={userInfo as UserModel}
                 loading={profileLoading}
                 sendFriendRequest={sendFriendRequest}
                 sendRequestLoading={sendRequestLoading}
