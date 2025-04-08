@@ -59,7 +59,7 @@ export const ApiPath = {
   GET_CONVERSATION: getApiPath("conversations/"),
   CREATE_CONVERSATION: getApiPath("conversations/"),
   DELETE_CONVERSATION: getApiPath("conversations/"),
-  GET_CONVERSATION_BY_ID: getApiPath("conversations/"),
+  UPDATE_CONVERSATION: getApiPath("conversations/"),
 
   //Message
   GET_WS_PATH_MESSAGE: getWSPath("messages/ws/"),
@@ -72,8 +72,9 @@ export const ApiPath = {
   //Conversation_Detail
   GET_CONVERSATION_DETAIL: getApiPath("conversation_details/get_by_id/"),
   CREATE_CONVERSATION_DETAIL: getApiPath("conversation_details/"),
-  DELETE_CONVERSATION_DETAIL: getApiPath("conversation_details/"),
-
+  DELETE_CONVERSATION_DETAIL: getApiPath("conversation_details/delete/"),
+  UPDATE_CONVERSATION_DETAIL: getApiPath("conversation_details/update"),
+  CREATE_MANY_CONVERSATION_DETAIL: getApiPath("conversation_details/create_many"),
 };
 
 function getApiPath(path: string) {

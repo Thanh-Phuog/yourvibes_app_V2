@@ -125,7 +125,7 @@ const NotificationItem = ({ notification, onUpdate  }: { notification: Notificat
           </Text>
           {content ? (
             <Text
-              numberOfLines={1}
+              numberOfLines={3}
               ellipsizeMode="tail"
               style={{ fontSize: 14, color: '#333' }}
             >

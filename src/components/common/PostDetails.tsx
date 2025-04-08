@@ -464,7 +464,7 @@ function PostDetails({postId, isModal}:{postId: string, isModal: boolean}): Reac
                   flexDirection: "row",
                   alignItems: "center",
                   padding: 10,
-                  paddingBottom: Platform.OS === "ios" ? 10 : 40,
+                  paddingBottom: Platform.OS === "ios" ? 10 : 50,
                 }}
               >
                 <Image

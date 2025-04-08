@@ -301,7 +301,7 @@ const SignUpFeature = () => {
                   }
                 />
               </Form.Item>
-              {/* Checkbox */}
+              Checkbox
               <Form.Item
                 name={"agree"}
                 rules={[

@@ -55,7 +55,7 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
         <ProfileHeader
           total={total}
           friendCount={friendCount}
-          user={user as UserModel}
+          userInfo={user as UserModel}
           loading={false}
         />
         <ProfileTabs

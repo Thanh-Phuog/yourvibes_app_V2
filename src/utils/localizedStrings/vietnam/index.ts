@@ -1,4 +1,5 @@
 import messages from "@/app/messages";
+import AddUserGroup from "@/src/components/screens/chat/component/AddUserGroup";
 
 export const VnLocalizedStrings = {
   Public: {
@@ -154,7 +155,7 @@ export const VnLocalizedStrings = {
     SharePostFailed: "Chia sẻ bài viết thất bại!",
     SharePost: "Chia sẻ",
     DeleteNewFeed: "Ẩn bài viết",
-    NoContent: "Nội dung không hiển thị",
+    NoContent: "Nội dung không còn tồn tại!",
     Sponsor: "Được tài trợ",
   },
   PostDetails: {
@@ -305,6 +306,8 @@ Messages:{
   Messages: "Tin nhắn",
   EnterMessage: "Nhập tin nhắn",
   Member: "Thành viên",
+  DeleteMember: "Xoa thanh vien",
   Reply: "Trả lời",
+  AddUserGroup: "Thêm thành viên",
 },
 };

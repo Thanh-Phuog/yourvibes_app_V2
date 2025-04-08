@@ -1,5 +1,5 @@
 import { MessagesRepo } from "@/src/api/features/messages/MessagesRepo";
-import { ConversationDetailResponseModel, CreateConversationDetail } from "@/src/api/features/messages/models/ConversationDetail";
+import { ConversationDetailRequestModel, ConversationDetailResponseModel, CreateConversationDetail } from "@/src/api/features/messages/models/ConversationDetail";
 import { useState } from "react";
 
 const useConversationDetailViewModel = (repo: MessagesRepo) => {
@@ -9,12 +9,11 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
     const [total, setTotal] = useState(0);
     const [hasMore, setHasMore] = useState(true);
 
-    const fetchConversationsDetail = async (newPage: number = 1, user_id ?: string, conversation_id ?: string) => {
+    const fetchConversationsDetail = async (newPage: number = 1, conversation_id ?: string) => {
         try {
             setLoading(true);
             const response = await repo.getConversationDetails({
                 conversation_id: conversation_id ?? undefined,
-                user_id: user_id ?? undefined,
                 page: newPage,
                 limit: 10,
             })
@@ -40,9 +39,11 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
     }
 
     const createConversationDetail = async (data: CreateConversationDetail) => {
-        try {
+        try { 
             setLoading(true);
             const response = await repo.createConversationDetail(data);
+            console.log("CreateConversationDetail response:", response);
+            
             if (!response?.error) {
                 fetchConversationsDetail();
             }
@@ -57,13 +58,45 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
     const loadMoreConversationsDetail = (user_id ?: string, conversation_id ?: string) => {
         if (!loading && hasMore) {
             setPageDetail((prevPage) => prevPage + 1);
-            fetchConversationsDetail(pageDetail + 1, user_id, conversation_id);
+            fetchConversationsDetail(pageDetail + 1, conversation_id);
+        }
+    }
+
+    const UpdateConversationDetail = async (data: ConversationDetailRequestModel) => {
+        try {
+            setLoading(true);
+            const response = await repo.UpdateConversationDetail(data);
+            console.log("UpdateConversationDetail response:", response);
+
+            if (!response?.error) {
+                return response?.data ;
+            }
+        } catch (error: any) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const DeleteConversationDetail = async (data: ConversationDetailRequestModel) => {
+        try {
+            setLoading(true);
+            const response = await repo.DeleteConversationDetail(data);
+            console.log("DeleteConversationDetail response:", response);
+
+            if (!response?.error) {
+                fetchConversationsDetail();
+            }
+        } catch (error: any) {
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
     }
 
 
 
-    return { conversationsDetail, loading, pageDetail, total, hasMore, fetchConversationsDetail, createConversationDetail, loadMoreConversationsDetail, setConversationsDetail };
+    return { conversationsDetail, loading, pageDetail, total, hasMore, fetchConversationsDetail, createConversationDetail, loadMoreConversationsDetail, setConversationsDetail, UpdateConversationDetail, DeleteConversationDetail };
 }
 
 export default useConversationDetailViewModel;
