@@ -2,16 +2,15 @@
   "expo": {
     "name": "YourVibes",
     "slug": "yourvibes",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
-    "scheme": "com.tranquockhang18102004.yourvibes",
+    "scheme": "com.phamminhthao.yourvibes",
     "platforms": [
       "ios",
       "android"
     ],
     "userInterfaceStyle": "automatic",
-    "entryPoint": "./node_modules/expo-router/entry.js",
     "jsEngine": "hermes",
     "splash": {
       "image": "./assets/images/yourvibes_splash.png",
@@ -20,7 +19,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tranquockhang18102004.yourvibes"
+      "bundleIdentifier": "com.phamminhthao.yourvibes"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +30,7 @@
         "INTERNET",
         "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.tranquockhang18102004.yourvibes",
+      "package": "com.phamminhthao.yourvibes",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -71,14 +70,15 @@
     },
     "extra": {
       "eas": {
-        "projectId": "bfa9ab76-c551-4f68-b26f-f1c888ef9f2c"
+        "projectId": "80f3a944-5942-41ce-b3a3-673822a4cf5e"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/bfa9ab76-c551-4f68-b26f-f1c888ef9f2c"
-    }
+      "url": "https://u.expo.dev/80f3a944-5942-41ce-b3a3-673822a4cf5e"
+    },
+    "owner": "phamminhthao"
   }
 }
