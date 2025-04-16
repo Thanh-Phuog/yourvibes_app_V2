@@ -56,7 +56,12 @@ export const ENGLocalizedStrings = {
     WhoLike:"Discover who liked the post!",
     HideInfo: "has hidden personal information",
     FriendOnly: "only friends can see",
-
+    Trending: "Trending",
+    BirthdayFriend: "Birthday Friend",
+    NewFeed: "New Feed",
+    NoBirthdays: "No birthdays today",
+    HappyBirthday: "Happy birthday, my friend!",
+    FriendRequests: "Friend Requests",
   },
   Form: {
     Label: {
@@ -308,5 +313,19 @@ export const ENGLocalizedStrings = {
     DeleteMember: "Delete member",
     Reply: "Reply",
     AddUserGroup: "Add user to group",
+  },
+  Suggested: {
+    SuggestedFriends: "Suggested Friends",
+    Hide: "Hide",
+    SeeMore: "See more",
+    Why: "Why do I see these friends?",
+    Dont: "I don't want to see these friends",
+    FriendRequestSent: "Waiting...",
+    AddFriend: "Add friend",
+    WhyExplanation: "These suggestions are based on factors such as:",
+    WhyFactor1: "Mutual friends",
+    WhyFactor2: "Similar interests",
+    WhyFactor3: "Recent activity on social media",
+    WhyConclusion: "We use an algorithm to find people you might know or want to connect with!"
   },
 }

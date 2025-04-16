@@ -15,6 +15,9 @@ export const ApiPath = {
   FRIEND_RESPONSE: getApiPath("users/friends/friend_response/"),
   UNFRIEND: getApiPath("users/friends/"),
   LIST_FRIENDS: getApiPath("users/friends/"),
+  
+  NON_FRIENDS: getApiPath("users/friends/non_friend"),
+  BIRTHDAY_FRIENDS: getApiPath("users/friends/birthday"),
 
   // Post
   CREATE_POST: getApiPath("posts/"),
@@ -25,6 +28,8 @@ export const ApiPath = {
   LIKE_POST: getApiPath("posts/like_post/"),
   SHARE_POST: getApiPath("posts/share_post/"),
   ADVERTISE_POST: getApiPath("advertise/"),
+  
+  TRENDING_POST: getApiPath("posts/trending"),
 
 
     //Report
@@ -54,6 +59,9 @@ export const ApiPath = {
   //Forgot Password
   GET_OTP_FORGOOT_PASSWORD: getApiPath("users/get_otp_forgot_user_password"),
   FORGOT_PASSWORD: getApiPath("users/forgot_user_password"),
+
+  //Suggestion
+  GET_SUGGESTION: getApiPath('users/friends/suggestion'),
 
   //Conversation
   GET_CONVERSATION: getApiPath("conversations/"),

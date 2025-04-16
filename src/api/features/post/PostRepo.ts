@@ -21,6 +21,7 @@ interface IPostRepo {
 	getPostLikes: (params: LikeUsersResponseModel) => Promise<BaseApiResponseModel<LikeUsersModel[]>>;
 	advertisePost: (params: AdvertisePostRequestModel) => Promise<BaseApiResponseModel<any>>;
 	getAdvertisePost: (params: AdvertisePostRequestModel) => Promise<BaseApiResponseModel<AdvertisePostResponseModel>>;
+	getPostsTrending: (params: GetUsersPostsRequestModel) => Promise<BaseApiResponseModel<PostResponseModel[]>>;
 }
 export class PostRepo implements IPostRepo {
 	async createPost(data: CreatePostRequestModel): Promise<BaseApiResponseModel<PostResponseModel>> {
@@ -64,6 +65,10 @@ export class PostRepo implements IPostRepo {
 
 	async getAdvertisePost(params: GetAdvertiseRequestModel): Promise<BaseApiResponseModel<AdvertisePostResponseModel>> {
 		return client.get(ApiPath.ADVERTISE_POST , params);
+	}
+
+	async getPostsTrending(params: GetUsersPostsRequestModel): Promise<BaseApiResponseModel<PostResponseModel[]>> {
+		return client.get(ApiPath.TRENDING_POST, params);
 	}
 }
 export const defaultPostRepo = new PostRepo();

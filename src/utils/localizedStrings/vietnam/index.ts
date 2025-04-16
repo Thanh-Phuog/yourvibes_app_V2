@@ -56,7 +56,13 @@ export const VnLocalizedStrings = {
     ListUserLikePost: "Danh sách người thích bài viết",
     WhoLike: "Khám phá ai đã thích bài viết!",
     HideInfo: "đã ẩn thông tin cá nhân",
-    FriendOnly: "chỉ bạn bè được xem"
+    FriendOnly: "chỉ bạn bè được xem",
+    Trending: "Xu hướng",
+    BirthdayFriend: "Sinh nhật bạn bè",
+    NewFeed: "Bảng tin",
+    NoBirthdays: "Không có ngày sinh nhật nào",
+    HappyBirthday: "Hãy gửi lời chúc mừng sinh nhật đến những người bạn của bạn!",
+    FriendRequests: "Lời mời kết bạn", 
   },
   Form: {
     Label: {
@@ -309,5 +315,19 @@ Messages:{
   DeleteMember: "Xoa thanh vien",
   Reply: "Trả lời",
   AddUserGroup: "Thêm thành viên",
+},
+Suggested: {
+  SuggestedFriends: "Những người bạn có thể biết",
+  Hide: "Ẩn",
+  SeeMore: "Xem thêm",
+  Why: "Tại sao tôi lại thấy những người bạn này?",
+  Dont: "Tôi không muốn thấy những người bạn này",
+  AddFriend: "Kết bạn",
+  FriendRequestSent: "Đã gửi..",
+  WhyExplanation: "Những gợi ý này dựa trên các yếu tố như:",
+  WhyFactor1: "Bạn bè chung",
+  WhyFactor2: "Sở thích tương đồng",
+  WhyFactor3: "Hoạt động gần đây trên mạng xã hội",
+  WhyConclusion: "Chúng tôi sử dụng thuật toán để tìm những người bạn có thể quen biết hoặc muốn kết nối!"
 },
 };
