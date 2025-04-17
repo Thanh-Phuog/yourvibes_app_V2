@@ -1,11 +1,11 @@
 import { ApiPath } from "../../ApiPath";
 import { BaseApiResponseModel } from "../../baseApiResponseModel/baseApiResponseModel";
 import client from "../../client";
-import { NewFeedRequestModel, NewFeedResponseModel, SuggestionResponseModel } from "./Model/NewFeedModel";
+import { NewFeedRequestModel, NewFeedResponseModel, SuggestionResponseModel, SuggestionUserModel } from "./Model/NewFeedModel";
 
 interface INewFeedRepo {
     getNewFeed: (data: NewFeedRequestModel) => Promise<BaseApiResponseModel<NewFeedResponseModel[]>>;
-    getSuggestion: (data: NewFeedRequestModel) => Promise<SuggestionResponseModel>;
+    getSuggestion: (data: NewFeedRequestModel) => Promise<BaseApiResponseModel<SuggestionUserModel[]>>;
 }
 export class NewFeedRepo implements INewFeedRepo {
     async getNewFeed(data: NewFeedRequestModel):
@@ -14,7 +14,7 @@ export class NewFeedRepo implements INewFeedRepo {
     }
 
     async getSuggestion(data: NewFeedRequestModel):
-        Promise<SuggestionResponseModel> {
+        Promise<BaseApiResponseModel<SuggestionUserModel[]>> {
           return client.get(ApiPath.GET_SUGGESTION, data);
     }
 
