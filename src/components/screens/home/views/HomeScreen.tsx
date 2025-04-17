@@ -73,6 +73,14 @@ const HomeScreen = () => {
           tabBarBackgroundColor={backgroundColor}
           tabBarTextStyle={{ fontWeight: "bold" }}
           tabBarActiveTextColor={brandPrimary}
+          tabBarInactiveTextColor="gray"
+          style={{
+            marginTop: 10,
+            // marginHorizontal: 10,
+            borderRadius: 16, // 👈 Bo góc ở đây
+            overflow: "hidden", // 👈 Quan trọng để bo góc có hiệu lực
+          }}
+          
         >
           <View style={{ flex: 1 }}>
           {loadedTabs[0] && <NewFeed isActive={activeTab === 0} />}

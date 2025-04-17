@@ -6,5 +6,6 @@ export interface SocketContextType {
     connectSocketNotification: () => void;
     socketMessages: MessageWebSocketResponseModel[];
     setSocketMessages: (messages: MessageWebSocketResponseModel[]) => void;
+    newMessageTrigger: number;
   
 }

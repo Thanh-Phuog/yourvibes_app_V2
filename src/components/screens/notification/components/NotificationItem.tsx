@@ -29,6 +29,18 @@ const NotificationItem = ({ notification, onUpdate  }: { notification: Notificat
         return 'post';
       case 'like_comment':
         return 'like_comment';
+      case 'new_post_personal':
+        return 'post';
+      case 'block_create_post':
+        return 'post';
+      case 'deactivate_post':
+        return 'post';
+      case 'activace_post':
+        return 'post';
+      case 'deactivate_comment':
+        return 'comment';
+      case 'activace_comment':
+        return 'comment';
       default:
         return 'notifications';
     }
@@ -88,11 +100,35 @@ const NotificationItem = ({ notification, onUpdate  }: { notification: Notificat
         return `${localStrings.Notification.Items.NewPost}`;
       case 'like_comment':
         return `${localStrings.Notification.Items.LikeComment}`;
+      case 'new_post_personal':
+        return `${localStrings.Notification.Items.NewPostPersonal}`;
+      case 'block_create_post':
+        return `${localStrings.Notification.Items.BlockCreatePost}`;
+      case 'deactivate_post':
+        return `${localStrings.Notification.Items.DeactivatePostContent}`;
+      case 'activace_post':
+        return `${localStrings.Notification.Items.ActivacePostContent}`;
+      case 'deactivate_comment':
+        return `${localStrings.Notification.Items.DeactivateCommentContent}`;
+      case 'activace_comment':
+        return `${localStrings.Notification.Items.ActivaceCommentContent}`;
       default:
         return 'notifications';
     }
   };
 
+  const getDescription = (content: string) => {
+    if (content.includes("violence")) {
+      return localStrings.Notification.Items.violence;
+  }
+  if (content.includes("nsfw")) {
+      return localStrings.Notification.Items.nsfw;
+  }
+  if (content.includes("political")) {
+      return localStrings.Notification.Items.political;
+  }
+  return content;
+  }
   return (
     <TouchableOpacity onPress={()=>{onUpdate();
       if( notification_type === "friend_request" || notification_type === "accept_friend_request"){
@@ -129,7 +165,7 @@ const NotificationItem = ({ notification, onUpdate  }: { notification: Notificat
               ellipsizeMode="tail"
               style={{ fontSize: 14, color: '#333' }}
             >
-              {content}
+              {getDescription(content)}
             </Text>
           ) : null}
           <Text style={{ fontSize: 12, color: '#888', marginTop: 4 }}>

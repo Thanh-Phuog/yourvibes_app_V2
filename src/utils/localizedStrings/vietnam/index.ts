@@ -126,6 +126,7 @@ export const VnLocalizedStrings = {
     CreatePostFailed: "Đăng bài thất bại!",
     EmptyContent: "Thiếu nội dung hoặc file media",
     PickImgFailed: "Tải file thất bại!",
+    CensorPost: "Bài viết của bạn đang được kiểm duyệt, vui lòng chờ.",
   },
   ObjectPostPrivacy: {
     PublicDescription: "Bất kỳ ai ở trên YourVibes",
@@ -163,6 +164,7 @@ export const VnLocalizedStrings = {
     DeleteNewFeed: "Ẩn bài viết",
     NoContent: "Nội dung không còn tồn tại!",
     Sponsor: "Được tài trợ",
+    NoTrendingPosts: "Chưa có bài viết trending nào",
   },
   PostDetails: {
     ViewReplies: "Xem phản hồi",
@@ -245,6 +247,16 @@ export const VnLocalizedStrings = {
       AcceptFriend: "đã chấp nhận lời mời kết bạn của bạn.",
       NewPost: "đã đăng một bài viết mới.",
       LikeComment: "đã thích bình luận của bạn: ",
+      NewPostPersonal: "bài viết của bạn đăng thành công:",
+      NewPostError: "bài viết của bạn bị lỗi",
+      BlockCreatePost: "bài viết của bạn đã bị chặn",
+      nsfw: "vì chứa nội dung nhạy cảm",
+      political: "vì chứa nội dung chính trị không phù hợp",
+      violence: "vì chứa nội dung bạo lực",
+      DeactivatePostContent:"bài viết của bạn đã bị chặn vì vi phạm các điều khoản và điều kiện của chúng tôi. Nếu bạn nghĩ rằng đây là một sai lầm, vui lòng liên hệ với bộ phận hỗ trợ của chúng tôi để được xem xét lại.",
+      ActivacePostContent:"bài viết của bạn đã được kích hoạt lại sau khi xem xét. Cảm ơn bạn đã kiên nhẫn chờ đợi.",
+      DeactivateCommentContent:"bình luận của bạn đã bị chặn vì vi phạm các điều khoản và điều kiện của chúng tôi. Nếu bạn nghĩ rằng đây là một sai lầm, vui lòng liên hệ với bộ phận hỗ trợ của chúng tôi để được xem xét lại.",
+      ActivaceCommentContent:"bình luận của bạn đã được kích hoạt lại sau khi xem xét. Cảm ơn bạn đã kiên nhẫn chờ đợi.",
     }
   },
   ListFriends: {
@@ -329,5 +341,25 @@ Suggested: {
   WhyFactor2: "Sở thích tương đồng",
   WhyFactor3: "Hoạt động gần đây trên mạng xã hội",
   WhyConclusion: "Chúng tôi sử dụng thuật toán để tìm những người bạn có thể quen biết hoặc muốn kết nối!"
+},
+People: {
+  FetchUsersFailed: "Tải danh sách người dùng thất bại",
+  ErrorFetchingUsers: "Lỗi khi tải danh sách người dùng",
+  NoFriendRequests: "Không có lời mời kết bạn nào",
+  ErrorFriendRequests: "Lỗi khi tải danh sách lời mời kết bạn",
+  AcceptScuccess: "Chấp nhận lời mời thành công",
+  AcceptFailed: "Chấp nhận lời mời thất bại",
+  AcceptError: "Lỗi khi chấp nhận lời mời",
+  DeclineSuccess: "Từ chối lời mời thành công",
+  DeclineFailed: "Từ chối lời mời thất bại",
+  DeclineError: "Lỗi khi từ chối lời mời",
+  FriendRequestSent: "Đã gửi lời mời kết bạn",
+  FriendRequestSentError: "Lỗi khi gửi lời mời kết bạn",
+  FriendRequestSentSuccess: "Gửi lời mời kết bạn thành công",
+  FriendRequestCanceled: "Đã hủy lời mời kết bạn",
+  FriendRequestCanceledError: "Lỗi khi hủy lời mời kết bạn",
+  FriendRequestCanceledSuccess: "Hủy lời mời kết bạn thành công",
+  FriendRequestSentFailed: "Gửi lời mời kết bạn thất bại",
+  FriendRequestCanceledFailed: "Hủy lời mời kết bạn thất bại",
 },
 };

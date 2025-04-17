@@ -76,7 +76,22 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
     }
   }, [isActive]);
   return (
-    <FlatList
+    <> {triendingPosts.length === 0 && !loadingTrending ? (
+      <>
+      {renderAddPost()}
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: 100,
+        }}
+      >
+        <Text>{localStrings.Post.NoTrendingPosts}</Text>
+      </View>
+      </>
+    ) : (
+       <FlatList
       ListHeaderComponent={<>{renderAddPost()}</>}
       data={triendingPosts}
       renderItem={({ item }) => (
@@ -105,6 +120,12 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
       onViewableItemsChanged={onViewableItemsChanged.current}
       viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
     />
+    )
+
+    }
+   
+    </>
+   
   );
 };
 

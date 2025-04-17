@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import friendSuggestionsViewModel, {
   FriendSuggestionWithStatus,
@@ -35,6 +35,9 @@ const FriendSuggestions = () => {
     setFriendSuggestions,
     handleRemoveSuggestion,
     loading,
+    hasMoreFriend,
+    handleLoadMore,
+    onViewableItemsChanged,
   } = friendSuggestionsViewModel(defaultNewFeedRepo);
 
   const renderFriendButton = useCallback(
@@ -74,30 +77,6 @@ const FriendSuggestions = () => {
               </View>
             </Button>
           );
-        // case FriendStatus.IsFriend:
-        //   return (
-        //     <TouchableOpacity
-        //       style={{
-        //         height: 36,
-        //         flexDirection: "row",
-        //         alignItems: "center",
-        //         justifyContent: "center",
-        //       }}
-        //       onPress={() => handleFriendRequest(userId, "send")}
-        //     >
-        //       <FontAwesome5 name="user-check" size={16} color={brandPrimary} />
-        //       <Text
-        //         style={{
-        //           color: brandPrimary,
-        //           fontSize: 16,
-        //           marginHorizontal: 10,
-        //           fontWeight: "bold",
-        //         }}
-        //       >
-        //         {localStrings.Public.Friend}
-        //       </Text>
-        //     </TouchableOpacity>
-        //   );
         case FriendStatus.SendFriendRequest:
           return (
             <Button
@@ -177,256 +156,183 @@ const FriendSuggestions = () => {
       }
     );
   }, [localStrings]);
+    const renderFooter = () => {
+      if (!hasMoreFriend) return null;
+      return (
+        <View style={{ paddingVertical: 10, alignItems: "center" }}>
+          <ActivityIndicator size="large" color={brandPrimary} />
+        </View>
+      );
+    };
 
   useEffect(() => {
     fetchSuggestions();
   }, []);
 
   return (
-    <View
-      className="friend-suggestions"
-      style={{
-        // padding: 10,
-        // backgroundColor: "#fff",
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        marginTop: 10,
-        marginHorizontal: 10,
-      }}
-    >
-      <View
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 10,
-          flexDirection: "row",
-        }}
-      >
+    <>
+      {friendSuggestions.length > 0 && (
         <View
+          className="friend-suggestions"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            flexDirection: "row",
-          }}
-        >
-          {/* <UsergroupAddOutlined style={{ fontSize: "18px" }} /> */}
-          <FontAwesome5 name="user-friends" size={24} color={brandPrimary} />
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {localStrings.Suggested.SuggestedFriends}
-          </Text>
-        </View>
-        <TouchableOpacity
-          onPress={showAction}
-        >
-          <Entypo name="dots-three-vertical" size={16} />
-        </TouchableOpacity>
-      </View>
-
-      {loading ? (
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: 100,
-          }}
-        >
-          <ActivityIndicator size="large" color={brandPrimary} />
-        </View>
-      ) : (
-        <>
-        <ScrollView
-  horizontal={true}
-  showsHorizontalScrollIndicator={false}
-  contentContainerStyle={{
-  }}
->
-  {friendSuggestions
-    .filter((s) => !s.hidden)
-    .map((suggestion) => (
-      <Card
-        key={suggestion.id}
-        style={{
-          width: 125,
-          height: 200,
-          marginRight: 10,
-          borderRadius: 10,
-          padding: 10,
-        }}
-      >
-        <TouchableOpacity
-          className="suggestion-item"
-          onPress={() => router.push(`/user/${suggestion.id}`)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Image
-            source={suggestion.avatar_url}
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 32,
-              marginBottom: 10,
-            }}
-            alt="Avatar"
-          />
-          <Text
-            style={{
-              fontWeight: "bold",
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {suggestion.family_name} {suggestion.name}
-          </Text>
-        </TouchableOpacity>
-
-        {renderFriendButton(suggestion)}
-
-        <TouchableOpacity
-          style={{
-            alignItems: "center",
+            // padding: 10,
+            // backgroundColor: "#fff",
+            borderRadius: 10,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
             marginTop: 10,
+            marginHorizontal: 10,
           }}
-          onPress={() => handleRemoveSuggestion(suggestion.id!)}
         >
-          <Text
+          <View
             style={{
-              color: brandPrimary,
-              fontSize: 14,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 10,
+              flexDirection: "row",
             }}
-          >
-            {localStrings.Suggested.Hide}
-          </Text>
-        </TouchableOpacity>
-      </Card>
-    ))}
-</ScrollView>
-
-            {/* <TouchableOpacity
-              onPress={() => setIsModalVisible(true)}
-              style={{ padding: 10, alignItems: "center" }}
-            >
-              <Text
-                style={{ color: brandPrimary, textDecorationLine: "underline" }}
-              >
-                {localStrings.Suggested.SeeMore}
-              </Text>
-            </TouchableOpacity> */}
-
-          <Modal
-            title={localStrings.Suggested.SuggestedFriends}
-            visible={isModalVisible}
-            onClose={() => setIsModalVisible(false)}
           >
             <View
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
                 flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                paddingHorizontal: 10,
               }}
             >
-              {friendSuggestions
-                .filter((s) => !s.hidden)
-                .slice(0, 9)
-                .map((suggestion) => (
+              {/* <UsergroupAddOutlined style={{ fontSize: "18px" }} /> */}
+              <FontAwesome5
+                name="user-friends"
+                size={24}
+                color={brandPrimary}
+              />
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                {localStrings.Suggested.SuggestedFriends}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={showAction}>
+              <Entypo name="dots-three-vertical" size={16} />
+            </TouchableOpacity>
+          </View>
+
+          {loading ? (
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 100,
+              }}
+            >
+              <ActivityIndicator size="large" color={brandPrimary} />
+            </View>
+          ) : (
+            <>
+
+              <FlatList 
+               data={friendSuggestions}
+               horizontal={true}
+                keyExtractor={(item) => item.id!}
+                renderItem={({ item }) => (
                   <Card
-                    key={suggestion.id}
-                    style={{
-                      width: "30%", // khoảng 1/3 chiều ngang
-                      height: 200,
-                      borderRadius: 10,
-                      padding: 10,
-                      marginBottom: 15,
-                    }}
-                  >
-                    <TouchableOpacity
-                      className="suggestion-item"
-                      onPress={() => router.push(`/user/${suggestion.id}`)}
+                      key={item.id}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        width: 125,
+                        height: 200,
+                        marginRight: 10,
+                        borderRadius: 10,
+                        padding: 10,
                       }}
                     >
-                      <Image
-                        source={suggestion.avatar_url}
+                      <TouchableOpacity
+                        className="suggestion-item"
+                        onPress={() => router.push(`/user/${item.id}`)}
                         style={{
-                          width: 64,
-                          height: 64,
-                          borderRadius: 32,
-                          marginBottom: 10,
-                        }}
-                        alt="Avatar"
-                      />
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          marginTop: 5,
-                          marginBottom: 5,
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {suggestion.family_name} {suggestion.name}
-                      </Text>
-                    </TouchableOpacity>
-
-                    {renderFriendButton(suggestion)}
-
-                    <TouchableOpacity
-                      style={{
-                        alignItems: "center",
-                        marginTop: 10,
-                      }}
-                      onPress={() => handleRemoveSuggestion(suggestion.id!)}
-                    >
-                      <Text
-                        style={{
-                          color: brandPrimary,
-                          fontSize: 14,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        {localStrings.Suggested.Hide}
-                      </Text>
-                    </TouchableOpacity>
-                  </Card>
-                ))}
-            </View>
-          </Modal>
+                        <Image
+                          source={item.avatar_url}
+                          style={{
+                            width: 64,
+                            height: 64,
+                            borderRadius: 32,
+                            marginBottom: 10,
+                          }}
+                          alt="Avatar"
+                        />
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            marginTop: 5,
+                            marginBottom: 5,
+                          }}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          {item.family_name} {item.name}
+                        </Text>
+                      </TouchableOpacity>
 
-          <Modal
-            title={localStrings.Suggested.Why}
-            transparent
-            visible={isWhyModalVisible}
-            onClose={() => setIsWhyModalVisible(false)}
-            closable
-            maskClosable
-          >
-            <Text style={{ fontWeight: "bold" }}>
-              {localStrings.Suggested.WhyExplanation}
-            </Text>
-            <View>
-              <Text>{localStrings.Suggested.WhyFactor1}</Text>
-              <Text>{localStrings.Suggested.WhyFactor2}</Text>
-              <Text>{localStrings.Suggested.WhyFactor3}</Text>
-            </View>
-            <Text>{localStrings.Suggested.WhyConclusion}</Text>
-          </Modal>
-        </>
+                      {renderFriendButton(item)}
+
+                      <TouchableOpacity
+                        style={{
+                          alignItems: "center",
+                          marginTop: 10,
+                        }}
+                        onPress={() => handleRemoveSuggestion(item.id!)}
+                      >
+                        <Text
+                          style={{
+                            color: brandPrimary,
+                            fontSize: 14,
+                          }}
+                        >
+                          {localStrings.Suggested.Hide}
+                        </Text>
+                      </TouchableOpacity>
+                    </Card>
+                )}
+                showsHorizontalScrollIndicator={false} 
+                ListFooterComponent={renderFooter}
+                onEndReached={handleLoadMore}
+                contentContainerStyle={{ paddingRight: 20 }}
+                onEndReachedThreshold={0.5}
+                removeClippedSubviews={true}
+                showsVerticalScrollIndicator={false}
+                onViewableItemsChanged={onViewableItemsChanged.current}
+                viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+              />
+
+              <Modal
+                title={localStrings.Suggested.Why}
+                transparent
+                visible={isWhyModalVisible}
+                onClose={() => setIsWhyModalVisible(false)}
+                closable
+                maskClosable
+              >
+                <Text style={{ fontWeight: "bold" }}>
+                  {localStrings.Suggested.WhyExplanation}
+                </Text>
+                <View>
+                  <Text>{localStrings.Suggested.WhyFactor1}</Text>
+                  <Text>{localStrings.Suggested.WhyFactor2}</Text>
+                  <Text>{localStrings.Suggested.WhyFactor3}</Text>
+                </View>
+                <Text>{localStrings.Suggested.WhyConclusion}</Text>
+              </Modal>
+            </>
+          )}
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
