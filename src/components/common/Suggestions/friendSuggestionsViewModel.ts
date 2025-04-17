@@ -25,10 +25,10 @@ const friendSuggestionsViewModel = (repo: NewFeedRepo) => {
   const [pageFriend, setPageFriend] = useState(1);
   const [total, setTotal] = useState(0);
   const [visibleItems, setVisibleItems] = useState<string[]>([]);
-     const onViewableItemsChanged = useRef(({ viewableItems }: any) => {    
-        const visibleIds = viewableItems.map((item: any) => item.item.id);
-        setVisibleItems(visibleIds);
-      });
+  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+    const visibleIds = viewableItems.map((item: any) => item.item.id);
+    setVisibleItems(visibleIds);
+  });
   const fetchSuggestions = async (newPage: number = 1) => {
     try {
       setLoading(true);
@@ -46,8 +46,14 @@ const friendSuggestionsViewModel = (repo: NewFeedRepo) => {
             hidden: false,
           })
         );
-
-        setFriendSuggestions(suggestionsWithStatus);
+        if (newPage === 1) {
+          setFriendSuggestions(suggestionsWithStatus);
+        } else {
+          setFriendSuggestions((prevPosts) => [
+            ...prevPosts,
+            ...(suggestionsWithStatus || []),
+          ]);
+        }
         const {
           page: currentPage,
           limit: currentLimit,
