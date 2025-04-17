@@ -2,14 +2,11 @@
   "expo": {
     "name": "YourVibes",
     "slug": "yourvibes",
-    "version": "1.0.2",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "com.phamminhthao.yourvibes",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "splash": {
@@ -26,14 +23,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "INTERNET",
-        "ACCESS_NETWORK_STATE"
-      ],
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
       "package": "com.phamminhthao.yourvibes",
-      "versionCode": 4,
-      "minSdkVersion": 23,
-      "enableProguardInReleaseBuilds": true,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -45,10 +36,7 @@
               "pathPrefix": "/records"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
@@ -59,14 +47,7 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font",
-      [
-        "expo-video",
-        {
-          "supportsBackgroundPlayback": true,
-          "supportsPictureInPicture": true
-        }
-      ]
+      "expo-font" 
     ],
     "experiments": {
       "typedRoutes": true
@@ -81,7 +62,6 @@
     },
     "updates": {
       "url": "https://u.expo.dev/80f3a944-5942-41ce-b3a3-673822a4cf5e"
-    },
-    "owner": "phamminhthao"
+    }
   }
 }
