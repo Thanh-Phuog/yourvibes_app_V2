@@ -24,11 +24,13 @@ import useConversationDetailViewModel from "../viewModel/ConversationDetailsView
 import useConversationViewModel from "../viewModel/ConversationViewModel";
 import { create } from "react-test-renderer";
 import AddGroupModel from "../component/CreateGroupModel";
+import { useWebSocket } from "@/src/context/socket/useSocket";
 
 const MessagesFeature = () => {
   const { user } = useAuth();
   const { backgroundColor, brandPrimary } = useColor();
   const { localStrings } = useAuth();
+  const {newMessageTrigger} = useWebSocket();
   const [showGroupModel, setShowGroupModel] = React.useState(false);
   const { friends, page, fetchFriends } = useListFriendsViewModel();
   const {createConversation, loading, fetchConversations, conversations, loadMoreConversations} = useConversationViewModel(defaultMessagesRepo);
@@ -113,9 +115,14 @@ const MessagesFeature = () => {
   useEffect(() => {
     if (user) {
       fetchFriends(page, user.id);
-      fetchConversations(page);
     }
   }, [user]);
+  
+  useEffect(() => {
+    if (user) {
+      fetchConversations(page);
+    }
+  }, [user, newMessageTrigger]);
 
   return (
     <KeyboardAvoidingView

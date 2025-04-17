@@ -377,7 +377,7 @@ const Chat = () => {
                               }}
                             >
                               <Text style={{ fontSize: 14, color: "#666" }}>
-                                {localStrings.Messages.Reply}: {item.parent_id}
+                                {localStrings.Messages.Reply}: {item.parent_content}
                               </Text>
                             </View>
                             <Text>{item.content}</Text>

@@ -81,7 +81,14 @@ const useMessagesViewModel = (repo: MessagesRepo) => {
     }
   }
 
-  
+  // useEffect(() => {
+  //   if (socketMessages) {
+  //    if (socketMessages.length > 0) {
+  //      fetchMessages(1, socketMessages[0].conversation_id);
+  //    }
+  //   }
+  // }, [socketMessages]);
+
   return {
     messages,
     setMessages,

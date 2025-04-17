@@ -143,6 +143,7 @@ const HomeViewModel = (repo: NewFeedRepo) => {
     refeshLoading,
     onViewableItemsChanged,
     visibleItems,
+    page
   }
 }
 

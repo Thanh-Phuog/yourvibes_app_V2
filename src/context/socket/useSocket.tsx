@@ -1,4 +1,11 @@
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SocketContextType } from "./socketContextType";
 import { ApiPath } from "@/src/api/ApiPath";
 import { useAuth } from "../auth/useAuth";
@@ -7,151 +14,220 @@ import Toast from "react-native-toast-message";
 import { MessageWebSocketResponseModel } from "@/src/api/features/messages/models/Messages";
 import { usePathname } from "expo-router";
 
-const WebSocketContext = createContext<SocketContextType | undefined>(undefined);
+const WebSocketContext = createContext<SocketContextType | undefined>(
+  undefined
+);
 
-export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const { user, localStrings } = useAuth();
-    const pathname = usePathname();// Lấy đường dẫn hiện tại
-    const [socketMessages, setSocketMessages] = useState<MessageWebSocketResponseModel[]>([]);
+export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const { user, localStrings } = useAuth();
+  const pathname = usePathname(); // Lấy đường dẫn hiện tại
+  const [socketMessages, setSocketMessages] = useState<
+    MessageWebSocketResponseModel[]
+  >([]);
 
-    // Sử dụng useRef để lưu trữ WebSocket
-    const wsMessageRef = useRef<WebSocket | null>(null);
-    const wsNotificationRef = useRef<WebSocket | null>(null);
+  // Sử dụng useRef để lưu trữ WebSocket
+  const wsMessageRef = useRef<WebSocket | null>(null);
+  const wsNotificationRef = useRef<WebSocket | null>(null);
+  const [newMessageTrigger, setNewMessageTrigger] = useState<number>(0);
+  const MaxConnection = 3; // Số lần kết nối tối đa
+  const [connectionAttempts, setConnectionAttempts] = useState(0); // Biến đếm số lần kết nối
+  const [connectionAttemptsNotification, setConnectionAttemptsNotification] =
+    useState(0); // Biến đếm số lần kết nối
 
-    const { LIKE_POST, NEW_SHARE, NEW_COMMENT, FRIEND_REQUEST, ACCEPT_FRIEND_REQUEST, NEW_POST, LIKE_COMMENT } = useTypeNotification();
+  const {
+    LIKE_POST,
+    NEW_SHARE,
+    NEW_COMMENT,
+    FRIEND_REQUEST,
+    ACCEPT_FRIEND_REQUEST,
+    NEW_POST,
+    LIKE_COMMENT,
+    NEW_POST_PERSONAL,
+    BLOCK_CREATE_POST,
+    DEACTIVATE_POST,
+    ACTIVACE_POST,
+    DEACTIVATE_COMMENT,
+    ACTIVACE_COMMENT,
+  } = useTypeNotification();
 
-    const mapNotifiCationContent = (type: string) => {
-        switch (type) {
-            case LIKE_POST: return localStrings.Notification.Items.LikePost;
-            case NEW_SHARE: return localStrings.Notification.Items.SharePost;
-            case NEW_COMMENT: return localStrings.Notification.Items.CommentPost;
-            case FRIEND_REQUEST: return localStrings.Notification.Items.Friend;
-            case ACCEPT_FRIEND_REQUEST: return localStrings.Notification.Items.AcceptFriend;
-            case NEW_POST: return localStrings.Notification.Items.NewPost;
-            case LIKE_COMMENT: return localStrings.Notification.Items.LikeComment;
-            default: return "notifications";
+  const mapNotifiCationContent = (type: string) => {
+    switch (type) {
+      case LIKE_POST:
+        return localStrings.Notification.Items.LikePost;
+      case NEW_SHARE:
+        return localStrings.Notification.Items.SharePost;
+      case NEW_COMMENT:
+        return localStrings.Notification.Items.CommentPost;
+      case FRIEND_REQUEST:
+        return localStrings.Notification.Items.Friend;
+      case ACCEPT_FRIEND_REQUEST:
+        return localStrings.Notification.Items.AcceptFriend;
+      case NEW_POST:
+        return localStrings.Notification.Items.NewPost;
+      case LIKE_COMMENT:
+        return localStrings.Notification.Items.LikeComment;
+      case NEW_POST_PERSONAL:
+        return localStrings.Notification.Items.NewPostPersonal;
+      case BLOCK_CREATE_POST:
+        return localStrings.Notification.Items.BlockCreatePost;
+      case DEACTIVATE_POST:
+        return localStrings.Notification.Items.DeactivatePostContent;
+      case ACTIVACE_POST:
+        return localStrings.Notification.Items.ActivacePostContent;
+      case DEACTIVATE_COMMENT:
+        return localStrings.Notification.Items.DeactivateCommentContent;
+      case ACTIVACE_COMMENT:
+        return localStrings.Notification.Items.ActivaceCommentContent;
+
+      default:
+        return localStrings.Notification.Notification;
+    }
+  };
+
+  // 👉 Hàm kết nối WebSocket Message
+  const connectSocketMessage = () => {
+    if (!user?.id || wsMessageRef.current) return; // Tránh kết nối lại khi đã có kết nối
+
+    const ws = new WebSocket(`${ApiPath.GET_WS_PATH_MESSAGE}${user.id}`);
+    wsMessageRef.current = ws;
+
+    ws.onopen = () => console.log("🔗 WebSocket Message connected");
+
+    ws.onmessage = (e) => {
+      const message = JSON.parse(e.data);
+      console.log("📩 Nhận tin nhắn:", message, "Path:", pathname);
+      setSocketMessages((prev) => [message, ...prev]);
+      setNewMessageTrigger((prev) => prev + 1);
+    };
+
+    ws.onclose = (e) => {
+      console.log("❌ WebSocket Message disconnected:", e.reason);
+      wsMessageRef.current = null;
+      setConnectionAttempts((prevAttempts) => {
+        const newAttempts = prevAttempts + 1;
+        if (newAttempts < MaxConnection) {
+            setTimeout(() => connectSocketMessage(), 5000); // Thử lại sau 5 giây
         }
+        return newAttempts;
+    });
+};
+
+    ws.onerror = (error) => {
+      console.error("⚠️ WebSocket Message error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Lỗi WebSocket",
+        text2: "Không thể kết nối WebSocket.",
+      });
     };
+  };
 
-    // 👉 Hàm kết nối WebSocket Message
-    const connectSocketMessage = () => {
-        if (!user?.id || wsMessageRef.current) return; // Tránh kết nối lại khi đã có kết nối
+  // 👉 Hàm kết nối WebSocket Notification
+  const connectSocketNotification = () => {
+    if (!user?.id || wsNotificationRef.current) return;
 
-        const ws = new WebSocket(`${ApiPath.GET_WS_PATH_MESSAGE}${user.id}`);
-        wsMessageRef.current = ws;
+    const ws = new WebSocket(`${ApiPath.GET_WS_PATH_NOTIFICATION}${user.id}`);
+    wsNotificationRef.current = ws;
 
-        ws.onopen = () => console.log("🔗 WebSocket Message connected");
+    ws.onopen = () => console.log("🔗 WebSocket Notification connected");
 
-        ws.onmessage = (e) => {
-            const message = JSON.parse(e.data);
-            console.log("📩 Nhận tin nhắn:", message, "Path:", pathname);
-
-            // if (pathname === "/chat") {
-                // Nếu đang ở trang chat, cập nhật danh sách tin nhắn
-                setSocketMessages((prev) => [message, ...prev]);
-            // } else {
-            //     // Nếu không ở trang chat, hiển thị thông báo
-            //     if (message?.user?.id !== user?.id) {
-            //         Toast.show({
-            //             type: "info",
-            //             text1: `${message.user.name} đã gửi tin nhắn`,
-            //             text2: message.content,
-            //         });
-            //     }
-            // }
-        };
-
-        ws.onclose = (e) => {
-            console.log("❌ WebSocket Message disconnected:", e.reason);
-            wsMessageRef.current = null; // Reset ref khi bị ngắt kết nối
-        };
-
-        ws.onerror = (error) => {
-            console.error("⚠️ WebSocket Message error:", error);
-            Toast.show({
-                type: "error",
-                text1: "Lỗi WebSocket",
-                text2: "Không thể kết nối WebSocket.",
-            });
-        };
-    };
-
-    // 👉 Hàm kết nối WebSocket Notification
-    const connectSocketNotification = () => {
-        if (!user?.id || wsNotificationRef.current) return;
-
-        const ws = new WebSocket(`${ApiPath.GET_WS_PATH_NOTIFICATION}${user.id}`);
-        wsNotificationRef.current = ws;
-
-        ws.onopen = () => console.log("🔗 WebSocket Notification connected");
-
-        ws.onmessage = (e) => {
-            const notification = JSON.parse(e.data);
-            const userName = notification?.from;
-            const content = notification?.content;
-            const type = notification?.notification_type;
-            const mapType = mapNotifiCationContent(type);
-
-            Toast.show({
-                type: "info",
-                text1: `${userName} ${mapType}`,
-                text2: content,
-            });
-        };
-
-        ws.onclose = (e) => {
-            console.log("❌ WebSocket Notification disconnected:", e.reason);
-            wsNotificationRef.current = null;
-        };
-
-        ws.onerror = (error) => {
-            console.error("⚠️ WebSocket Notification error:", error);
-            Toast.show({
-                type: "error",
-                text1: "Lỗi WebSocket",
-                text2: "Không thể kết nối WebSocket.",
-            });
-        };
-    };
-
-    // 👉 Xử lý cleanup khi user thay đổi hoặc component unmount
-    useEffect(() => {
-        if (user?.id) {
-            connectSocketNotification();
-            connectSocketMessage();
+    ws.onmessage = (e) => {
+      const notification = JSON.parse(e.data);
+      const userName = notification?.from;
+      const content = notification?.content;
+      const type = notification?.notification_type;
+      const mapType = mapNotifiCationContent(type);
+      const getDescription = (content: string) => {
+        if (content.includes("violence")) {
+            return localStrings.Notification.Items.violence;
         }
+        if (content.includes("nsfw")) {
+            return localStrings.Notification.Items.nsfw;
+        }
+        if (content.includes("political")) {
+            return localStrings.Notification.Items.political;
+        }
+        return content;
+    }
+      Toast.show({
+        type: "info",
+        text1: `${userName} ${mapType}`,
+        text2: getDescription(content),
+      });
+    };
 
-        return () => {
-            if (wsMessageRef.current) {
-                wsMessageRef.current.close();
-                wsMessageRef.current = null;
-            }
-            if (wsNotificationRef.current) {
-                wsNotificationRef.current.close();
-                wsNotificationRef.current = null;
-            }
-        };
-    }, [user?.id]);
-
-    // 👉 Lắng nghe pathname để cập nhật tin nhắn khi vào trang chat
-    useEffect(() => {
-        console.log("🌐 Pathname changed:", pathname);
-    }, [pathname]);
-
-    return (
-        <WebSocketContext.Provider value={{ 
-            socketMessages, setSocketMessages, connectSocketMessage, connectSocketNotification, }}>
-            {children}
-        </WebSocketContext.Provider>
+    ws.onclose = (e) => {
+      console.log("❌ WebSocket Notification disconnected:", e.reason);
+      wsNotificationRef.current = null;
+      setConnectionAttemptsNotification((prevAttempts) => {
+        const newAttempts = prevAttempts + 1;
+        console.log("connectionAttemptsNotification", newAttempts);
+        console.log("MaxConnection", MaxConnection);
         
-    );
+        // Kiểm tra điều kiện và cố gắng kết nối lại nếu chưa đạt MaxConnection
+        if (newAttempts < MaxConnection) {
+            setTimeout(() => connectSocketNotification(), 5000); // Thử lại sau 5 giây
+        }
+        return newAttempts;
+    });
+    };
+
+    ws.onerror = (error) => {
+      console.error("⚠️ WebSocket Notification error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Lỗi WebSocket",
+        text2: "Không thể kết nối WebSocket.",
+      });
+    };
+  };
+
+  // 👉 Xử lý cleanup khi user thay đổi hoặc component unmount
+  useEffect(() => {
+    if (user?.id) {
+      connectSocketNotification();
+      connectSocketMessage();
+    }
+
+    return () => {
+      if (wsMessageRef.current) {
+        wsMessageRef.current.close();
+        wsMessageRef.current = null;
+      }
+      if (wsNotificationRef.current) {
+        wsNotificationRef.current.close();
+        wsNotificationRef.current = null;
+      }
+    };
+  }, [user?.id]);
+
+  // 👉 Lắng nghe pathname để cập nhật tin nhắn khi vào trang chat
+  useEffect(() => {
+    console.log("🌐 Pathname changed:", pathname);
+  }, [pathname]);
+
+  return (
+    <WebSocketContext.Provider
+      value={{
+        socketMessages,
+        setSocketMessages,
+        connectSocketMessage,
+        connectSocketNotification,
+        newMessageTrigger,
+      }}
+    >
+      {children}
+    </WebSocketContext.Provider>
+  );
 };
 
 // Hook dùng WebSocket
 export const useWebSocket = (): SocketContextType => {
-    const context = useContext(WebSocketContext);
-    if (!context) {
-        throw new Error("useWebSocket must be used within a WebSocketProvider");
-    }
-    return context;
+  const context = useContext(WebSocketContext);
+  if (!context) {
+    throw new Error("useWebSocket must be used within a WebSocketProvider");
+  }
+  return context;
 };

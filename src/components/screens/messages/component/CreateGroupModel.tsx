@@ -89,7 +89,7 @@ const AddGroupModel = () => {
         return;
       }
 
-      const UserIds = [user?.id, ...selectedFriends];
+      const UserIds = [...selectedFriends];
       if (UserIds) {
         try {
           const friendNames = selectedFriends
@@ -100,10 +100,9 @@ const AddGroupModel = () => {
             .filter(Boolean) // Lọc bỏ giá trị null
             .join(", ");
 
-          const fullName = `${user?.family_name} ${user?.name}${
-            friendNames ? `, ${friendNames}` : ""
-          }`;
-console.log("Full name:", fullName);
+          // const fullName = `${user?.family_name} ${user?.name}${
+          //   friendNames ? `, ${friendNames}` : ""
+          // }`;
 
           const conversationId = await createConversation({
             // name: fullName,

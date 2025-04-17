@@ -56,7 +56,12 @@ export const ENGLocalizedStrings = {
     WhoLike:"Discover who liked the post!",
     HideInfo: "has hidden personal information",
     FriendOnly: "only friends can see",
-
+    Trending: "Trending",
+    BirthdayFriend: "Birthday Friend",
+    NewFeed: "New Feed",
+    NoBirthdays: "No birthdays today",
+    HappyBirthday: "Happy birthday, my friend!",
+    FriendRequests: "Friend Requests",
   },
   Form: {
     Label: {
@@ -154,6 +159,7 @@ export const ENGLocalizedStrings = {
     DeleteNewFeed: "Delete (hide) new feed",
     NoContent: "Content is empty",
     Sponsor: "Sponsored",
+    NoTrendingPosts: "No trending posts found",
   },
   PostDetails:{
     ViewReplies: "View replies",
@@ -236,6 +242,20 @@ export const ENGLocalizedStrings = {
       AcceptFriend: "accepted your friend request.",
     NewPost: "posted a new post.",
     LikeComment: "liked your comment: ",
+    NewPostPersonal: "Your post has been successfully published:",
+      NewPostError: "Your post encountered an error",
+      BlockCreatePost: "Your post has been blocked",
+      nsfw: "due to containing sensitive content",
+      political: "due to containing inappropriate political content",
+      violence: "due to containing violent content",
+      DeactivatePostContent:
+        "Your post has been blocked for violating our terms and conditions. If you believe this is a mistake, please contact our support team for review.",
+      ActivacePostContent:
+        "Your post has been reactivated after review. Thank you for your patience.",
+      DeactivateCommentContent:
+        "Your comment has been blocked for violating our terms and conditions. If you believe this is a mistake, please contact our support team for review.",
+      ActivaceCommentContent:
+        "Your comment has been reactivated after review. Thank you for your patience.",
     },
   },
   ListFriends: {
@@ -308,5 +328,42 @@ export const ENGLocalizedStrings = {
     DeleteMember: "Delete member",
     Reply: "Reply",
     AddUserGroup: "Add user to group",
+  },
+  Suggested: {
+    SuggestedFriends: "Suggested Friends",
+    Hide: "Hide",
+    SeeMore: "See more",
+    Why: "Why do I see these friends?",
+    Dont: "I don't want to see these friends",
+    FriendRequestSent: "Waiting...",
+    AddFriend: "Add friend",
+    WhyExplanation: "These suggestions are based on factors such as:",
+    WhyFactor1: "Mutual friends",
+    WhyFactor2: "Similar interests",
+    WhyFactor3: "Recent activity on social media",
+    WhyConclusion: "We use an algorithm to find people you might know or want to connect with!"
+  },
+  People: {
+    FetchUsersFailed: "Failed to fetch users!",
+    ErrorFetchingUsers: "Error fetching users!",
+    NoFriendRequests: "No friend requests",
+    ErrorFriendRequests: "Error fetching friend requests!",
+    AcceptScuccess: "Accept friend request successfully!",
+    AcceptFailed: "Accept friend request failed!",
+    AcceptError: "Error accepting friend request!",
+    DeclineSuccess: "Decline friend request successfully!",
+    DeclineFailed: "Decline friend request failed!",
+    DeclineError: "Error declining friend request!",
+    FriendRequestSent: "Friend request sent!",
+    FriendRequestSentSuccess: "Friend request sent successfully!",
+    FriendRequestFailed: "Friend request failed!",
+    FriendRequestError: "Error sending friend request!",
+    FriendRequestCanceled: "Friend request canceled!",
+    FriendRequestCancelFailed: "Friend request cancel failed!",
+    FriendRequestSentFailed: "Friend request sent failed!",
+    FriendRequestSentError: "Error sending friend request!",
+    FriendRequestCanceledSuccess: "Friend request canceled successfully!",
+    FriendRequestCanceledFailed: "Friend request cancel failed!",
+    FriendRequestCanceledError: "Error canceling friend request!",
   },
 }

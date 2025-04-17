@@ -1,100 +1,46 @@
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  Text,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Platform } from "react-native";
+import { Tabs } from "@ant-design/react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import React, { useCallback, useEffect } from "react";
+import Toast from "react-native-toast-message";
 import useColor from "@/src/hooks/useColor";
-import Post from "@/src/components/common/Post";
-import { ActivityIndicator } from "@ant-design/react-native";
-import HomeViewModel from "../viewModel/HomeViewModel";
-import { defaultNewFeedRepo } from "@/src/api/features/newFeed/NewFeedRepo";
-import { router } from "expo-router";
 import { useAuth } from "@/src/context/auth/useAuth";
-import { Platform } from "react-native";
-import Toast from 'react-native-toast-message'
-import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
+import NewFeed from "../compoment/NewFeed";
+import Triending from "../compoment/Triending";
+import FriendRequestAndBirth from "../compoment/FriendRequestAndBirth";
 
 const HomeScreen = () => {
-  const { brandPrimary, backgroundColor, lightGray } = useColor();
-  const {
-    loading,
-    newFeeds,
-    fetchNewFeeds,
-    loadMoreNewFeeds,
-    refeshLoading,
-    refreshNewFeeds,
-    onViewableItemsChanged,
-    visibleItems
-  } = HomeViewModel(defaultNewFeedRepo)
+  const { brandPrimary, backgroundColor } = useColor();
   const { user, localStrings } = useAuth();
 
-  const renderAddPost = () => {
-    return (
-      <TouchableOpacity
-        onPress={() => router.push({ pathname: '/add' })}
-      >
-        <View
-          style={{
-            padding: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: 10,
-            marginTop: 10,
-            backgroundColor: backgroundColor,
-            borderWidth: 1,
-            borderColor: lightGray,
-            borderRadius: 10,
-          }}
-        >
-          <Image
-            source={{
-              uri: user?.avatar_url || 'https://static2.yan.vn/YanNews/2167221/202102/facebook-cap-nhat-avatar-doi-voi-tai-khoan-khong-su-dung-anh-dai-dien-e4abd14d.jpg',
-            }}
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: lightGray,
-            }}
-          />
-          <View style={{ marginLeft: 10, flex: 1 }}>
-            <Text>{user?.family_name + ' ' + user?.name || localStrings.Public.Username}</Text>
-            <Text style={{ color: 'gray' }}>{localStrings.Public.Today}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    )
+  const tabs = [
+    { title: localStrings.Public.NewFeed },
+    { title: localStrings.Public.Trending },
+    { title: localStrings.Public.BirthdayFriend },
+  ];
+
+  const [activeTab, setActiveTab] = useState(0);
+  const [loadedTabs, setLoadedTabs] = useState([true, false, false]);
+
+  const handleTabChange = (tab: { title: React.ReactNode }, index: number) => {
+    setActiveTab(index);
+    if (!loadedTabs[index]) {
+      const updated = [...loadedTabs];
+      updated[index] = true;
+      setLoadedTabs(updated);
+    }
   };
 
-  const renderFooter = () => {
-    if (!loading) return null;
-    return (
-      <View style={{ paddingVertical: 10, alignItems: "center" }}>
-        <ActivityIndicator size="large" color={brandPrimary} />
-      </View>
-    );
-  };
-
-  useEffect(() => {
-    fetchNewFeeds();
-  }, []);
 
   return (
     <View style={{ flex: 1 }}>
       {/* Header */}
-      <View
-        style={{
-          backgroundColor: backgroundColor,
-          paddingTop: Platform.OS === "ios" ? 40 : 0,
-        }}
-      >
+      <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === "ios" ? 40 : 0 }}>
         <View
           style={{
             height: 70,
-            display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
@@ -109,41 +55,47 @@ const HomeScreen = () => {
               marginLeft: 10,
             }}
           />
-
-          <AntDesign size={35} name="wechat" style={{marginRight: 15}} onPress={() => user && router.push(`/messages?userId=${user.id}`)}/>
+          <Ionicons
+            size={30}
+            name="chatbubble-ellipses"
+            style={{ marginRight: 15 }}
+            onPress={() => user && router.push(`/messages?userId=${user.id}`)}
+          />
         </View>
       </View>
-      {/* Content */}
 
-      <FlatList
-        ListHeaderComponent={renderAddPost}
-        data={newFeeds}
-        renderItem={({ item }) => (
-          <Post
-            key={item?.id}
-            post={item}
-            isVisible={visibleItems.includes(item?.id as string)}
-          >
-            {item?.parent_post && (
-              <Post
-                post={item?.parent_post}
-                isParentPost
-                isVisible={visibleItems.includes(item?.parent_post?.id as string)}
-              />
-            )}
-          </Post>
-        )}
-        keyExtractor={(item) => item?.id as string}
-        ListFooterComponent={renderFooter}
-        onEndReached={loadMoreNewFeeds}
-        onEndReachedThreshold={0.5}
-        removeClippedSubviews={true}
-        showsVerticalScrollIndicator={false}
-        onRefresh={refreshNewFeeds}
-        refreshing={refeshLoading}
-        onViewableItemsChanged={onViewableItemsChanged.current}
-        viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
-      />
+      {/* Tabs */}
+      <View style={{ flex: 1 }}>
+        <Tabs
+          tabs={tabs}
+          onChange={handleTabChange}
+          swipeable={false}
+          tabBarBackgroundColor={backgroundColor}
+          tabBarTextStyle={{ fontWeight: "bold" }}
+          tabBarActiveTextColor={brandPrimary}
+          tabBarInactiveTextColor="gray"
+          style={{
+            marginTop: 10,
+            // marginHorizontal: 10,
+            borderRadius: 16, // 👈 Bo góc ở đây
+            overflow: "hidden", // 👈 Quan trọng để bo góc có hiệu lực
+          }}
+          
+        >
+          <View style={{ flex: 1 }}>
+          {loadedTabs[0] && <NewFeed isActive={activeTab === 0} />}
+          </View>
+
+          <View style={{ flex: 1 }}>
+          {loadedTabs[1] && <Triending isActive={activeTab === 1} />}
+          </View>
+
+          <View style={{ flex: 1 }}>
+          {loadedTabs[2] && <FriendRequestAndBirth isActive={activeTab === 2} />}
+          </View>
+        </Tabs>
+      </View>
+
       <Toast />
     </View>
   );
