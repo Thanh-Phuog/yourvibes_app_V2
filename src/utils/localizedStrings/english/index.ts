@@ -53,7 +53,7 @@ export const ENGLocalizedStrings = {
     ReportComment: "Report Comment",
     Day: "Day",
     ListUserLikePost: "List User Like Your Post",
-    WhoLike:"Discover who liked the post!",
+    WhoLike: "Discover who liked the post!",
     HideInfo: "has hidden personal information",
     FriendOnly: "only friends can see",
     Trending: "Trending",
@@ -62,6 +62,9 @@ export const ENGLocalizedStrings = {
     NoBirthdays: "No birthdays today",
     HappyBirthday: "Happy birthday, my friend!",
     FriendRequests: "Friend Requests",
+    Theme: "Theme",
+    DarkMode: "Dark Mode",
+    LightMode: "Light Mode",
   },
   Form: {
     Label: {
@@ -94,7 +97,8 @@ export const ENGLocalizedStrings = {
       ConfirmPasswordTypeMessage: "Confirm password is invalid!",
       OTPTypeMessage: "OTP code must be a 6-digit string!",
       PhoneTypeMessage: "Phone number must be a 10-digit string!",
-      PleaseOldPasswordDifferentNewPassword:"New password must be different from old password!",
+      PleaseOldPasswordDifferentNewPassword:
+        "New password must be different from old password!",
     },
   },
   Login: {
@@ -125,6 +129,7 @@ export const ENGLocalizedStrings = {
     CreatePostFailed: "Create post failed!",
     EmptyContent: "Missing content or media file",
     PickImgFailed: "Pick images failed!",
+    CensorPost: "Your post is under review, please wait.",
   },
   ObjectPostPrivacy: {
     PublicDescription: "Everyone on YourVibes",
@@ -143,7 +148,8 @@ export const ENGLocalizedStrings = {
     ProfilePrivacy: "Profile's privacy",
     Contents: {
       WhoCanSee: "Who can see your information?",
-      DefaultPrivacy2: ", but you can change the privacy for your account details.",
+      DefaultPrivacy2:
+        ", but you can change the privacy for your account details.",
     },
   },
   Post: {
@@ -161,9 +167,9 @@ export const ENGLocalizedStrings = {
     Sponsor: "Sponsored",
     NoTrendingPosts: "No trending posts found",
   },
-  PostDetails:{
+  PostDetails: {
     ViewReplies: "View replies",
-    HideReplies:"Hide replies",
+    HideReplies: "Hide replies",
     Save: "Save",
     Cancel: "Cancel",
     Error: "Error",
@@ -171,7 +177,7 @@ export const ENGLocalizedStrings = {
     ReportComment: "Report comment",
     EditComment: "Edit comment",
     DeleteComment: "Delete comment",
-    ActionOptions:"Action options",
+    ActionOptions: "Action options",
     ReportSusesfully: "Reported succeeded!",
     Success: "Success",
     EditCommentSuccess: "Edit comment successful!",
@@ -240,9 +246,9 @@ export const ENGLocalizedStrings = {
       CommentPost: "commented on your post: ",
       Friend: "sent you a friend request.",
       AcceptFriend: "accepted your friend request.",
-    NewPost: "posted a new post.",
-    LikeComment: "liked your comment: ",
-    NewPostPersonal: "Your post has been successfully published:",
+      NewPost: "posted a new post.",
+      LikeComment: "liked your comment: ",
+      NewPostPersonal: "Your post has been successfully published:",
       NewPostError: "Your post encountered an error",
       BlockCreatePost: "Your post has been blocked",
       nsfw: "due to containing sensitive content",
@@ -256,6 +262,7 @@ export const ENGLocalizedStrings = {
         "Your comment has been blocked for violating our terms and conditions. If you believe this is a mistake, please contact our support team for review.",
       ActivaceCommentContent:
         "Your comment has been reactivated after review. Thank you for your patience.",
+      NewMessage: "You have a new message.",
     },
   },
   ListFriends: {
@@ -279,14 +286,14 @@ export const ENGLocalizedStrings = {
     AdvertisePostFailed: "Advertise post failed!",
     AdvertisePostSuccess: "Advertise post successful!",
     ActiveCampaign: "Active campaign",
-    HideCampaign:"Hide history campaign",
-    ShowCampaign:"Show history campaign",
+    HideCampaign: "Hide history campaign",
+    ShowCampaign: "Show history campaign",
     Campaign: "Campaign",
-    End:"End",
-    RemainingTime:"Remaining time",
-    Day:"Day",
-    Grant:"Grant", 
-    Status:"Status",
+    End: "End",
+    RemainingTime: "Remaining time",
+    Day: "Day",
+    Grant: "Grant",
+    Status: "Status",
     PaymentSuccess: "Payment successful.",
     PaymentFailed: "Payment failed.",
     NoCampaign: "No campaign found",
@@ -323,11 +330,18 @@ export const ENGLocalizedStrings = {
   },
   Messages: {
     Messages: "Messages",
+    Admin: "Admin",
     EnterMessage: "Enter message",
-    Member: "Members", 
+    Member: "Members",
     DeleteMember: "Delete member",
     Reply: "Reply",
     AddUserGroup: "Add user to group",
+    DeleteConversation: "Delete conversation",
+    LeaveGroup: "Leave the group",
+    DeleteConversationConfirm: "Are you sure you want to delete this conversation?",
+    LeaveGroupConfirm: "Are you sure you want to leave this group?",
+    CantLeaveGroup: "Please transfer the group ownership to someone else before leaving the group",
+    CantDeleteGroup: "Only the group owner has the right to delete this group",
   },
   Suggested: {
     SuggestedFriends: "Suggested Friends",
@@ -341,7 +355,8 @@ export const ENGLocalizedStrings = {
     WhyFactor1: "Mutual friends",
     WhyFactor2: "Similar interests",
     WhyFactor3: "Recent activity on social media",
-    WhyConclusion: "We use an algorithm to find people you might know or want to connect with!"
+    WhyConclusion:
+      "We use an algorithm to find people you might know or want to connect with!",
   },
   People: {
     FetchUsersFailed: "Failed to fetch users!",
@@ -366,4 +381,4 @@ export const ENGLocalizedStrings = {
     FriendRequestCanceledFailed: "Friend request cancel failed!",
     FriendRequestCanceledError: "Error canceling friend request!",
   },
-}
+};

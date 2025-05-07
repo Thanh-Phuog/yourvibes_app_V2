@@ -1,3 +1,4 @@
+"use client";
 import {
   View,
   Text,
@@ -14,7 +15,7 @@ import { useAuth } from "@/src/context/auth/useAuth";
 import { ActivityIndicator, ListView, Modal } from "@ant-design/react-native";
 import MessagerItem from "../component/MessagesItem";
 import useColor from "@/src/hooks/useColor";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import useListFriendsViewModel from "../../listFriends/viewModel/ListFriendsViewModel";
@@ -56,7 +57,7 @@ const MessagesFeature = () => {
                 marginLeft: 4,
               }}
               onPress={async() => {
-                const UserIds = [user?.id, friend.id];
+                const UserIds = [friend.id];
                   if (UserIds) {
                     try {
                       const conversationId = await createConversation({
@@ -65,7 +66,6 @@ const MessagesFeature = () => {
                       });
           
                       if (conversationId) {
-                        console.log("Before API call - conversationId:", conversationId, typeof conversationId);
 
                           router.push(`/chat?conversation_id=${conversationId}`);
                       } else {
@@ -118,11 +118,13 @@ const MessagesFeature = () => {
     }
   }, [user]);
   
-  useEffect(() => {
-    if (user) {
-      fetchConversations(page);
-    }
-  }, [user, newMessageTrigger]);
+  useFocusEffect(
+    useCallback(() => {
+      if (user) {
+        fetchConversations(page);
+      }
+    }, [user, newMessageTrigger]) // Ensure proper typing and avoid null issues
+  );
 
   return (
     <KeyboardAvoidingView

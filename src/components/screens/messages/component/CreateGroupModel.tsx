@@ -1,3 +1,4 @@
+"use client";
 import {
   View,
   Text,
@@ -55,7 +56,6 @@ const AddGroupModel = () => {
         borderColor: "#e0e0e0",
       }}
     >
-      {" "}
       <Checkbox
         checked={selectedFriends.includes(item.id)}
         onChange={() => toggleSelectFriend(item.id)}

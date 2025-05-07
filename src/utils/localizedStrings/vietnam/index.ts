@@ -63,6 +63,9 @@ export const VnLocalizedStrings = {
     NoBirthdays: "Không có ngày sinh nhật nào",
     HappyBirthday: "Hãy gửi lời chúc mừng sinh nhật đến những người bạn của bạn!",
     FriendRequests: "Lời mời kết bạn", 
+    Theme: "Chế độ",
+    DarkMode: "Chế độ tối",
+    LightMode: "Chế độ sáng",
   },
   Form: {
     Label: {
@@ -257,6 +260,7 @@ export const VnLocalizedStrings = {
       ActivacePostContent:"bài viết của bạn đã được kích hoạt lại sau khi xem xét. Cảm ơn bạn đã kiên nhẫn chờ đợi.",
       DeactivateCommentContent:"bình luận của bạn đã bị chặn vì vi phạm các điều khoản và điều kiện của chúng tôi. Nếu bạn nghĩ rằng đây là một sai lầm, vui lòng liên hệ với bộ phận hỗ trợ của chúng tôi để được xem xét lại.",
       ActivaceCommentContent:"bình luận của bạn đã được kích hoạt lại sau khi xem xét. Cảm ơn bạn đã kiên nhẫn chờ đợi.",
+      NewMessage: "Có tin nhắn mới.",
     }
   },
   ListFriends: {
@@ -322,11 +326,18 @@ export const VnLocalizedStrings = {
   },
 Messages:{
   Messages: "Tin nhắn",
+  Admin: "Chủ phòng",
   EnterMessage: "Nhập tin nhắn",
   Member: "Thành viên",
-  DeleteMember: "Xoa thanh vien",
+  DeleteMember: "Xoá thành viên",
   Reply: "Trả lời",
   AddUserGroup: "Thêm thành viên",
+  DeleteConversation: "Xóa cuộc trò chuyện",
+  LeaveGroup: "Rời khỏi nhóm",
+  DeleteConversationConfirm: "Bạn có chắc chắn muốn xóa cuộc trò chuyện này?",
+  LeaveGroupConfirm: "Bạn có chắc chắn muốn rời khỏi nhóm này?",
+  CantLeaveGroup: "Vui lòng chuyển quyền chủ phòng cho người khác trước khi rời nhóm",
+  CantDeleteGroup: "Chỉ chủ phòng có quyền xóa nhóm này",
 },
 Suggested: {
   SuggestedFriends: "Những người bạn có thể biết",
