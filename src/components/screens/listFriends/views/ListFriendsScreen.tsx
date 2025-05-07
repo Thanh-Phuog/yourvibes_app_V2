@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import useListFriendsViewModel from '../viewModel/ListFriendsViewModel';
 import { useAuth } from '@/src/context/auth/useAuth';
 import Toast from 'react-native-toast-message';
+import useColor from '@/src/hooks/useColor';
 
 const ListFriendsScreen = ({ userId }: { userId: string }) => {
   const {
@@ -17,12 +18,13 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
     handleMoreOptions,
     fetchFriends,
   } = useListFriendsViewModel();
+  const {colorOnl} = useColor();
 
   const { localStrings } = useAuth();
   const renderFriend = ({
     item,
   }: {
-    item: { id: string; avatar: string; family_name: string; name: string };
+    item: { id: string; avatar: string; family_name: string; name: string,   ative_status: boolean; };
   }) => (
     <View
       style={{
@@ -36,7 +38,8 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
       <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", flex: 1 }} onPress={() => {
         router.push(`/(tabs)/user/${item?.id}`);
       }}>
-        <Image
+        <View style={{ position: "relative", flexDirection: "row" }}>
+             <Image
           source={{ uri: item.avatar }}
           style={{
             width: 40,
@@ -44,8 +47,29 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
             borderRadius: 20,
             backgroundColor: "#e0e0e0",
             marginRight: 10,
+            shadowColor: '#BA8DA7',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
           }}
         />
+        {item?.ative_status && (
+           <View
+           style={{
+             position: "absolute",
+             bottom: 0,
+             right: 0,
+             width: 12,
+             height: 12,
+             backgroundColor: colorOnl || "#00CED1",
+             borderRadius: 6,
+             borderWidth: 2,
+             borderColor: 'white',
+           }}
+         />
+        )}
+        </View>
+     
         <Text style={{ fontSize: 16, color: "black" }}>
           {item.family_name} {item.name}
         </Text>

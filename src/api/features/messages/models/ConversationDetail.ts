@@ -28,4 +28,5 @@ export interface ConversationDetailResponseModel {
     };
     last_message?: string;
     last_message_status?: boolean;
+    conversation_role: number; 
 }

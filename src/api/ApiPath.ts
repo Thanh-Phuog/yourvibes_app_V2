@@ -83,6 +83,7 @@ export const ApiPath = {
   DELETE_CONVERSATION_DETAIL: getApiPath("conversation_details/delete/"),
   UPDATE_CONVERSATION_DETAIL: getApiPath("conversation_details/update"),
   CREATE_MANY_CONVERSATION_DETAIL: getApiPath("conversation_details/create_many"),
+  TRANSFER_OWNER_ROLE: getApiPath("conversation_details/transfer_owner_role"),
 };
 
 function getApiPath(path: string) {

@@ -1,19 +1,22 @@
+"use client";
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { getTimeDiff } from "@/src/utils/helper/DateTransfer";
 import { useAuth } from "@/src/context/auth/useAuth";
 import { ConversationResponseModel } from "@/src/api/features/messages/models/Conversation";
-import a from "@ant-design/react-native/lib/modal/alert";
+import useConversationDetailViewModel from "../viewModel/ConversationDetailsViewModel";
+import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 
 const MessagerItem = ({
   conversation,
 }: {
   conversation: ConversationResponseModel;
 }) => {
-  const { localStrings } = useAuth();
+  const {user, localStrings } = useAuth();
   const {
+    id,
     name,
     family_name,
     image,
@@ -21,11 +24,23 @@ const MessagerItem = ({
     last_message,
     last_message_status,
   } = conversation;
+  const {UpdateConversationDetail} = useConversationDetailViewModel(defaultMessagesRepo);
+  const handeUpdateConversation = async () => {
+    try {
+      await UpdateConversationDetail({
+        conversation_id: id,
+        user_id: user?.id,
+      });
+    } catch (error) {
+      console.log("Error updating conversation:", error);
+    }
+  }
 
   return (
     <TouchableOpacity
       onPress={() => {
         router.push(`/chat?conversation_id=${conversation.id}`);
+        handeUpdateConversation();
       }}
       style={{
         backgroundColor: "#f0f0f0",

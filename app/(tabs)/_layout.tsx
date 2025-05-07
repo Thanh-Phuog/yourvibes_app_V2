@@ -18,27 +18,6 @@ const TabLayout = () => {
   const [statusNotifi, setStatusNotifi] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
-  const mapNotifiCationContent = (type: string) => {
-    switch (type) {
-      case 'like_post':
-        return localStrings.Notification.Items.LikePost;
-      case 'new_share':
-        return localStrings.Notification.Items.SharePost;
-      case 'new_comment':
-        return localStrings.Notification.Items.CommentPost;
-      case 'friend_request':
-        return localStrings.Notification.Items.Friend;
-      case 'accept_friend_request':
-        return localStrings.Notification.Items.AcceptFriend;
-      case 'new_post':
-        return localStrings.Notification.Items.NewPost;
-      case 'like_comment':
-        return localStrings.Notification.Items.LikeComment;
-      default:
-        return 'notifications';
-    }
-  };
-
   // Hàm kiểm tra trạng thái thông báo (nếu có thông báo nào chưa đọc thì đặt `statusNotifi` thành `true`)
   const checkNotificationStatus = async () => {
     const response = await defaultNotificationRepo.getNotifications({
@@ -54,93 +33,6 @@ const TabLayout = () => {
       setStatusNotifi(statusTrue);
     }
   };
-
-  // const connectWebSocket = async () => {
-  //   const ws = new WebSocket(`${ApiPath.GET_WS_PATH_NOTIFICATION}${user?.id}`);
-
-  //   ws.onopen = () => {
-  //     console.log('Web Socket connected');
-
-  //   };
-
-  //   ws.onmessage = (e) => {
-  //     const notification = JSON.parse(e.data);
-  //     const userName = notification?.from;
-  //     const content = notification?.content;
-  //     const type = notification?.notification_type;
-  //     const status = notification?.status;
-
-  //     setStatusNotifi(status);
-
-  //     const mapType = mapNotifiCationContent(type);
-  //     Toast.show({
-  //       type: 'info',
-  //       text1: `${userName} ${mapType}`,
-  //       text2: `${content}`,
-  //     });
-  //   };
-
-  //   ws.onclose = (e) => {
-  //     console.log('WebSocket disconnected:', e.reason);
-  //   };
-
-  //   ws.onerror = (error) => {
-  //     console.log('WebSocket error:', error);
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: localStrings.webSocker.WebSocketError,
-  //       text2: localStrings.webSocker.WebSocketErrorText,
-  //     });
-
-  //   };
-
-  //   return () => {
-  //     ws.close();
-  //   };
-  // };
-
-  // const connectWebSocket = async () => {
-  //   const ws = new WebSocket(`${ApiPath.GET_WS_PATH_MESSAGE}${user?.id}`);
-
-  //   ws.onopen = () => {
-  //     console.log('Web Socket connected');
-
-  //   };
-
-  //   ws.onmessage = (e) => {
-  //     const messages = JSON.parse(e.data);
-  //     const Name = messages?.user.name;
-  //     const content = messages?.content;
-  //     const family_name = messages?.user.family_name;
-
-  //     // setStatusNotifi(status);
-
-  //     // const mapType = mapNotifiCationContent(type);
-  //     Toast.show({
-  //       type: 'info',
-  //       text1: `${family_name} ${Name}`,
-  //       text2: `${content}`,
-  //     });
-  //   };
-
-  //   ws.onclose = (e) => {
-  //     console.log('WebSocket disconnected:', e.reason);
-  //   };
-
-  //   ws.onerror = (error) => {
-  //     console.log('WebSocket error:', error);
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: localStrings.webSocker.WebSocketError,
-  //       text2: localStrings.webSocker.WebSocketErrorText,
-  //     });
-
-  //   };
-
-  //   return () => {
-  //     ws.close();
-  //   };
-  // };
 
   const tabs: { name: string; icon: ReactNode; focusIcon: ReactNode; href?: Href | null }[] = [
     {

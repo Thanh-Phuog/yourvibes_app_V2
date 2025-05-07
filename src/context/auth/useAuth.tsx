@@ -14,6 +14,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [language, setLanguage] = useState<"vi" | "en">("vi");
   const [user, setUser] = useState<UserModel | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const checkLanguage = async () => {
     const storedLanguage = await AsyncStorage.getItem('language');
@@ -34,6 +35,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setLocalStrings(lng === "vi" ? VnLocalizedStrings : ENGLocalizedStrings);
     });
   };
+
+  const checkTheme = async () => {
+    const storedTheme = await AsyncStorage.getItem('theme');
+    if (storedTheme === "dark") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  }
+
+  const changeTheme = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme); // cập nhật giao diện ngay lập tức
+    AsyncStorage.setItem('theme', newTheme); // lưu không đồng bộ, không cần chờ
+  };
+  
+
+
 
   const onLogin = async (user: any) => {
     await AsyncStorage.setItem('user', JSON.stringify(user.user));
@@ -67,7 +85,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     checkLanguage();
-  }, [language]);
+    checkTheme();
+  }, []);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -96,7 +115,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isAuthenticated,
       user,
       onUpdateProfile,
-      isLoginUser
+      isLoginUser,
+      theme,
+      changeTheme,
     }}
     >
       {children}

@@ -23,7 +23,8 @@ interface IMessagesRepo {
     getConversationDetails(data: GetConversationDetailById): Promise<BaseApiResponseModel<ConversationDetailResponseModel[]>>;
     createConversationDetail(data: CreateConversationDetail): Promise<BaseApiResponseModel<ConversationDetailResponseModel>>;
     DeleteConversationDetail(data: ConversationDetailRequestModel): Promise<BaseApiResponseModel<any>>;  
-    UpdateConversationDetail(data: ConversationDetailRequestModel): Promise<BaseApiResponseModel<any>>;  
+    UpdateConversationDetail(data: ConversationDetailRequestModel): Promise<BaseApiResponseModel<any>>; 
+    TransferOwnerRole(data: ConversationDetailRequestModel): Promise<BaseApiResponseModel<any>>; 
 }
 
 export class MessagesRepo implements IMessagesRepo {
@@ -98,6 +99,10 @@ export class MessagesRepo implements IMessagesRepo {
 
     async UpdateConversationDetail(data: ConversationDetailRequestModel): Promise<BaseApiResponseModel<any>> {
         return client.patch(ApiPath.UPDATE_CONVERSATION_DETAIL, data);
+    }
+
+    async TransferOwnerRole(data: ConversationDetailRequestModel): Promise<BaseApiResponseModel<any>> {
+        return client.patch(ApiPath.TRANSFER_OWNER_ROLE, data);
     }
 }                           
 

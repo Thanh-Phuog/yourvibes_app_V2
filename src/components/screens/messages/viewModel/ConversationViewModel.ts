@@ -41,8 +41,6 @@ const useConversationViewModel = (repo : MessagesRepo) => {
             
             setLoading(true);
             const response = await repo.createConversation(data);  
-            console.log("Raw response:", response);
-            console.log("Extracted conversationId:", response?.data?.id, typeof response?.data?.id);
             
             
             if (!response?.error) {
@@ -73,7 +71,23 @@ const useConversationViewModel = (repo : MessagesRepo) => {
         }
     }
 
-    return {conversations, loading, createConversation, conversationId, fetchConversations, pageCv, hasMore, loadMoreConversations};
+    const deleteConversation = async (id: string) => {
+        try {
+            setLoading(true);
+            const response = await repo.deleteConversation(id);
+console.log("res", response);
+
+            if (!response?.error) {
+                fetchConversations();
+            }
+        } catch (error: any) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return {conversations, loading, createConversation, conversationId, fetchConversations, pageCv, hasMore, loadMoreConversations, deleteConversation};
 
 }
 

@@ -51,13 +51,7 @@ const FriendSuggestions = () => {
     (suggestion: FriendSuggestionWithStatus) => {
       const userId = suggestion.id!;
       const isLoading = friendRequestLoading[userId];
-      // const buttonStyles = {
-      //   flexDirection: "row",
-      //   alignItems: "center" as const,
-      //   justifyContent: "center",
-      //   width: "100%",
-      //   paddingHorizontal: 10,
-      // };
+
 
       switch (suggestion.friendStatus) {
         case FriendStatus.NotFriend:
@@ -124,7 +118,7 @@ const FriendSuggestions = () => {
           );
       }
     },
-    [friendRequestLoading, localStrings, handleFriendRequest]
+    [friendRequestLoading, localStrings, handleFriendRequest, backgroundColor, brandPrimary]
   );
 
   const showAction = useCallback(() => {
@@ -183,7 +177,7 @@ const FriendSuggestions = () => {
           className="friend-suggestions"
           style={{
             // padding: 10,
-            // backgroundColor: "#fff",
+            backgroundColor: backgroundColor,
             borderRadius: 10,
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
@@ -216,27 +210,14 @@ const FriendSuggestions = () => {
                 size={24}
                 color={brandPrimary}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 18, color: brandPrimary }}>
                 {localStrings.Suggested.SuggestedFriends}
               </Text>
             </View>
-            <TouchableOpacity onPress={showAction}>
-              <Entypo name="dots-three-vertical" size={16} />
+            <TouchableOpacity onPress={showAction} >
+              <Entypo name="dots-three-vertical" size={16} color={brandPrimary}/>
             </TouchableOpacity>
           </View>
-
-          {/* {loading ? (
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: 100,
-              }}
-            >
-              <ActivityIndicator size="large" color={brandPrimary} />
-            </View>
-          ) : ( */}
             <>
               <FlatList
                 data={friendSuggestions}
@@ -251,6 +232,7 @@ const FriendSuggestions = () => {
                       marginRight: 10,
                       borderRadius: 10,
                       padding: 10,
+                      backgroundColor: backgroundColor,
                     }}
                   >
                     <TouchableOpacity
@@ -277,6 +259,7 @@ const FriendSuggestions = () => {
                           fontWeight: "bold",
                           marginTop: 5,
                           marginBottom: 5,
+                          color: brandPrimary,
                         }}
                         numberOfLines={1}
                         ellipsizeMode="tail"
