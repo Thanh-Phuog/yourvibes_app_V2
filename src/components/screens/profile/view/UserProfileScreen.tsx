@@ -12,7 +12,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import Toast from 'react-native-toast-message';
 
 const UserProfileScreen = ({ id }: { id: string }) => {
-  const { backgroundColor } = useColor();
+  const { backGround } = useColor();
   const { localStrings } = useAuth();
   const [tab, setTab] = useState(0);
   const { showActionSheetWithOptions } = useActionSheet();
@@ -80,7 +80,7 @@ const UserProfileScreen = ({ id }: { id: string }) => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: backgroundColor, width: '100%' }}
+      style={{ flex: 1, backgroundColor: backGround, width: '100%' }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={{ flex: 1 }}>

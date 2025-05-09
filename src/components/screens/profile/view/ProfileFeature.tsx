@@ -18,7 +18,7 @@ import { UserModel } from "@/src/api/features/authenticate/model/LoginModel";
 import Toast from "react-native-toast-message";
 
 const ProfileFeatures = ({ tab }: { tab: number }) => {
-  const { backgroundColor } = useColor();
+  const { backGround } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const {
@@ -77,7 +77,7 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: backgroundColor, width: "100%" }}
+      style={{ flex: 1, backgroundColor: backGround, width: "100%" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={{ flex: 1 }}>
