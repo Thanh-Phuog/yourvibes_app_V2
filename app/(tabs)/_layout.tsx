@@ -10,7 +10,7 @@ import { Image, View, Platform, StatusBar, Alert } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const TabLayout = () => {
-  const { brandPrimary, brandPrimaryTap } = useColor();
+  const { brandPrimary, brandPrimaryTap, backgroundColor } = useColor();
   const iconSize = 25;
   const addIconSize = 28;
   const {theme } = useAuth();
