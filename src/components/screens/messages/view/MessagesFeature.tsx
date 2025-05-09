@@ -19,11 +19,8 @@ import { router, useFocusEffect } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import useListFriendsViewModel from "../../listFriends/viewModel/ListFriendsViewModel";
-import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
-import { ConversationDetailResponseModel } from "@/src/api/features/messages/models/ConversationDetail";
-import useConversationDetailViewModel from "../viewModel/ConversationDetailsViewModel";
+import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo"; 
 import useConversationViewModel from "../viewModel/ConversationViewModel";
-import { create } from "react-test-renderer";
 import AddGroupModel from "../component/CreateGroupModel";
 import { useWebSocket } from "@/src/context/socket/useSocket";
 
