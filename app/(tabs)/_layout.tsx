@@ -13,7 +13,7 @@ const TabLayout = () => {
   const { brandPrimary, brandPrimaryTap } = useColor();
   const iconSize = 25;
   const addIconSize = 28;
-  const { user, localStrings } = useAuth();
+  const {theme } = useAuth();
   const pathname = usePathname();
   const [statusNotifi, setStatusNotifi] = useState(false);
   const [initialized, setInitialized] = useState(false);
@@ -107,7 +107,7 @@ const TabLayout = () => {
           headerLeft: () => (
             <View>
               <Image
-                source={require('@/assets/images/yourvibes_black.png')}
+                 source={theme === "dark" ? require("@/assets/images/yourvibes_white.png") : require("@/assets/images/yourvibes_black.png")}
                 style={{
                   width: 120,
                   objectFit: 'contain',

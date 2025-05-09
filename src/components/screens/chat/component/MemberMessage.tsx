@@ -8,11 +8,14 @@ import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import { Entypo } from "@expo/vector-icons";
 import { useAuth } from "@/src/context/auth/useAuth";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { use } from "i18next";
 
 const MemberMessage = ({
   conversationDetail,
+  currentUserId,
 }: {
   conversationDetail: ConversationDetailResponseModel;
+  currentUserId: ConversationDetailResponseModel | undefined;
 }) => {
   const { localStrings, user } = useAuth();
   // const {user, conversation, conversation_role } = conversationDetail
@@ -61,6 +64,9 @@ const MemberMessage = ({
     );
   }, [localStrings]);
 
+  const isCurrentUser = conversationDetail?.user?.id === user?.id;
+  
+
   return (
     <View
       style={{
@@ -96,16 +102,14 @@ const MemberMessage = ({
             {conversationDetail?.user?.name}{" "}
             {conversationDetail?.user?.family_name}
           </Text>
-          {/* {conversation_role === 0 && ( */}
-          {conversationDetail?.conversation_role === 0 && (
+      
             <Text style={{ fontSize: 14, color: "#888" }}>
-              {localStrings.Messages.Admin}
+              {conversationDetail?.conversation_role === 0 ? localStrings.Messages.Admin : localStrings.Messages.Member}
             </Text>
-          )}
         </View>
       </TouchableOpacity>
 
-          {(conversationDetail?.conversation_role === 0 && conversationDetail?.user?.id === user?.id) && (
+          {currentUserId?.conversation_role === 0 && (
             <TouchableOpacity
           style={{ paddingHorizontal: 10 }}
           onPress={showMemberAction}

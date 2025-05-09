@@ -258,7 +258,7 @@ const ProfileHeader = ({
 
         {/* User Information */}
         <View style={{ alignItems: "center", marginTop: 10 }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: brandPrimary }}>
             {" "}
             {userInfo?.family_name}{" "}
             {userInfo?.name || localStrings.Public.Username}
@@ -267,7 +267,7 @@ const ProfileHeader = ({
             {userInfo?.biography || localStrings.Public.Biography}
           </Text>
           <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <Text style={{ marginHorizontal: 20, fontWeight: "bold" }}>
+            <Text style={{ marginHorizontal: 20, fontWeight: "bold", color: brandPrimaryTap }}>
               {" "}
               {total || userInfo?.post_count} {localStrings.Public.Post}
               {language === "en" &&
@@ -277,7 +277,7 @@ const ProfileHeader = ({
                 ? "s"
                 : ""}
             </Text>
-            <Text style={{ marginHorizontal: 20, fontWeight: "bold" }}>
+            <Text style={{ marginHorizontal: 20, fontWeight: "bold", color: brandPrimaryTap }}>
               {friendCount} {localStrings.Public.Friend}
             </Text>
           </View>

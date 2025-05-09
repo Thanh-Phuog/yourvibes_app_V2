@@ -24,7 +24,7 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
   const renderFriend = ({
     item,
   }: {
-    item: { id: string; avatar: string; family_name: string; name: string,   ative_status: boolean; };
+    item: { id: string; avatar_url: string; family_name: string; name: string,   ative_status: boolean; };
   }) => (
     <View
       style={{
@@ -40,7 +40,7 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
       }}>
         <View style={{ position: "relative", flexDirection: "row" }}>
              <Image
-          source={{ uri: item.avatar }}
+          source={{ uri: item.avatar_url }}
           style={{
             width: 40,
             height: 40,

@@ -10,10 +10,11 @@ import { router } from "expo-router";
 import NewFeed from "../compoment/NewFeed";
 import Triending from "../compoment/Triending";
 import FriendRequestAndBirth from "../compoment/FriendRequestAndBirth";
+import { t } from "i18next";
 
 const HomeScreen = () => {
-  const { brandPrimary, backgroundColor } = useColor();
-  const { user, localStrings } = useAuth();
+  const { brandPrimary, backgroundColor, backGround } = useColor();
+  const { user, localStrings, theme } = useAuth();
 
   const tabs = [
     { title: localStrings.Public.NewFeed },
@@ -35,7 +36,7 @@ const HomeScreen = () => {
 
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor:backGround }}>
       {/* Header */}
       <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === "ios" ? 40 : 0 }}>
         <View
@@ -47,7 +48,8 @@ const HomeScreen = () => {
           }}
         >
           <Image
-            source={require("@/assets/images/yourvibes_black.png")}
+            source={theme === "dark" ? require("@/assets/images/yourvibes_white.png") : require("@/assets/images/yourvibes_black.png")}
+
             style={{
               width: 210,
               height: "100%",
@@ -58,7 +60,7 @@ const HomeScreen = () => {
           <Ionicons
             size={30}
             name="chatbubble-ellipses"
-            style={{ marginRight: 15 }}
+            style={{ marginRight: 15, color: brandPrimary }}
             onPress={() => user && router.push(`/messages?userId=${user.id}`)}
           />
         </View>

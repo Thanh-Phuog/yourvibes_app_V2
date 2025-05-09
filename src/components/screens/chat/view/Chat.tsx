@@ -32,7 +32,7 @@ import AddUserGroup from "../component/AddUserGroup";
 import { CustomStatusCode } from "@/src/utils/helper/CustomStatus";
 
 const Chat = () => {
-  const { backgroundColor, brandPrimary } = useColor();
+  const { backgroundColor, brandPrimary, backGround } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -173,6 +173,8 @@ const Chat = () => {
       ]
     );
   };
+  // Tìm phần tử trong conversationsDetail tương ứng với user hiện tại
+  const currentUserDetail = conversationsDetail.find(item => item.user?.id === user?.id);
 
   const showMessAction = useCallback(() => {
     const options = [
@@ -181,11 +183,8 @@ const Chat = () => {
       localStrings.Messages.LeaveGroup,
       localStrings.Messages.DeleteConversation,
       localStrings.Public.Cancel
-    ];
+      ];
     
-    
-    // Tìm phần tử trong conversationsDetail tương ứng với user hiện tại
-    const currentUserDetail = conversationsDetail.find(item => item.user?.id === user?.id);
     // Ẩn "Xoá cuộc trò chuyện" (index 2) nếu không phải là conversation_role === 0
     if (total > 2 && currentUserDetail?.conversation_role !== 0) {
       options.splice(3, 1); // Xoá "DeleteConversation"
@@ -242,7 +241,7 @@ const Chat = () => {
   );
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#f9f9f9", width: "100%" }}
+      style={{ flex: 1, backgroundColor: backGround, width: "100%" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={{ flex: 1 }}>
@@ -463,14 +462,14 @@ const Chat = () => {
           {/*messager input */}
           <Form
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: backGround,
             }}
             form={messagerForm}
           >
             {selectedMessage && (
               <View
                 style={{
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: backgroundColor,
                   padding: 5,
                   borderRadius: 8,
                   marginBottom: 5,
@@ -489,7 +488,6 @@ const Chat = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 padding: 10,
-                paddingBottom: Platform.OS === "ios" ? 10 : 40,
               }}
             >
               <Form.Item noStyle name="message">
@@ -552,7 +550,7 @@ const Chat = () => {
       >
         <FlatList
           data={conversationsDetail}
-          renderItem={({ item }) => <MemberMessage conversationDetail={item} />}
+          renderItem={({ item }) => <MemberMessage conversationDetail={item} currentUserId={currentUserDetail} />}
           // keyExtractor={(item, index) => item.user.id?.toString() || index.toString()}
         />
       </Modal>

@@ -48,6 +48,26 @@ const SettingsTab = () => {
   return (
     <View style={{ padding: 20, flex: 1 }}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <List.Item
+          extra={
+            <Switch
+              checked={theme === "dark"}
+              onChange={(checked) => {if (changeTheme) {
+                  changeTheme(checked ? "dark" : "light");
+                }}
+              }
+            />
+          }
+          style={{backgroundColor: backgroundColor }}
+        >
+          <Text style={{ color: brandPrimary, fontSize: 16 }}>
+            {localStrings.Public.Theme}(
+            {theme === "dark"
+              ? localStrings?.Public.DarkMode
+              : localStrings?.Public.LightMode}
+            )
+          </Text>
+        </List.Item>
         <Button
           type="ghost"
           onPress={() => {
@@ -87,26 +107,6 @@ const SettingsTab = () => {
             {localStrings.Public.Theme}
           </Text>
         </Button>
-        <List.Item
-          extra={
-            <Switch
-              checked={theme === "dark"}
-              onChange={(checked) => {if (changeTheme) {
-                  changeTheme(checked ? "dark" : "light");
-                }}
-              }
-            />
-          }
-          style={{ marginTop: 10 }}
-        >
-          <Text style={{ color: brandPrimary, fontSize: 16 }}>
-            {localStrings.Public.Theme}(
-            {theme === "dark"
-              ? localStrings?.Public.DarkMode
-              : localStrings?.Public.LightMode}
-            )
-          </Text>
-        </List.Item>
         <Button type="ghost" onPress={handleLogout} style={{ marginTop: 10 }}>
           <Text style={{ color: brandPrimary, fontSize: 16 }}>
             {localStrings.Public.LogOut}

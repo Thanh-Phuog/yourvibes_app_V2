@@ -157,21 +157,11 @@ const Post: React.FC<IPost> = React.memo(({
   }, [likedPost?.is_liked]);
 
   return (
-    <Provider theme={{
-      primary_button_fill: brandPrimary,
-      primary_button_fill_tap: brandPrimaryTap,
-      ghost_button_color: brandPrimary,
-      ghost_button_fill_tap: brandPrimaryTap,
-      brand_primary: brandPrimary,
-      prefix_padding: 0,
-      background_color: backgroundColor,
-      background_color_light: backgroundColor,
-      background_color_dark: backgroundColor,
-    }}>
 
     <Card style={{
       margin: 10,
       borderColor: isParentPost ? brandPrimary : "white",
+      backgroundColor: backgroundColor,
     }}
     >
       {/* Header */}
@@ -186,7 +176,7 @@ const Post: React.FC<IPost> = React.memo(({
               <TouchableOpacity
                 onPress={() => router.push(`/(tabs)/user/${likedPost?.user?.id}`)}
               >
-                <Text style={{ fontWeight: 'bold', fontSize: 14 }}>{likedPost?.user?.family_name} {likedPost?.user?.name}</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 14, color: brandPrimary }}>{likedPost?.user?.family_name} {likedPost?.user?.name}</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {likedPost?.is_advertisement ? (
@@ -481,7 +471,6 @@ const Post: React.FC<IPost> = React.memo(({
         </KeyboardAvoidingView>
       </Modal>
     </Card >
-    </Provider>
   );
 })
 

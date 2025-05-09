@@ -36,7 +36,7 @@ const ProfileTabs = ({
   onViewableItemsChanged: React.MutableRefObject<({ viewableItems }: any) => void>;
   visibleItems: string[];
 }) => {
-  const { brandPrimary } = useColor();
+  const { brandPrimary, backgroundColor } = useColor();
   const { localStrings, user } = useAuth();
   const [tab, setTab] = React.useState(tabNum);
 
@@ -75,9 +75,14 @@ const ProfileTabs = ({
         initialPage={tab}
         tabBarPosition="top"
         tabBarActiveTextColor={brandPrimary}
+        tabBarBackgroundColor={backgroundColor}
+        tabBarInactiveTextColor="gray"
         onChange={(_, index) => setTab(index)}
         animated={false}
         style={{ height: '100%' }}
+        tabBarUnderlineStyle={{
+          backgroundColor: brandPrimary,
+        }}
       />
       {renderBody()}
       <Toast />
