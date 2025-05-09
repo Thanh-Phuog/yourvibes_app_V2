@@ -10,7 +10,6 @@ import { router } from "expo-router";
 import NewFeed from "../compoment/NewFeed";
 import Triending from "../compoment/Triending";
 import FriendRequestAndBirth from "../compoment/FriendRequestAndBirth";
-import { t } from "i18next";
 
 const HomeScreen = () => {
   const { brandPrimary, backgroundColor, backGround } = useColor();
@@ -49,16 +48,15 @@ const HomeScreen = () => {
         >
           <Image
             source={theme === "dark" ? require("@/assets/images/yourvibes_white.png") : require("@/assets/images/yourvibes_black.png")}
-
             style={{
-              width: 210,
-              height: "100%",
+              width: 140,
+              height: "65%",
               objectFit: "contain",
               marginLeft: 10,
             }}
           />
           <Ionicons
-            size={30}
+            size={25}
             name="chatbubble-ellipses"
             style={{ marginRight: 15, color: brandPrimary }}
             onPress={() => user && router.push(`/messages?userId=${user.id}`)}
@@ -74,7 +72,7 @@ const HomeScreen = () => {
           swipeable={false}
           tabBarBackgroundColor={backgroundColor}
           tabBarActiveTextColor={brandPrimary}
-          tabBarTextStyle={{ fontWeight: "bold" }}
+          tabBarTextStyle={{ fontWeight: "bold", fontSize: 13 }}
           tabBarInactiveTextColor="gray"
           tabBarUnderlineStyle={{
             backgroundColor: brandPrimary,
