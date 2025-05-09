@@ -177,7 +177,7 @@ const FriendSuggestions = () => {
           className="friend-suggestions"
           style={{
             // padding: 10,
-            backgroundColor: backgroundColor,
+            // backgroundColor: backgroundColor,
             borderRadius: 10,
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
@@ -187,7 +187,7 @@ const FriendSuggestions = () => {
             marginHorizontal: 10,
           }}
         >
-          <View
+          {/* <View
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -195,29 +195,29 @@ const FriendSuggestions = () => {
               marginBottom: 10,
               flexDirection: "row",
             }}
-          >
-            <View
+          > */}
+            {/* <View
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
                 flexDirection: "row",
               }}
-            >
+            > */}
               {/* <UsergroupAddOutlined style={{ fontSize: "18px" }} /> */}
-              <FontAwesome5
+              {/* <FontAwesome5
                 name="user-friends"
-                size={24}
+                size={18}
                 color={brandPrimary}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 18, color: brandPrimary }}>
+              <Text style={{ fontWeight: "bold", fontSize: 14, color: brandPrimary }}>
                 {localStrings.Suggested.SuggestedFriends}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={showAction} >
+              </Text> */}
+            {/* </View> */}
+            {/* <TouchableOpacity onPress={showAction} >
               <Entypo name="dots-three-vertical" size={16} color={brandPrimary}/>
-            </TouchableOpacity>
-          </View>
+            </TouchableOpacity> */}
+          {/* </View> */}
             <>
               <FlatList
                 data={friendSuggestions}
