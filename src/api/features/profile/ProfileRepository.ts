@@ -18,6 +18,7 @@ interface IProfileRepo {
   unfriend(userId: string): Promise<BaseApiResponseModel<any>>;
   getListFriends(data: GetFriendRequestModel): Promise<BaseApiResponseModel<FriendResponseModel>>; 
   changePassword(data: ChangePasswordRequestModel): Promise<BaseApiResponseModel<any>>;
+  getListFriendsRequest(data: GetFriendRequestModel): Promise<BaseApiResponseModel<FriendResponseModel[]>>;
 }
 
 export class ProfileRepo implements IProfileRepo {
@@ -48,6 +49,9 @@ export class ProfileRepo implements IProfileRepo {
   } 
   async changePassword(data: ChangePasswordRequestModel): Promise<BaseApiResponseModel<any>> {
     return client.patch(ApiPath.CHANGE_PASSWORD, data);
+  }
+  async getListFriendsRequest(data: GetFriendRequestModel): Promise<BaseApiResponseModel<FriendResponseModel[]>> {
+    return client.get(ApiPath.FRIEND_REQUEST, data);
   }
 }
 
