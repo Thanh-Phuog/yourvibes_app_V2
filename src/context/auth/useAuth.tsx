@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     checkLanguage();
     checkTheme();
-  }, []);
+  }, [language, theme]);
 
   useEffect(() => {
     const checkAuthStatus = async () => {

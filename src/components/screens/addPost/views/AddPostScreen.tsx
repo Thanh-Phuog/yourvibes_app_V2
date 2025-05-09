@@ -30,7 +30,7 @@ import { usePostContext } from '@/src/context/post/usePostContext';
 const AddPostScreen = () => {
   const { user, localStrings } = useAuth()
   const savedPost = usePostContext()
-  const { brandPrimary, backgroundColor, brandPrimaryTap, lightGray } = useColor();
+  const { brandPrimary, backgroundColor, brandPrimaryTap, lightGray, backGround, darkSlate } = useColor();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   // const [image, setImage] = useState<string | null>(null);
@@ -143,7 +143,7 @@ const AddPostScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: backGround }}>
         {/* Header */}
         <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === 'ios' ? 30 : 0 }}>
           <StatusBar barStyle="dark-content" />
@@ -165,6 +165,7 @@ const AddPostScreen = () => {
                 fontWeight: 'bold',
                 fontSize: 20,
                 marginLeft: 10,
+                color: brandPrimary,
               }}>
                 {localStrings.AddPost.NewPost}
               </Text>
@@ -191,11 +192,11 @@ const AddPostScreen = () => {
           </View>
           <View style={{ marginLeft: 10, flex: 1 }}>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 16, color: brandPrimary }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
               <MyInput
                 placeholder={localStrings.AddPost.WhatDoYouThink}
                 variant='outlined'
-                moreStyle={{ paddingLeft: 10, marginTop: 10, borderColor: brandPrimaryTap }}
+                moreStyle={{ paddingLeft: 10, marginTop: 10, marginBottom: 5,borderColor: brandPrimaryTap }}
                 textArea={{
                   autoSize: { minRows: 3 },
                 }}
@@ -235,7 +236,7 @@ const AddPostScreen = () => {
                     padding: 2
                   }}
                 >
-                  <Ionicons name="close" size={18} color={brandPrimary} />
+                  <Ionicons name="close" size={18} color={darkSlate} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -249,6 +250,7 @@ const AddPostScreen = () => {
                 backgroundColor: lightGray,
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginRight: 10,
               }}
               disabled={loading} // Disable the button while loading
             >

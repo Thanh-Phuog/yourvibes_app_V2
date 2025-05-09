@@ -35,7 +35,7 @@ const MessagesFeature = () => {
   const [showGroupModel, setShowGroupModel] = React.useState(false);
   const { friends, page, fetchFriends } = useListFriendsViewModel();
   const {createConversation, loading, fetchConversations, conversations, loadMoreConversations} = useConversationViewModel(defaultMessagesRepo);
-
+  
   const renderFriend = useCallback(() => {
     return (
       <View style={{ paddingVertical: 20, overscrollBehavior: "auto" }}>

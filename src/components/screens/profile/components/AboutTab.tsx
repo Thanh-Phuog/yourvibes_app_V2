@@ -30,7 +30,7 @@ const AboutTab = ({
   friendCount: number;
   resultCode: number;
 }) => {
-  const { brandPrimaryTap } = useColor();
+  const { brandPrimaryTap, brandPrimary } = useColor();
   const { isLoginUser, localStrings } = useAuth();
 
   const renderFriend = useCallback(() => {
@@ -44,10 +44,10 @@ const AboutTab = ({
           }}
         >
           <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: brandPrimary }}>
               {localStrings.Public.Friend}
             </Text>
-            <Text>
+            <Text style={{ color: "gray" }}>
               {friendCount} {localStrings.Public.Friend}
             </Text>
           </View>
@@ -92,7 +92,7 @@ const AboutTab = ({
                   marginRight: 10,
                 }}
               />
-              <Text style={{ marginTop: 5 }}>
+              <Text style={{ marginTop: 5, color: brandPrimaryTap }}>
                 {friend.family_name} {friend.name}
               </Text>
             </TouchableOpacity>))}
@@ -140,7 +140,7 @@ const AboutTab = ({
               flex: 1, flexDirection: "row", justifyContent: "space-between"
             }}>
               <Text
-                style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
+                style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, color: brandPrimaryTap }}
               >
                 {localStrings.Public.Detail}
               </Text>
@@ -163,8 +163,8 @@ const AboutTab = ({
                     marginBottom: 10,
                   }}
                 >
-                  <MaterialIcons name="email" size={24} color="black" />
-                  <Text style={{ marginLeft: 10 }}>
+                  <MaterialIcons name="email" size={24} color={brandPrimaryTap} />
+                  <Text style={{ marginLeft: 10, color: brandPrimaryTap }}>
                     {localStrings.Public.Mail}:{" "}
                     <Text style={{ fontWeight: "bold" }}>
                       {user?.email || "N/A"}
@@ -181,8 +181,8 @@ const AboutTab = ({
                       marginBottom: 10,
                     }}
                   >
-                    <Feather name="phone" size={24} color="black" />
-                    <Text style={{ marginLeft: 10 }}>
+                    <Feather name="phone" size={24} color={brandPrimaryTap} />
+                    <Text style={{ marginLeft: 10, color: brandPrimaryTap }}>
                       {localStrings.Public.Phone}:{" "}
                       <Text style={{ fontWeight: "bold" }}>
                         {user?.phone_number}
@@ -200,8 +200,8 @@ const AboutTab = ({
                       marginBottom: 10,
                     }}
                   >
-                    <Feather name="calendar" size={24} color="black" />
-                    <Text style={{ marginLeft: 10 }}>
+                    <Feather name="calendar" size={24} color={brandPrimaryTap} />
+                    <Text style={{ marginLeft: 10, color: brandPrimaryTap }}>
                       {localStrings.Public.Birthday}:{" "}
                       <Text style={{ fontWeight: "bold" }}>
                         {user?.birthday ? DateTransfer(user?.birthday) : "N/A"}
@@ -218,8 +218,8 @@ const AboutTab = ({
                     marginBottom: 10,
                   }}
                 >
-                  <MaterialIcons name="date-range" size={24} color="black" />
-                  <Text style={{ marginLeft: 10 }}>
+                  <MaterialIcons name="date-range" size={24} color={brandPrimaryTap} />
+                  <Text style={{ marginLeft: 10, color: brandPrimaryTap }}>
                     {localStrings.Public.Active}:{" "}
                     <Text style={{ fontWeight: "bold" }}>
                       {DateTransfer(user?.created_at) || "N/A"}

@@ -37,7 +37,7 @@ const useListFriendsViewModel = (userId?: string) => {
               id: friendResponse.id,
               family_name: friendResponse.family_name,
               name: friendResponse.name,
-              avatar: friendResponse.avatar_url,
+              avatar_url: friendResponse.avatar_url,
             })
           ) as FriendResponseModel[];
           setFriends(friends);
