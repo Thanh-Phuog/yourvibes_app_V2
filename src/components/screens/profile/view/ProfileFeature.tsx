@@ -18,7 +18,7 @@ import { UserModel } from "@/src/api/features/authenticate/model/LoginModel";
 import Toast from "react-native-toast-message";
 
 const ProfileFeatures = ({ tab }: { tab: number }) => {
-  const { backGround } = useColor();
+  const { backGround, backgroundColor, brandPrimary } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const {
@@ -91,14 +91,14 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            backgroundColor: "#fff",
+            backgroundColor: backgroundColor,
             zIndex: 10,
             borderBottomColor: "black",
             borderBottomWidth: 1,
           }}
         >
           <TouchableOpacity onPress={() => router.push("/home")}>
-            <Feather name="arrow-left" size={24} color="black" />
+            <Feather name="arrow-left" size={24} color={brandPrimary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -106,6 +106,7 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
               fontSize: 18,
               fontWeight: "bold",
               flex: 1,
+              color: brandPrimary,
             }}
           >
             {user?.family_name} {user?.name || localStrings.Public.Username}

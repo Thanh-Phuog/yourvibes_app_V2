@@ -10,7 +10,7 @@ import { Image, View, Platform, StatusBar, Alert } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const TabLayout = () => {
-  const { brandPrimary, brandPrimaryTap, backgroundColor } = useColor();
+  const { brandPrimary, brandPrimaryTap, backgroundColor, borderBirth } = useColor();
   const iconSize = 25;
   const addIconSize = 28;
   const {theme } = useAuth();
@@ -18,7 +18,7 @@ const TabLayout = () => {
   const [statusNotifi, setStatusNotifi] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
-  // Hàm kiểm tra trạng thái thông báo (nếu có thông báo nào chưa đọc thì đặt `statusNotifi` thành `true`)
+  // Hàm kiểm tra trạng thái thông báo (nếu có thông báo nào chưa đọc thì đặt statusNotifi thành true)
   const checkNotificationStatus = async () => {
     const response = await defaultNotificationRepo.getNotifications({
       sort_by: 'created_at',
@@ -37,36 +37,36 @@ const TabLayout = () => {
   const tabs: { name: string; icon: ReactNode; focusIcon: ReactNode; href?: Href | null }[] = [
     {
       name: "home",
-      icon: <Ionicons size={iconSize} name="home-outline" />,
-      focusIcon: <Ionicons size={iconSize} name="home" />,
+      icon: <Ionicons size={iconSize} name="home-outline" color={brandPrimary} />,
+      focusIcon: <Ionicons size={iconSize} name="home" color={brandPrimary} />,
       href: "/home",
     },
     {
       name: "search",
-      icon: <AntDesign size={iconSize} name="search1" />,
-      focusIcon: <FontAwesome5 size={iconSize} name="search" />,
+      icon: <AntDesign size={iconSize} name="search1" color={brandPrimary} />,
+      focusIcon: <FontAwesome5 size={iconSize} name="search" color={brandPrimary} />,
       href: "/search",
     },
     {
       name: "add",
-      icon: <AntDesign size={addIconSize} name="pluscircle" />,
-      focusIcon: <AntDesign size={addIconSize} name="pluscircle" />,
+      icon: <AntDesign size={addIconSize} name="pluscircle" color={brandPrimary} />,
+      focusIcon: <AntDesign size={addIconSize} name="pluscircle" color={brandPrimary} />,
       href: "/add",
     },
     {
       name: "notification",
       icon: (
         <Badge dot={statusNotifi}>
-          <FontAwesome size={iconSize} name="bell-o" />
+          <FontAwesome size={iconSize} name="bell-o" color={brandPrimary} />
         </Badge>
       ),
-      focusIcon: <FontAwesome size={iconSize} name="bell" />,
+      focusIcon: <FontAwesome size={iconSize} name="bell" color={brandPrimary} />,
       href: "/notification",
     },
     {
       name: "profile",
-      icon: <FontAwesome size={iconSize} name="user-circle-o" />,
-      focusIcon: <FontAwesome size={iconSize} name="user-circle" />,
+      icon: <FontAwesome size={iconSize} name="user-circle-o" color={brandPrimary} />,
+      focusIcon: <FontAwesome size={iconSize} name="user-circle" color={brandPrimary} />,
       href: "/profile",
     },
     {
@@ -97,17 +97,27 @@ const TabLayout = () => {
 
   return (
     <>
-
-      <Tabs
+ <Tabs
         screenOptions={{
-          tabBarActiveTintColor: brandPrimary,
+          tabBarItemStyle: {
+            backgroundColor: brandPrimaryTap,
+          },
           headerShown: false,
           headerStyle: { height: 80 },
           headerTitle: "",
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            height: Platform.OS === 'ios' ? 60 : 40,
+            backgroundColor: backgroundColor, 
+          },
           headerLeft: () => (
             <View>
               <Image
-                 source={theme === "dark" ? require("@/assets/images/yourvibes_white.png") : require("@/assets/images/yourvibes_black.png")}
+                source={
+                  theme === "dark"
+                    ? require("@/assets/images/yourvibes_white.png")
+                    : require("@/assets/images/yourvibes_black.png")
+                }
                 style={{
                   width: 120,
                   objectFit: 'contain',
@@ -120,15 +130,14 @@ const TabLayout = () => {
       >
         {tabs.map((tab) => (
           <Tabs.Screen
+
             key={tab.name}
             name={tab.name}
             options={{
               tabBarIcon: ({ focused }) => (tab.href && focused ? tab.focusIcon : tab.icon),
-              tabBarShowLabel: false,
-              tabBarInactiveTintColor: brandPrimaryTap,
-              tabBarStyle: { height: Platform.OS === 'ios' ? 60 : 40 },
               href: tab.href,
             }}
+            
           />
         ))}
       </Tabs>

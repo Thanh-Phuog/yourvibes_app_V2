@@ -58,7 +58,10 @@ const SettingsTab = () => {
               }
             />
           }
-          style={{backgroundColor: backgroundColor }}
+          style={{    backgroundColor: backgroundColor,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: brandPrimary,}}
         >
           <Text style={{ color: brandPrimary, fontSize: 16 }}>
             {localStrings.Public.Theme}(
@@ -73,6 +76,7 @@ const SettingsTab = () => {
           onPress={() => {
             router.push("/update-profile");
           }}
+          style={{ marginTop: 10, backgroundColor: backgroundColor, borderColor: brandPrimary }}
         >
           <Text style={{ color: brandPrimary, fontSize: 16 }}>
             {localStrings.Public.EditProfile}
@@ -83,7 +87,7 @@ const SettingsTab = () => {
           onPress={() => {
             router.push("/changePassword");
           }}
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 10, backgroundColor: backgroundColor, borderColor: brandPrimary }}
         >
           <Text style={{ color: brandPrimary, fontSize: 16 }}>
             {localStrings.Public.ChangePassword}
@@ -92,22 +96,14 @@ const SettingsTab = () => {
         <Button
           type="ghost"
           onPress={showLanguageOptions}
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 10, backgroundColor: backgroundColor, borderColor: brandPrimary }}
         >
           <Text style={{ color: brandPrimary, fontSize: 16 }}>
             {localStrings.Public.Language}
           </Text>
         </Button>
-        <Button
-          type="ghost"
-          onPress={showLanguageOptions}
-          style={{ marginTop: 10 }}
-        >
-          <Text style={{ color: brandPrimary, fontSize: 16 }}>
-            {localStrings.Public.Theme}
-          </Text>
-        </Button>
-        <Button type="ghost" onPress={handleLogout} style={{ marginTop: 10 }}>
+  
+        <Button type="ghost" onPress={handleLogout} style={{ marginTop: 10, backgroundColor: backgroundColor, borderColor: brandPrimary }}>
           <Text style={{ color: brandPrimary, fontSize: 16 }}>
             {localStrings.Public.LogOut}
           </Text>
