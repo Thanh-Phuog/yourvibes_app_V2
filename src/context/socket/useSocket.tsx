@@ -14,6 +14,43 @@ import Toast from "react-native-toast-message";
 import { MessageWebSocketResponseModel } from "@/src/api/features/messages/models/Messages";
 import { usePathname } from "expo-router";
 
+interface MessageHandlingStrategy {
+  handleMessage: (message: MessageWebSocketResponseModel) => void;
+}
+
+class ChatPageStrategy implements MessageHandlingStrategy {
+  protected setSocketMessages: React.Dispatch<
+    React.SetStateAction<MessageWebSocketResponseModel[]>
+  >;
+
+  constructor(
+    setSocketMessages: React.Dispatch<
+      React.SetStateAction<MessageWebSocketResponseModel[]>
+    >,
+  ) {
+    this.setSocketMessages = setSocketMessages;
+  }
+  handleMessage(message: MessageWebSocketResponseModel): void {
+    this.setSocketMessages((prev) => [message, ...prev]);
+  }
+}
+
+class OtherPageStrategy implements MessageHandlingStrategy {
+  private localStrings: any;
+  constructor(localStrings: any) {
+    this.localStrings = localStrings;
+  }
+
+  handleMessage(message: MessageWebSocketResponseModel): void {
+    Toast.show({
+      type: "info",
+      text1: this.localStrings.Notification.Items.NewMessage,
+      text2: message.content,
+    });
+  }
+}
+
+
 const WebSocketContext = createContext<SocketContextType | undefined>(
   undefined
 );
@@ -22,7 +59,8 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { user, localStrings } = useAuth();
-  const pathname = usePathname(); // Lấy đường dẫn hiện tại
+  const pathname = usePathname(); 
+  const pathnameRef = useRef(pathname); 
   const [socketMessages, setSocketMessages] = useState<
     MessageWebSocketResponseModel[]
   >([]);
@@ -97,8 +135,15 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
 
     ws.onmessage = (e) => {
       const message = JSON.parse(e.data);
-      console.log("📩 Nhận tin nhắn:", message, "Path:", pathname);
-      setSocketMessages((prev) => [message, ...prev]);
+      const currentPath = pathnameRef.current;
+    console.log("currentPath", currentPath);
+    
+      const strategy: MessageHandlingStrategy =
+        currentPath === "/chat" || currentPath.startsWith("/chat/")
+          ? new ChatPageStrategy(setSocketMessages)
+          : new OtherPageStrategy(localStrings);
+    
+      strategy.handleMessage(message);
       setNewMessageTrigger((prev) => prev + 1);
     };
 
@@ -108,11 +153,11 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
       setConnectionAttempts((prevAttempts) => {
         const newAttempts = prevAttempts + 1;
         if (newAttempts < MaxConnection) {
-            setTimeout(() => connectSocketMessage(), 5000); // Thử lại sau 5 giây
+          setTimeout(() => connectSocketMessage(), 5000); // Thử lại sau 5 giây
         }
         return newAttempts;
-    });
-};
+      });
+    };
 
     ws.onerror = (error) => {
       console.error("⚠️ WebSocket Message error:", error);
@@ -141,16 +186,16 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
       const mapType = mapNotifiCationContent(type);
       const getDescription = (content: string) => {
         if (content.includes("violence")) {
-            return localStrings.Notification.Items.violence;
+          return localStrings.Notification.Items.violence;
         }
         if (content.includes("nsfw")) {
-            return localStrings.Notification.Items.nsfw;
+          return localStrings.Notification.Items.nsfw;
         }
         if (content.includes("political")) {
-            return localStrings.Notification.Items.political;
+          return localStrings.Notification.Items.political;
         }
         return content;
-    }
+      };
       Toast.show({
         type: "info",
         text1: `${userName} ${mapType}`,
@@ -165,13 +210,13 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
         const newAttempts = prevAttempts + 1;
         console.log("connectionAttemptsNotification", newAttempts);
         console.log("MaxConnection", MaxConnection);
-        
+
         // Kiểm tra điều kiện và cố gắng kết nối lại nếu chưa đạt MaxConnection
         if (newAttempts < MaxConnection) {
-            setTimeout(() => connectSocketNotification(), 5000); // Thử lại sau 5 giây
+          setTimeout(() => connectSocketNotification(), 5000); // Thử lại sau 5 giây
         }
         return newAttempts;
-    });
+      });
     };
 
     ws.onerror = (error) => {
@@ -201,13 +246,12 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
         wsNotificationRef.current = null;
       }
     };
-  }, [user?.id]);
+  }, [user?.id]); // Kết nối lại khi user thay đổi hoặc pathname thay đổi
 
-  // 👉 Lắng nghe pathname để cập nhật tin nhắn khi vào trang chat
   useEffect(() => {
-    console.log("🌐 Pathname changed:", pathname);
-  }, [pathname]);
-
+    pathnameRef.current = pathname; // Cập nhật pathnameRef khi pathname thay đổi
+  }
+  , [pathname]); // Cập nhật pathnameRef khi pathname thay đổi
   return (
     <WebSocketContext.Provider
       value={{

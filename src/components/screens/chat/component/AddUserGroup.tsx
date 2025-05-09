@@ -1,3 +1,4 @@
+"use client"
 import { View, Text, Image, ActivityIndicator, SectionList, TouchableOpacity, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/src/context/auth/useAuth';

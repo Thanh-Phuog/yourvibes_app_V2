@@ -1,23 +1,31 @@
 import { MessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import { ConversationDetailRequestModel, ConversationDetailResponseModel, CreateConversationDetail } from "@/src/api/features/messages/models/ConversationDetail";
+import { useAuth } from "@/src/context/auth/useAuth";
+import { CustomStatusCode } from "@/src/utils/helper/CustomStatus";
+import { router } from "expo-router";
 import { useState } from "react";
+import Toast from "react-native-toast-message";
 
 const useConversationDetailViewModel = (repo: MessagesRepo) => {
+    const {localStrings} = useAuth();
     const [conversationsDetail, setConversationsDetail] = useState<ConversationDetailResponseModel[]>([]);
     const [loading, setLoading] = useState(false);
     const [pageDetail, setPageDetail] = useState(1);
     const [total, setTotal] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    
 
     const fetchConversationsDetail = async (newPage: number = 1, conversation_id ?: string) => {
         try {
             setLoading(true);
+            
             const response = await repo.getConversationDetails({
                 conversation_id: conversation_id ?? undefined,
                 page: newPage,
                 limit: 10,
             })
 
+            
             if (response?.message === 'Success') {
                 if (newPage === 1) {
                     setConversationsDetail(response?.data as ConversationDetailResponseModel[] || []);
@@ -42,7 +50,6 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
         try { 
             setLoading(true);
             const response = await repo.createConversationDetail(data);
-            console.log("CreateConversationDetail response:", response);
             
             if (!response?.error) {
                 fetchConversationsDetail();
@@ -66,7 +73,6 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
         try {
             setLoading(true);
             const response = await repo.UpdateConversationDetail(data);
-            console.log("UpdateConversationDetail response:", response);
 
             if (!response?.error) {
                 return response?.data ;
@@ -79,14 +85,46 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
     }
 
     const DeleteConversationDetail = async (data: ConversationDetailRequestModel) => {
+        
         try {
             setLoading(true);
             const response = await repo.DeleteConversationDetail(data);
-            console.log("DeleteConversationDetail response:", response);
+            
+            if (!response?.error) {
+                router.back();
+            } else {
+                if (response?.error?.code === CustomStatusCode.CantLeaveConversationIfIsOwners ){
+                       Toast.show({
+                    type: 'error',
+                    text1: localStrings.Messages.CantLeaveGroup,
+                });
+                }
+            }
 
+        } catch (error: any) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    
+    const TransferOwnerRole = async (data: ConversationDetailRequestModel) => {
+        try {
+            setLoading(true);
+            const response = await repo.TransferOwnerRole(data);
+            console.log('response', response);
+            
             if (!response?.error) {
                 fetchConversationsDetail();
+                
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: response?.error?.message,
+                });
             }
+
         } catch (error: any) {
             console.error(error);
         } finally {
@@ -96,7 +134,7 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
 
 
 
-    return { conversationsDetail, loading, pageDetail, total, hasMore, fetchConversationsDetail, createConversationDetail, loadMoreConversationsDetail, setConversationsDetail, UpdateConversationDetail, DeleteConversationDetail };
+    return { conversationsDetail, loading, pageDetail, total, hasMore, fetchConversationsDetail, createConversationDetail, loadMoreConversationsDetail, setConversationsDetail, UpdateConversationDetail, DeleteConversationDetail, TransferOwnerRole };
 }
 
 export default useConversationDetailViewModel;

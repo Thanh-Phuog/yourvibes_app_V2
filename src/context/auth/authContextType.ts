@@ -13,4 +13,6 @@ export interface AuthContextType {
   user: UserModel | null;
   isAuthenticated: boolean;
   isLoginUser: (userId: string) => boolean;
+  theme?: "light" | "dark";
+  changeTheme?: (theme: "light" | "dark") => void ;
 }

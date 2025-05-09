@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native';
 import { Image } from 'expo-image';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Button, Card, Form, Modal } from '@ant-design/react-native';
+import { ActivityIndicator, Button, Card, Form, Modal, Provider } from '@ant-design/react-native';
 import { Entypo, AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import useColor from '@/src/hooks/useColor';
 import { PostResponseModel } from '@/src/api/features/post/models/PostResponseModel';
@@ -35,7 +35,7 @@ const Post: React.FC<IPost> = React.memo(({
   noComment = false,
   isVisible = false,
 }) => {
-  const { brandPrimary, brandPrimaryTap, lightGray, backgroundColor } = useColor();
+  const { brandPrimary, brandPrimaryTap, backgroundColor } = useColor();
   const { user, localStrings } = useAuth();
   const [shareForm] = Form.useForm();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -157,6 +157,18 @@ const Post: React.FC<IPost> = React.memo(({
   }, [likedPost?.is_liked]);
 
   return (
+    <Provider theme={{
+      primary_button_fill: brandPrimary,
+      primary_button_fill_tap: brandPrimaryTap,
+      ghost_button_color: brandPrimary,
+      ghost_button_fill_tap: brandPrimaryTap,
+      brand_primary: brandPrimary,
+      prefix_padding: 0,
+      background_color: backgroundColor,
+      background_color_light: backgroundColor,
+      background_color_dark: backgroundColor,
+    }}>
+
     <Card style={{
       margin: 10,
       borderColor: isParentPost ? brandPrimary : "white",
@@ -469,6 +481,7 @@ const Post: React.FC<IPost> = React.memo(({
         </KeyboardAvoidingView>
       </Modal>
     </Card >
+    </Provider>
   );
 })
 

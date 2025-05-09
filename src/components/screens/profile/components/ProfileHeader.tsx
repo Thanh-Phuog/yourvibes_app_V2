@@ -299,7 +299,7 @@ const ProfileHeader = ({
                 marginHorizontal: 10, flex: 1
               }}
               onPress={async () => {
-                const UserIds = [userInfo?.id, user?.id];
+                const UserIds = [userInfo?.id];
                 if (UserIds) {
                   try {
                     const conversationId = await createConversation({

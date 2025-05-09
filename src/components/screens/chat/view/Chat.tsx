@@ -1,3 +1,4 @@
+"use client";
 import {
   View,
   Text,
@@ -28,6 +29,7 @@ import Toast from "react-native-toast-message";
 import { useWebSocket } from "@/src/context/socket/useSocket";
 import UserProfileViewModel from "../../profile/viewModel/UserProfileViewModel";
 import AddUserGroup from "../component/AddUserGroup";
+import { CustomStatusCode } from "@/src/utils/helper/CustomStatus";
 
 const Chat = () => {
   const { backgroundColor, brandPrimary } = useColor();
@@ -49,7 +51,7 @@ const Chat = () => {
     loadMoreMessages,
     loadingMessages,
   } = useMessagesViewModel(defaultMessagesRepo);
-  const { createConversation } = useConversationViewModel(defaultMessagesRepo);
+  const { createConversation, deleteConversation } = useConversationViewModel(defaultMessagesRepo);
   const mergerMessages = [...socketMessages, ...messages];
   const { conversation_id: rawConversationId, friend_id: rawFriendId } =
     useLocalSearchParams();
@@ -61,7 +63,7 @@ const Chat = () => {
     conversationsDetail,
     fetchConversationsDetail,
     pageDetail,
-    createConversationDetail,
+    DeleteConversationDetail,
     total,
   } = useConversationDetailViewModel(defaultMessagesRepo);
   const [currentConversationId, setCurrentConversationId] =
@@ -80,8 +82,6 @@ const Chat = () => {
     setSelectedMessage(message);
   };
   
-  
-  
   const handleSendMessages = async () => {
       handleSendMessage({
         content: newMessage,
@@ -97,9 +97,6 @@ const Chat = () => {
       setSelectedMessage(null);
       messagerForm.setFieldsValue({ message: "" });
     }
-    useEffect(() => {
-      console.log('Cập nhật socketMessages:', socketMessages);
-  }, [socketMessages]); 
   
   useEffect(() => {
     if (conversation_id) {
@@ -127,12 +124,74 @@ const Chat = () => {
   //   flatListRef.current?.scrollToEnd({ animated: true });
   // }, [messages]);
 
+  const handleDeleteConversation =  () => {
+    Modal.alert(
+      localStrings.Messages.DeleteConversation,
+      localStrings.Messages.DeleteConversationConfirm,
+      [
+        {
+          text: localStrings.Public.Cancel,
+          style: "cancel",
+        },
+        {
+          text: localStrings.Public.Confirm,
+          onPress: async () => {
+            try {
+              await deleteConversation(conversation_id);
+              router.back();
+            } catch (error) {
+              console.error("Error deleting conversation:", error);
+            }
+          },
+        },
+      ]
+    );
+  }
+
+  const handleLeaveGroup = () => {
+    Modal.alert(
+      localStrings.Messages.LeaveGroup,
+      localStrings.Messages.LeaveGroupConfirm,
+      [
+        {
+          text: localStrings.Public.Cancel,
+          style: "cancel",
+        },
+        {
+          text: localStrings.Public.Confirm,
+          onPress: async () => {
+            try {
+              await DeleteConversationDetail({
+                conversation_id: conversation_id,
+                user_id: user?.id,
+              });
+            } catch (error) {
+              console.error("Error leaving group:", error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const showMessAction = useCallback(() => {
     const options = [
-      localStrings.Messages.Member, 
+      localStrings.Messages.Member,
       localStrings.Messages.AddUserGroup,
-      localStrings.Public.Cancel];
+      localStrings.Messages.LeaveGroup,
+      localStrings.Messages.DeleteConversation,
+      localStrings.Public.Cancel
+    ];
+    
+    
+    // Tìm phần tử trong conversationsDetail tương ứng với user hiện tại
+    const currentUserDetail = conversationsDetail.find(item => item.user?.id === user?.id);
+    // Ẩn "Xoá cuộc trò chuyện" (index 2) nếu không phải là conversation_role === 0
+    if (total > 2 && currentUserDetail?.conversation_role !== 0) {
+      options.splice(3, 1); // Xoá "DeleteConversation"
+    }
 
+      
     showActionSheetWithOptions(
       {
         title: localStrings.Public.Action,
@@ -144,20 +203,22 @@ const Chat = () => {
         switch (buttonIndex) {
           case 0:
             setShowMember(true);
-
             break;
           case 1:
             setShowUserGroupModel(true);
             break;
           case 2:
-            // Cancel action
+            handleLeaveGroup();
+            break;
+            case 3:
+            handleDeleteConversation();
             break;
           default:
             break;
         }
       }
     );
-  }, [localStrings]);
+  }, [localStrings, conversationsDetail]);
 
   const renderFooter = useCallback(() => {
     return (
@@ -201,7 +262,9 @@ const Chat = () => {
             borderBottomWidth: 1,
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() =>{
+            router.back()}
+          } >
             <Feather name="arrow-left" size={24} color="black" />
           </TouchableOpacity>
           <Text
@@ -212,6 +275,7 @@ const Chat = () => {
               flex: 1,
             }}
           >
+            
             {/* {conversationsDetail[0]?.conversation?.name ||
               } */}
               {total === 2 ? (
