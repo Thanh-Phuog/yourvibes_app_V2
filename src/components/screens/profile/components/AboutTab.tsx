@@ -114,7 +114,7 @@ const AboutTab = ({
         </TouchableOpacity>
       </View>
     )
-  }, [friends, user, friendCount]);
+  }, [friends, user, friendCount, brandPrimary, brandPrimaryTap]);
 
   const renderPrivacyIcon = () => {
     switch (user?.privacy) {

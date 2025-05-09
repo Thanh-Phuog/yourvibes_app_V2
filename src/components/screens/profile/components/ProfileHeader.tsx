@@ -359,6 +359,7 @@ const ProfileHeader = ({
     user,
     friendCount,
     localStrings,
+    brandPrimary,
   ]);
 
   useEffect(() => {
