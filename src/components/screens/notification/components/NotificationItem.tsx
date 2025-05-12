@@ -6,10 +6,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { getTimeDiff } from '@/src/utils/helper/DateTransfer';
 import { useAuth } from '@/src/context/auth/useAuth';
 import { router } from 'expo-router';
+import useColor from '@/src/hooks/useColor';
 
 const NotificationItem = ({ notification, onUpdate  }: { notification: NotificationResponseModel, onUpdate: () => void}) => {
   const { from, from_url, content, created_at, notification_type, status, content_id } = notification;
   const { user, localStrings } = useAuth();
+  const {backGround, backgroundColor, brandPrimary, brandPrimaryTap, theme} = useColor();
+
+  
 
   const type = mapNotifiCationType(notification_type || '');
 
@@ -137,7 +141,7 @@ const NotificationItem = ({ notification, onUpdate  }: { notification: Notificat
       if (notification_type === "like_post" || notification_type === "new_comment" || notification_type === "new_share" || notification_type === "new_post") {
         router.push(`/postDetails?postId=${content_id}`);
       }
-    }} style={{ backgroundColor: status ? '#fff' : '#f0f0f0' }}>
+    }} style={{ backgroundColor: status ? backgroundColor : backGround }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
         <View style={{ position: 'relative' }}>
           {/* Avatar */}
@@ -150,20 +154,20 @@ const NotificationItem = ({ notification, onUpdate  }: { notification: Notificat
             name={getIcons()}
             size={20}
             color={getColor()}
-            style={{ position: 'absolute', top: type === 'friend' ? 22 : 25, right: 5 }}
+            style={{ position: 'absolute', top: type === 'friend' ? 22 : 25, right: 5, backgroundColor: theme === "dark" ? '#fff' : 'transparent', borderRadius: 20}}
           />
         </View>
 
         {/* Nội dung thông báo */}
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 14, color: '#333' }}>
+          <Text style={{ fontSize: 14, color: brandPrimary }}>
             <Text style={{ fontWeight: 'bold' }}>{from}</Text> {mapNotifiCationContent(notification_type || '')}
           </Text>
           {content ? (
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
-              style={{ fontSize: 14, color: '#333' }}
+              style={{ fontSize: 14, color: brandPrimaryTap }}
             >
               {getDescription(content)}
             </Text>

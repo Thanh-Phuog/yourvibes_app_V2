@@ -14,7 +14,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
      const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
      const { user } = useAuth();
      const [groupForm] = Form.useForm();
-     const { brandPrimary } = useColor();
+     const { brandPrimary, backGround, backgroundColor } = useColor();
      const { friends, page, fetchFriends, loading, hasMore, handleEndReached } =
        useListFriendsViewModel();
        const { createConversationDetail, } =
@@ -101,14 +101,14 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
   return (
     <View>
       {filteredFriends.length === 0 ? (
-        <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20 }}>
+        <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20, color: brandPrimary, backgroundColor: backgroundColor }}>
           Không có bạn bè nào để thêm vào nhóm.
         </Text>
       ):(
         <>
         <Form
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: backgroundColor,
         }}
         form={groupForm}
       >
@@ -123,7 +123,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
 
           <View
             style={{
-              backgroundColor: "white",
+              backgroundColor: backGround,
               borderRadius: 50,
               // marginLeft: 10,
               padding: 10,
@@ -146,9 +146,10 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100%",
+                
               }}
             >
-              <Text>Thêm thành viên</Text>
+              <Text style={{color: brandPrimary}}>Thêm thành viên</Text>
               {/* <FontAwesome name="send-o" size={30} color={brandPrimary} /> */}
               <AntDesign
                 name="addusergroup"

@@ -16,12 +16,11 @@ import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import UserProfileViewModel from "../../profile/viewModel/UserProfileViewModel";
 import { Button } from "@ant-design/react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import dayjs from "dayjs";
 
 const FriendRequestAndBirth = ({ isActive }: { isActive: boolean }) => {
   const { user, localStrings } = useAuth();
-  const { brandPrimary, backgroundColor, lightGray, pink } = useColor();
+  const { brandPrimary, backgroundColor, lightGray, borderBirth } = useColor();
   const { acceptFriendRequest, refuseFriendRequest, sendRequestLoading } =
     UserProfileViewModel();
   const fadeAnimation = useRef(new Animated.Value(0)).current;
@@ -102,11 +101,7 @@ const FriendRequestAndBirth = ({ isActive }: { isActive: boolean }) => {
             {localStrings.Public.HappyBirthday}
           </Text>
         </View>
-        {loadingBirthday ? (
-          <View style={{ paddingVertical: 10, alignItems: "center" }}>
-            <ActivityIndicator size="large" color={brandPrimary} />
-          </View>
-        ) : birthdayFriends.length > 0 ? (
+        { birthdayFriends.length > 0 ? (
           <FlatList
             data={birthdayFriends}
             renderItem={({ item }) => {
@@ -125,11 +120,6 @@ const FriendRequestAndBirth = ({ isActive }: { isActive: boolean }) => {
                       elevation: 6,
                     }}
                   >
-                    <LinearGradient
-                      colors={["#e6f0ff", "#fff1f5"]}
-                      start={{ x: 0.2, y: 0 }}
-                      end={{ x: 0.8, y: 1 }}
-                    >
                       <TouchableOpacity
                         style={{
                           flexDirection: "row",
@@ -140,17 +130,45 @@ const FriendRequestAndBirth = ({ isActive }: { isActive: boolean }) => {
                         activeOpacity={0.8}
                         onPress={() => router.push(`/(tabs)/user/${item.id}`)}
                       >
-                        <Image
+                        <View style={{ position: "relative", display: "flex" }}>
+                            <Image
                           source={{ uri: item.avatar_url }}
                           style={{
                             width: 44,
                             height: 44,
                             borderRadius: 22,
                             borderWidth: 2,
-                            borderColor: pink || "#FF6699",
+                            borderColor: borderBirth || "#FF6699",
                             marginRight: 12,
                           }}
                         />
+                        {dayjs(item.birthday).isSame(dayjs(), 'day') && (
+                          <View
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              right: 0,
+                              backgroundColor: brandPrimary,
+                              borderRadius: 50,
+                              padding: 4,
+                              borderWidth: 2,
+                              borderColor: backgroundColor,
+                              transform: [{ translateX: 10 }, { translateY: -10 }],
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "#ffffff",
+                                fontSize: 10,
+                                fontWeight: "600",
+                              }}
+                            >
+                              {localStrings.Public.Today}
+                            </Text>
+                          </View>
+                        )}
+                        </View>
+                      
                         <View style={{ flex: 1 }}>
                           <Text
                             style={{
@@ -174,7 +192,6 @@ const FriendRequestAndBirth = ({ isActive }: { isActive: boolean }) => {
                           </Text>
                         </View>
                       </TouchableOpacity>
-                    </LinearGradient>
                   </Animated.View>
                 </>
               );
@@ -237,7 +254,7 @@ const FriendRequestAndBirth = ({ isActive }: { isActive: boolean }) => {
                     alignItems: "center",
                     padding: 12,
                     marginVertical: 6,
-                    backgroundColor: "#ffffff",
+                    backgroundColor: backgroundColor,
                     borderRadius: 10,
                     marginHorizontal: 10,
                     shadowColor: "#ff1f5",

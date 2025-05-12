@@ -29,10 +29,10 @@ import Toast from "react-native-toast-message";
 import { useWebSocket } from "@/src/context/socket/useSocket";
 import UserProfileViewModel from "../../profile/viewModel/UserProfileViewModel";
 import AddUserGroup from "../component/AddUserGroup";
-import { CustomStatusCode } from "@/src/utils/helper/CustomStatus";
+import { DateTransfer } from "@/src/utils/helper/DateTransfer";
 
 const Chat = () => {
-  const { backgroundColor, brandPrimary, backGround } = useColor();
+  const { backgroundColor, brandPrimary, backGround, colorChat, borderColor } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -232,6 +232,32 @@ const Chat = () => {
       </>
     );
   }, [loadingMessages]);
+
+const checkDate = (date: string) => {
+  const today = new Date();
+  const messageDate = new Date(date);
+
+  const isToday =
+    today.getDate() === messageDate.getDate() &&
+    today.getMonth() === messageDate.getMonth() &&
+    today.getFullYear() === messageDate.getFullYear();
+
+  if (isToday) return localStrings.Messages.Today;
+
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  const isYesterday =
+    yesterday.getDate() === messageDate.getDate() &&
+    yesterday.getMonth() === messageDate.getMonth() &&
+    yesterday.getFullYear() === messageDate.getFullYear();
+
+  if (isYesterday) return localStrings.Messages.Yesterday;
+
+  return DateTransfer(date); // giả sử bạn có hàm này để format ngày
+};
+ 
+
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -255,7 +281,7 @@ const Chat = () => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            backgroundColor: "#fff",
+            backgroundColor: backgroundColor,
             zIndex: 10,
             borderBottomColor: "black",
             borderBottomWidth: 1,
@@ -264,7 +290,7 @@ const Chat = () => {
           <TouchableOpacity onPress={() =>{
             router.back()}
           } >
-            <Feather name="arrow-left" size={24} color="black" />
+            <Feather name="arrow-left" size={24} color={brandPrimary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -272,6 +298,7 @@ const Chat = () => {
               fontSize: 18,
               fontWeight: "bold",
               flex: 1,
+              color: brandPrimary,
             }}
           >
             
@@ -290,7 +317,7 @@ const Chat = () => {
             }}
             onPress={showMessAction}
           >
-            <Entypo name="dots-three-vertical" size={16} />
+            <Entypo name="dots-three-vertical" size={16} color={brandPrimary} />
           </TouchableOpacity>
         </View>
 
@@ -305,8 +332,20 @@ const Chat = () => {
             keyExtractor={(item, index) =>
               item.id ? item.id.toString() : index.toString()
             }
-            renderItem={({ item }) =>
-              item.parent_id === null ? (
+            renderItem={({ item }) =>(
+              <View>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "#999",
+                    textAlign: "center",
+                    marginBottom: 5,
+                  }}
+                >
+                  {checkDate(item.created_at)}
+                </Text>
+
+                {item.parent_id === null ? (
                 <View
                   style={{
                     display: "flex",
@@ -344,8 +383,8 @@ const Chat = () => {
                       <View
                         style={{
                           padding: 10,
-                          backgroundColor: backgroundColor,
-                          borderColor: "#ccc",
+                          backgroundColor: item.user.id === user?.id ? colorChat : backgroundColor,
+                          borderColor: borderColor,
                           borderWidth: 1,
                           borderRadius: 10,
                           alignSelf: "flex-end",
@@ -365,7 +404,9 @@ const Chat = () => {
                           onLongPress={() => handleReplyMessage(item)}
                         >
                           <View>
-                            <Text>{item.content}</Text>
+                            <Text style={{color: brandPrimary}}>{item.content}</Text>
+                          </View>
+                          <View>
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -410,7 +451,7 @@ const Chat = () => {
                       <View
                         style={{
                           padding: 10,
-                          backgroundColor: backgroundColor,
+                          backgroundColor: item.user.id === user?.id ? colorChat : backgroundColor,
                           borderColor: "#ccc",
                           borderWidth: 1,
                           borderRadius: 10,
@@ -450,8 +491,9 @@ const Chat = () => {
                     </View>
                   </View>
                 </View>
-              )
-            }
+              )}
+              </View>
+            )}
             onEndReachedThreshold={0.5}
             ListFooterComponent={renderFooter}
             onEndReached={() => loadMoreMessages(conversation_id)}
@@ -513,7 +555,7 @@ const Chat = () => {
 
               <View
                 style={{
-                  backgroundColor: "white",
+                  backgroundColor: backGround,
                   borderRadius: 50,
                   marginLeft: 10,
                   padding: 10,
@@ -531,7 +573,7 @@ const Chat = () => {
                     handleSendMessages();
                   }}
                 >
-                  <FontAwesome name="send-o" size={30} color={brandPrimary} />
+                  <FontAwesome name="send-o" size={30} color={brandPrimary}  />
                 </TouchableOpacity>
               </View>
             </View>

@@ -8,6 +8,7 @@ import { useAuth } from "@/src/context/auth/useAuth";
 import { ConversationResponseModel } from "@/src/api/features/messages/models/Conversation";
 import useConversationDetailViewModel from "../viewModel/ConversationDetailsViewModel";
 import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
+import useColor from "@/src/hooks/useColor";
 
 const MessagerItem = ({
   conversation,
@@ -15,6 +16,7 @@ const MessagerItem = ({
   conversation: ConversationResponseModel;
 }) => {
   const {user, localStrings } = useAuth();
+  const {backgroundColor, brandPrimaryTap, backGround} = useColor();
   const {
     id,
     name,
@@ -43,7 +45,7 @@ const MessagerItem = ({
         handeUpdateConversation();
       }}
       style={{
-        backgroundColor: "#f0f0f0",
+        backgroundColor: backgroundColor,
         padding: 10,
         marginBottom: 2,
         borderRadius: 8,
@@ -70,12 +72,12 @@ const MessagerItem = ({
           }}
         >
           <View>
-            <Text style={{ fontWeight: "bold" }}>
+            <Text style={{ fontWeight: "bold", color: brandPrimaryTap }}>
               {family_name} {name}
             </Text>
             <Text
               style={{
-                color: last_message_status === false ? "gray" : "black",
+                color: last_message_status === false ? "gray" : brandPrimaryTap,
                 fontWeight: last_message_status === false ? "normal" : "bold",
               }}
             >

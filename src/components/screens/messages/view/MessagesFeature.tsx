@@ -19,20 +19,26 @@ import { router, useFocusEffect } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import useListFriendsViewModel from "../../listFriends/viewModel/ListFriendsViewModel";
-import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo"; 
+import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import useConversationViewModel from "../viewModel/ConversationViewModel";
 import AddGroupModel from "../component/CreateGroupModel";
 import { useWebSocket } from "@/src/context/socket/useSocket";
 
 const MessagesFeature = () => {
   const { user } = useAuth();
-  const { backgroundColor, brandPrimary } = useColor();
+  const { backgroundColor, brandPrimary, backGround } = useColor();
   const { localStrings } = useAuth();
-  const {newMessageTrigger} = useWebSocket();
+  const { newMessageTrigger } = useWebSocket();
   const [showGroupModel, setShowGroupModel] = React.useState(false);
   const { friends, page, fetchFriends } = useListFriendsViewModel();
-  const {createConversation, loading, fetchConversations, conversations, loadMoreConversations} = useConversationViewModel(defaultMessagesRepo);
-  
+  const {
+    createConversation,
+    loading,
+    fetchConversations,
+    conversations,
+    loadMoreConversations,
+  } = useConversationViewModel(defaultMessagesRepo);
+
   const renderFriend = useCallback(() => {
     return (
       <View style={{ paddingVertical: 20, overscrollBehavior: "auto" }}>
@@ -49,31 +55,32 @@ const MessagesFeature = () => {
               style={{
                 width: "23%",
                 alignItems: "center",
-                marginBottom: 10,
+                // marginBottom: 10,
                 marginRight: 4,
                 marginLeft: 4,
               }}
-              onPress={async() => {
+              onPress={async () => {
                 const UserIds = [friend.id];
-                  if (UserIds) {
-                    try {
-                      const conversationId = await createConversation({
-                          name: `${user?.family_name} ${user?.name}, ${friend.family_name} ${friend.name}`,
-                          user_ids: UserIds.filter((id): id is string => id !== undefined),
-                      });
-          
-                      if (conversationId) {
+                if (UserIds) {
+                  try {
+                    const conversationId = await createConversation({
+                      name: `${user?.family_name} ${user?.name}, ${friend.family_name} ${friend.name}`,
+                      user_ids: UserIds.filter(
+                        (id): id is string => id !== undefined
+                      ),
+                    });
 
-                          router.push(`/chat?conversation_id=${conversationId}`);
-                      } else {
-                          console.error("Conversation ID không hợp lệ");
-                      }
+                    if (conversationId) {
+                      router.push(`/chat?conversation_id=${conversationId}`);
+                    } else {
+                      console.error("Conversation ID không hợp lệ");
+                    }
                   } catch (error) {
-                      console.error("Lỗi khi tạo cuộc trò chuyện:", error);
+                    console.error("Lỗi khi tạo cuộc trò chuyện:", error);
                   }
-              } else {
+                } else {
                   router.push(`/chat?friend_id=${friend.id}`);
-              }
+                }
               }}
             >
               <Image
@@ -88,7 +95,7 @@ const MessagesFeature = () => {
                   marginRight: 10,
                 }}
               />
-              <Text style={{ marginTop: 5 }}>{friend.name}</Text>
+              <Text style={{ color: brandPrimary }}>{friend.name}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -114,7 +121,7 @@ const MessagesFeature = () => {
       fetchFriends(page, user.id);
     }
   }, [user]);
-  
+
   useFocusEffect(
     useCallback(() => {
       if (user) {
@@ -125,7 +132,7 @@ const MessagesFeature = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#f9f9f9", width: "100%" }}
+      style={{ flex: 1, backgroundColor: backGround, width: "100%" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={{ flex: 1 }}>
@@ -152,25 +159,33 @@ const MessagesFeature = () => {
                 paddingHorizontal: 10,
                 alignItems: "center",
                 flex: 1,
+                justifyContent: "space-between",
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  router.back();
-                }}
-              >
-                <Ionicons
-                  name="arrow-back-outline"
-                  size={24}
-                  color={brandPrimary}
-                />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    router.back();
+                  }}
+                >
+                  <Ionicons
+                    name="arrow-back-outline"
+                    size={24}
+                    color={brandPrimary}
+                  />
+                </TouchableOpacity>
 
-              <Text
-                style={{ fontWeight: "bold", fontSize: 20, marginLeft: 10 }}
-              >
-                {localStrings.Messages.Messages}
-              </Text>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    marginLeft: 10,
+                    color: brandPrimary,
+                  }}
+                >
+                  {localStrings.Messages.Messages}
+                </Text>
+              </View>
               <TouchableOpacity
                 onPress={() => {
                   setShowGroupModel(true);
@@ -192,9 +207,7 @@ const MessagesFeature = () => {
         {/* <MessagerItem messages={fakeMessages} /> */}
         <FlatList
           data={conversations}
-          renderItem={({ item }) => (
-            <MessagerItem conversation={item} />
-          )}
+          renderItem={({ item }) => <MessagerItem conversation={item} />}
           keyExtractor={(item, index) =>
             item.id?.toString() || index.toString()
           }

@@ -21,8 +21,8 @@ import useConversationDetailViewModel from "../viewModel/ConversationDetailsView
 
 const AddGroupModel = () => {
   const { user } = useAuth();
+  const { backgroundColor, brandPrimary, backGround } = useColor();
   const [groupForm] = Form.useForm();
-  const { brandPrimary } = useColor();
   const { friends, page, fetchFriends, loading, hasMore, handleEndReached } =
     useListFriendsViewModel();
 
@@ -134,7 +134,7 @@ const AddGroupModel = () => {
     <View>
       <Form
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: backgroundColor,
         }}
         form={groupForm}
       >
@@ -155,7 +155,7 @@ const AddGroupModel = () => {
                 borderWidth: 1,
                 borderRadius: 5,
                 padding: 10,
-                backgroundColor: "#fff",
+                backgroundColor: backGround,
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.25,
@@ -169,7 +169,7 @@ const AddGroupModel = () => {
 
           <View
             style={{
-              backgroundColor: "white",
+              backgroundColor: backgroundColor,
               borderRadius: 50,
               marginLeft: 10,
               padding: 10,

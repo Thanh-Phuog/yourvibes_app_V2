@@ -241,7 +241,7 @@ export const VnLocalizedStrings = {
   },
   Notification: {
     Notification: "Thông báo",
-    NoNotification: "Không có thông báo",
+    NoNotification: "Không có thông báo",  
     Items: {
       LikePost: "đã thích bài viết của bạn: ",
       SharePost: "đã chia sẻ bài viết của bạn: ",
@@ -338,6 +338,8 @@ Messages:{
   LeaveGroupConfirm: "Bạn có chắc chắn muốn rời khỏi nhóm này?",
   CantLeaveGroup: "Vui lòng chuyển quyền chủ phòng cho người khác trước khi rời nhóm",
   CantDeleteGroup: "Chỉ chủ phòng có quyền xóa nhóm này",
+  Today: "Hôm nay",
+  Yesterday: "Hôm qua",
 },
 Suggested: {
   SuggestedFriends: "Những người bạn có thể biết",

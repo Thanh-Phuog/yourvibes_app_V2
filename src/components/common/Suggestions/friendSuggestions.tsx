@@ -23,7 +23,6 @@ import {
   Button,
 } from "@ant-design/react-native";
 import { Image } from "expo-image";
-import { use } from "i18next";
 
 const FriendSuggestions = () => {
   const router = useRouter();
@@ -60,6 +59,9 @@ const FriendSuggestions = () => {
               type="primary"
               onPress={() => handleFriendRequest(userId, "send")}
               loading={isLoading}
+              style={{
+                backgroundColor: brandPrimary,
+              }}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <FontAwesome5
@@ -84,6 +86,11 @@ const FriendSuggestions = () => {
               type="ghost"
               onPress={() => handleFriendRequest(userId, "cancel")}
               loading={isLoading}
+              style={{
+                backgroundColor: backgroundColor,
+                borderColor: brandPrimary,
+                borderWidth: 1,
+              }}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Entypo name="cross" size={24} color={brandPrimary} />
@@ -171,7 +178,7 @@ const FriendSuggestions = () => {
   }, []);
 
   return (
-    <>
+    <View>
       {friendSuggestions.length > 0 && (
         <View
           className="friend-suggestions"
@@ -187,38 +194,7 @@ const FriendSuggestions = () => {
             marginHorizontal: 10,
           }}
         >
-          {/* <View
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 10,
-              flexDirection: "row",
-            }}
-          > */}
-            {/* <View
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                flexDirection: "row",
-              }}
-            > */}
-              {/* <UsergroupAddOutlined style={{ fontSize: "18px" }} /> */}
-              {/* <FontAwesome5
-                name="user-friends"
-                size={18}
-                color={brandPrimary}
-              />
-              <Text style={{ fontWeight: "bold", fontSize: 14, color: brandPrimary }}>
-                {localStrings.Suggested.SuggestedFriends}
-              </Text> */}
-            {/* </View> */}
-            {/* <TouchableOpacity onPress={showAction} >
-              <Entypo name="dots-three-vertical" size={16} color={brandPrimary}/>
-            </TouchableOpacity> */}
-          {/* </View> */}
-            <>
+            <View>
               <FlatList
                 data={friendSuggestions}
                 horizontal={true}
@@ -322,11 +298,11 @@ const FriendSuggestions = () => {
                 </View>
                 <Text>{localStrings.Suggested.WhyConclusion}</Text>
               </Modal>
-            </>
+            </View>
           {/* )} */}
         </View>
       )}
-    </>
+    </View>
   );
 };
 

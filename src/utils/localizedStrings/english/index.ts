@@ -342,6 +342,8 @@ export const ENGLocalizedStrings = {
     LeaveGroupConfirm: "Are you sure you want to leave this group?",
     CantLeaveGroup: "Please transfer the group ownership to someone else before leaving the group",
     CantDeleteGroup: "Only the group owner has the right to delete this group",
+    Today: "Today",
+    Yesterday: "Yesterday",
   },
   Suggested: {
     SuggestedFriends: "Suggested Friends",

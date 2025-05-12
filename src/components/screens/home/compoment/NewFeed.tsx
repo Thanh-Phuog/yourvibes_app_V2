@@ -81,10 +81,10 @@ const NewFeed = ({isActive}: {isActive: boolean}) => {
   return (
        <FlatList
             ListHeaderComponent={
-              <>
+              <View>
                 {renderAddPost()}
                 <FriendSuggestions />
-              </>
+              </View>
             }
             data={newFeeds}
             renderItem={({ item }) => (

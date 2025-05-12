@@ -76,8 +76,8 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
     }
   }, [isActive]);
   return (
-    <> {triendingPosts.length === 0 && !loadingTrending ? (
-      <>
+    <View> {triendingPosts.length === 0 && !loadingTrending ? (
+      <View>
       {renderAddPost()}
       <View
         style={{
@@ -89,10 +89,10 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
       >
         <Text>{localStrings.Post.NoTrendingPosts}</Text>
       </View>
-      </>
+      </View>
     ) : (
        <FlatList
-      ListHeaderComponent={<>{renderAddPost()}</>}
+      ListHeaderComponent={<View>{renderAddPost()}</View>}
       data={triendingPosts}
       renderItem={({ item }) => (
         <Post
@@ -124,7 +124,7 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
 
     }
    
-    </>
+    </View>
    
   );
 };
