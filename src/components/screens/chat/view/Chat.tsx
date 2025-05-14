@@ -179,24 +179,25 @@ const Chat = () => {
   );
 
 const showMessAction = useCallback(() => {
+  // Khởi tạo danh sách tùy chọn
   const options = [
     localStrings.Messages.Member,
     localStrings.Messages.AddUserGroup,
-    localStrings.Messages.LeaveGroup,  // "LeaveGroup"
+    localStrings.Messages.LeaveGroup,
     localStrings.Messages.DeleteConversation,
     localStrings.Public.Cancel,
   ];
 
-  // Ẩn "Xoá cuộc trò chuyện" (index 3) nếu không phải là conversation_role === 0
+  // Xử lý ẩn từng mục nếu cần
   if (total > 2 && currentUserDetail?.conversation_role !== 0) {
-    options.splice(3, 1); // Xoá "DeleteConversation"
+    options.splice(options.indexOf(localStrings.Messages.DeleteConversation), 1);
   }
 
-  // Ẩn "LeaveGroup" nếu total === 2
   if (total === 2) {
-    options.splice(2, 1); // Xoá "LeaveGroup" (index 2)
+    options.splice(options.indexOf(localStrings.Messages.LeaveGroup), 1);
   }
 
+  // Hiển thị ActionSheet
   showActionSheetWithOptions(
     {
       title: localStrings.Public.Action,
@@ -205,17 +206,20 @@ const showMessAction = useCallback(() => {
       cancelButtonTintColor: "#F95454",
     },
     (buttonIndex) => {
-      switch (buttonIndex) {
-        case 0:
+      const selectedOption = buttonIndex !== undefined ? options[buttonIndex] : null;
+
+      // Thực hiện hành động tương ứng với lựa chọn
+      switch (selectedOption) {
+        case localStrings.Messages.Member:
           setShowMember(true);
           break;
-        case 1:
+        case localStrings.Messages.AddUserGroup:
           setShowUserGroupModel(true);
           break;
-        case 2:
+        case localStrings.Messages.LeaveGroup:
           handleLeaveGroup();
           break;
-        case 3:
+        case localStrings.Messages.DeleteConversation:
           handleDeleteConversation();
           break;
         default:
@@ -223,7 +227,7 @@ const showMessAction = useCallback(() => {
       }
     }
   );
-}, [localStrings, conversationsDetail, total]);
+}, [localStrings, conversationsDetail, total, currentUserDetail]);
 
 
 

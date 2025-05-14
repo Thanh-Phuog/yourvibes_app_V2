@@ -151,7 +151,7 @@ const AddPostScreen = () => {
         {/* Header */}
         <View
           style={{
-            backgroundColor: backGround,
+            backgroundColor: backgroundColor,
             paddingTop: Platform.OS === "ios" ? 30 : 0,
           }}
         >
