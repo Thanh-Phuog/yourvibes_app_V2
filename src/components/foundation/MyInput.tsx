@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, ViewStyle } from 'react-native';
 import { Input } from '@ant-design/react-native';
 import { InputProps, TextAreaProps } from '@ant-design/react-native/lib/input/PropsType';
+import useColor from '@/src/hooks/useColor';
 
 interface MyInputProps extends InputProps {
   variant?: "outlined" | "borderless" | "filled";
@@ -10,6 +11,8 @@ interface MyInputProps extends InputProps {
 }
 
 const MyInput: React.FC<MyInputProps> = (props: MyInputProps) => {
+
+  const {borderColor} = useColor();
   if (props.textArea) {
     return (
       <Input.TextArea
@@ -18,6 +21,7 @@ const MyInput: React.FC<MyInputProps> = (props: MyInputProps) => {
           borderRadius: 5,
           ...styles[props?.variant || "borderless"],
           ...props?.moreStyle
+          
         }}
         {...props}
         {...props.textArea}

@@ -226,7 +226,7 @@ const ProfileHeader = ({
 
   const renderUserInformation = useCallback(() => {
     return (
-      <>
+      <View>
         {/* Cover Image */}
         <View
           style={{ width: "100%", height: 200, backgroundColor: lightGray }}
@@ -349,7 +349,7 @@ const ProfileHeader = ({
             </TouchableOpacity>
             </View>
         )}
-      </>
+      </View>
     );
   }, [
     isLoginUser,
@@ -368,14 +368,14 @@ const ProfileHeader = ({
   }, [user]);
 
   return (
-    <>
+    <View>
       {loading ? (
         <ActivityIndicator size="large" color={lightGray} />
       ) : (
-        <>{renderUserInformation()}</>
+        <View>{renderUserInformation()}</View>
       )}
       <Toast />
-    </>
+    </View>
   );
 };
 

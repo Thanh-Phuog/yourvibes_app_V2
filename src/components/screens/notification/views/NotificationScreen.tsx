@@ -119,11 +119,11 @@ const NotificationScreen = () => {
         />
       ) : (
         loading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: backGround }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
         ) : (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: backGround }}>
             <Text style={{ fontSize: 16, color: '#333' }}>{localStrings.Notification.NoNotification}</Text>
           </View>
         )

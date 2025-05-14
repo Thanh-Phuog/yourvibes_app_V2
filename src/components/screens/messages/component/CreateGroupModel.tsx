@@ -7,6 +7,7 @@ import {
   Platform,
   ActivityIndicator,
   SectionList,
+  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import useListFriendsViewModel from "../../listFriends/viewModel/ListFriendsViewModel";
@@ -20,11 +21,12 @@ import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import useConversationDetailViewModel from "../viewModel/ConversationDetailsViewModel";
 
 const AddGroupModel = () => {
-  const { user } = useAuth();
+  const { user, localStrings } = useAuth();
   const { backgroundColor, brandPrimary, backGround } = useColor();
   const [groupForm] = Form.useForm();
   const { friends, page, fetchFriends, loading, hasMore, handleEndReached } =
     useListFriendsViewModel();
+    
 
   const { createConversation } = useConversationViewModel(defaultMessagesRepo);
   const { createConversationDetail } =
@@ -44,7 +46,7 @@ const AddGroupModel = () => {
   const renderFriend = ({
     item,
   }: {
-    item: { id: string; avatar: string; family_name: string; name: string };
+    item: { id: string; avatar_url: string; family_name: string; name: string };
   }) => (
     <View
       style={{
@@ -59,9 +61,14 @@ const AddGroupModel = () => {
       <Checkbox
         checked={selectedFriends.includes(item.id)}
         onChange={() => toggleSelectFriend(item.id)}
+        style={{
+          marginRight: 10,
+          borderColor: brandPrimary,
+          
+        }}
       />
       <Image
-        source={{ uri: item.avatar }}
+        source={{ uri: item.avatar_url }}
         style={{
           width: 40,
           height: 40,
@@ -70,7 +77,7 @@ const AddGroupModel = () => {
           marginRight: 10,
         }}
       />
-      <Text style={{ fontSize: 16, color: "black" }}>
+      <Text style={{ fontSize: 16, color: brandPrimary }}>
         {item.family_name} {item.name}
       </Text>
     </View>
@@ -85,7 +92,15 @@ const AddGroupModel = () => {
   const handleCreateGroup = async () => {
     try {
       if (selectedFriends.length === 0) {
-        alert("Vui lòng chọn ít nhất một người bạn!");
+        Alert.alert(
+  "Thông báo", // Tiêu đề
+  "Bạn cần chọn ít nhất một người để tạo nhóm!", // Nội dung
+  [
+    {
+      text: "OK",
+    },
+  ]
+);
         return;
       }
 
@@ -99,10 +114,6 @@ const AddGroupModel = () => {
             })
             .filter(Boolean) // Lọc bỏ giá trị null
             .join(", ");
-
-          // const fullName = `${user?.family_name} ${user?.name}${
-          //   friendNames ? `, ${friendNames}` : ""
-          // }`;
 
           const conversationId = await createConversation({
             // name: fullName,
@@ -143,10 +154,9 @@ const AddGroupModel = () => {
             flexDirection: "row",
             alignItems: "center",
             padding: 10,
-            paddingBottom: Platform.OS === "ios" ? 10 : 40,
           }}
         >
-          <Form.Item noStyle name="message">
+          <Form.Item noStyle name="message"    rules={[{ required: true, message: localStrings.Messages.NameGroup}]}>
             <Input
               placeholder={"Type your message here"}
               style={{
@@ -162,8 +172,9 @@ const AddGroupModel = () => {
                 shadowRadius: 3.84,
                 elevation: 5,
               }}
-              //   value={newMessage}
-              //   onChangeText={(text) => setNewMessage(text)}
+              inputStyle={{
+                color: brandPrimary,
+              }}
             />
           </Form.Item>
 
@@ -202,7 +213,6 @@ const AddGroupModel = () => {
         sections={[{ title: "", data: friends as any }]}
         renderItem={renderFriend}
         keyExtractor={(item) => item.id}
-        onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         ListFooterComponent={
           loading && hasMore ? (

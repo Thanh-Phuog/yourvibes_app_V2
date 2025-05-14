@@ -65,6 +65,8 @@ export const ENGLocalizedStrings = {
     Theme: "Theme",
     DarkMode: "Dark Mode",
     LightMode: "Light Mode",
+    AllUser: "Users YourVibes",
+    UserNotFound: "User not found",
   },
   Form: {
     Label: {
@@ -344,6 +346,7 @@ export const ENGLocalizedStrings = {
     CantDeleteGroup: "Only the group owner has the right to delete this group",
     Today: "Today",
     Yesterday: "Yesterday",
+    NameGroup: "Please enter a group name!",
   },
   Suggested: {
     SuggestedFriends: "Suggested Friends",
@@ -361,6 +364,7 @@ export const ENGLocalizedStrings = {
       "We use an algorithm to find people you might know or want to connect with!",
   },
   People: {
+    People: "People",
     FetchUsersFailed: "Failed to fetch users!",
     ErrorFetchingUsers: "Error fetching users!",
     NoFriendRequests: "No friend requests",

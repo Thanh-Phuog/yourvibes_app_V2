@@ -9,33 +9,22 @@ import { useAuth } from "@/src/context/auth/useAuth";
 import { router } from "expo-router";
 import NewFeed from "../compoment/NewFeed";
 import Triending from "../compoment/Triending";
-import FriendRequestAndBirth from "../compoment/FriendRequestAndBirth";
+import FriendRequestAndUser from "../compoment/FriendRequestAndUser";
 
 const HomeScreen = () => {
   const { brandPrimary, backgroundColor, backGround } = useColor();
   const { user, localStrings, theme } = useAuth();
 
+  const [activeTab, setActiveTab] = useState(0); // 👉 Theo dõi tab hiện tại
+
   const tabs = [
     { title: localStrings.Public.NewFeed },
     { title: localStrings.Public.Trending },
-    { title: localStrings.Public.BirthdayFriend },
+    { title: localStrings.People.People},
   ];
 
-  const [activeTab, setActiveTab] = useState(0);
-  const [loadedTabs, setLoadedTabs] = useState([true, false, false]);
-
-  const handleTabChange = (tab: { title: React.ReactNode }, index: number) => {
-    setActiveTab(index);
-    if (!loadedTabs[index]) {
-      const updated = [...loadedTabs];
-      updated[index] = true;
-      setLoadedTabs(updated);
-    }
-  };
-
-
   return (
-    <View style={{ flex: 1, backgroundColor:backGround }}>
+    <View style={{ flex: 1, backgroundColor: backGround }}>
       {/* Header */}
       <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === "ios" ? 40 : 0 }}>
         <View
@@ -47,7 +36,9 @@ const HomeScreen = () => {
           }}
         >
           <Image
-            source={theme === "dark" ? require("@/assets/images/yourvibes_white.png") : require("@/assets/images/yourvibes_black.png")}
+            source={theme === "dark"
+              ? require("@/assets/images/yourvibes_white.png")
+              : require("@/assets/images/yourvibes_black.png")}
             style={{
               width: 140,
               height: "65%",
@@ -68,12 +59,13 @@ const HomeScreen = () => {
       <View style={{ flex: 1 }}>
         <Tabs
           tabs={tabs}
-          onChange={handleTabChange}
           swipeable={false}
           tabBarBackgroundColor={backgroundColor}
           tabBarActiveTextColor={brandPrimary}
           tabBarTextStyle={{ fontWeight: "bold", fontSize: 13 }}
           tabBarInactiveTextColor="gray"
+          page={activeTab}
+          onChange={(tab, index) => setActiveTab(index)} // 👉 Lưu index của tab đang active
           tabBarUnderlineStyle={{
             backgroundColor: brandPrimary,
             height: 2,
@@ -92,25 +84,22 @@ const HomeScreen = () => {
               }}
             />
           )}
-        
           style={{
             marginTop: 10,
-            // marginHorizontal: 10,
-            borderRadius: 16, // 👈 Bo góc ở đây
-            overflow: "hidden", // 👈 Quan trọng để bo góc có hiệu lực
+            borderRadius: 16,
+            overflow: "hidden",
           }}
-        
         >
           <View style={{ flex: 1 }}>
-          {loadedTabs[0] && <NewFeed isActive={activeTab === 0} />}
+            <NewFeed isActive={activeTab === 0} />
           </View>
 
           <View style={{ flex: 1 }}>
-          {loadedTabs[1] && <Triending isActive={activeTab === 1} />}
+            <Triending isActive={activeTab === 1} />
           </View>
 
           <View style={{ flex: 1 }}>
-          {loadedTabs[2] && <FriendRequestAndBirth isActive={activeTab === 2} />}
+            <FriendRequestAndUser isActive={activeTab === 2} />
           </View>
         </Tabs>
       </View>

@@ -35,7 +35,7 @@ const MyDateTimePicker = ({
   };
 
   return (
-    <>
+    <View>
       {Platform.OS === 'ios' ? (
         <Modal
           visible={show}
@@ -76,7 +76,7 @@ const MyDateTimePicker = ({
           </View>
         </Modal>
       ) : (
-        <>
+        <View>
           {show && (
             <DateTimePicker
               value={date}
@@ -87,9 +87,9 @@ const MyDateTimePicker = ({
               onChange={handleChange}
             />
           )}
-        </>
+        </View>
       )}
-    </>
+    </View>
 
   );
 };

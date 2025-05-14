@@ -16,11 +16,12 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
     loadingTrending,
     loadMoreTriendingPosts,
     fetchTrendingPosts,
-    onRefresh,
+    // onRefresh,
     triendingPosts,
     visibleItems,
     onViewableItemsChanged,
     pageTrend,
+    isLoadingMore
   } = TrendingViewModel(defaultPostRepo);
   const renderAddPost = () => {
     return (
@@ -52,7 +53,7 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
             }}
           />
           <View style={{ marginLeft: 10, flex: 1 }}>
-            <Text>
+            <Text style={{ color: brandPrimary }}>
               {user?.family_name + " " + user?.name ||
                 localStrings.Public.Username}
             </Text>
@@ -72,60 +73,59 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
   };
   useEffect(() => {
     if (isActive) {
-      fetchTrendingPosts(pageTrend);
+      fetchTrendingPosts(1);
     }
   }, [isActive]);
   return (
-    <View> {triendingPosts.length === 0 && !loadingTrending ? (
-      <View>
-      {renderAddPost()}
-      <View
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: 100,
-        }}
-      >
-        <Text>{localStrings.Post.NoTrendingPosts}</Text>
-      </View>
-      </View>
-    ) : (
-       <FlatList
-      ListHeaderComponent={<View>{renderAddPost()}</View>}
-      data={triendingPosts}
-      renderItem={({ item }) => (
-        <Post
-          key={item?.id}
-          post={item}
-          isVisible={visibleItems.includes(item?.id as string)}
-        >
-          {item?.parent_post && (
+    <View>
+      {triendingPosts.length === 0 && !loadingTrending ? (
+        <View>
+          {renderAddPost()}
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: 100,
+            }}
+          >
+            <Text>{localStrings.Post.NoTrendingPosts}</Text>
+          </View>
+        </View>
+      ) : (
+        <FlatList
+          ListHeaderComponent={<View>{renderAddPost()}</View>}
+          data={triendingPosts}
+          renderItem={({ item }) => (
             <Post
-              post={item?.parent_post}
-              isParentPost
-              isVisible={visibleItems.includes(item?.parent_post?.id as string)}
-            />
+              key={item?.id}
+              post={item}
+              isVisible={visibleItems.includes(item?.id as string)}
+            >
+              {item?.parent_post && (
+                <Post
+                  post={item?.parent_post}
+                  isParentPost
+                  isVisible={visibleItems.includes(
+                    item?.parent_post?.id as string
+                  )}
+                />
+              )}
+            </Post>
           )}
-        </Post>
+          keyExtractor={(item) => item?.id as string}
+          ListFooterComponent={renderFooter}
+          onEndReached={loadMoreTriendingPosts}
+          onEndReachedThreshold={0.5}
+          removeClippedSubviews={true}
+          showsVerticalScrollIndicator={false}
+          // onRefresh={onRefresh}
+          refreshing={isLoadingMore}
+          onViewableItemsChanged={onViewableItemsChanged.current}
+          viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+        />
       )}
-      keyExtractor={(item) => item?.id as string}
-      ListFooterComponent={renderFooter}
-      // onEndReached={loadMoreTriendingPosts}
-      onEndReachedThreshold={0.5}
-      removeClippedSubviews={true}
-      showsVerticalScrollIndicator={false}
-      onRefresh={onRefresh}
-      refreshing={loadingTrending}
-      onViewableItemsChanged={onViewableItemsChanged.current}
-      viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
-    />
-    )
-
-    }
-   
     </View>
-   
   );
 };
 

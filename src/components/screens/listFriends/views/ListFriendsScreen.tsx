@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator, Image, SectionList, Platform } from 'react-native'
+import { View, Text, TouchableOpacity, ActivityIndicator, Image, SectionList, Platform, FlatList } from 'react-native'
 import React, { useEffect } from 'react'
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { router } from 'expo-router';
@@ -18,21 +18,65 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
     handleMoreOptions,
     fetchFriends,
   } = useListFriendsViewModel();
-  const {colorOnl} = useColor();
+  const {colorOnl, backGround, backgroundColor, brandPrimary} = useColor();
 
   const { localStrings } = useAuth();
-  const renderFriend = ({
-    item,
-  }: {
-    item: { id: string; avatar_url: string; family_name: string; name: string,   ative_status: boolean; };
-  }) => (
+
+
+       const renderFooter = () => {
+            if (!loading) return null;
+            return (
+              <View style={{ paddingVertical: 10, alignItems: "center" }}>
+                <ActivityIndicator size="large" color={brandPrimary} />
+              </View>
+            );
+          };
+
+  const Header = () => (
     <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        backgroundColor: backgroundColor,
+        borderBottomWidth: 1,
+        borderColor: "#e0e0e0",
+        marginTop: Platform.OS === 'ios' ? 30 : 0,
+      }}
+    >
+      <TouchableOpacity onPress={() => router.back()}>
+        <Ionicons name="arrow-back" size={24} color={brandPrimary} />
+      </TouchableOpacity>
+      <Text style={{ fontSize: 18, fontWeight: "bold", color: brandPrimary }}>
+        {localStrings.ListFriends.ListFriends}
+      </Text>
+      <View />
+    </View>
+  );
+  useEffect(() => {
+    if (userId) {
+      fetchFriends(page, userId);
+    }
+  }, [userId]);
+  return (
+    <ActionSheetProvider>
+      <View style={{ flex: 1, backgroundColor: backGround}}>
+        <Header />
+        <View style={{ flex: 1}}>
+          <FlatList 
+            data={friends}
+            renderItem={({ item }) => {
+              return (
+                 <View
       style={{
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderColor: "#e0e0e0",
+        backgroundColor: backgroundColor,
       }}
     >
       <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", flex: 1 }} onPress={() => {
@@ -70,95 +114,23 @@ const ListFriendsScreen = ({ userId }: { userId: string }) => {
         )}
         </View>
      
-        <Text style={{ fontSize: 16, color: "black" }}>
+        <Text style={{ fontSize: 16, color: brandPrimary }}>
           {item.family_name} {item.name}
         </Text>
       </TouchableOpacity>
-
-      {/* <TouchableOpacity
-        style={{ paddingHorizontal: 10 }}
-        onPress={() => handleMoreOptions(item)}
-      >
-        <Ionicons name="ellipsis-vertical" size={24} color="black" />
-      </TouchableOpacity> */}
     </View>
-  );
+              )}
+            }
+            keyExtractor={(item) => item?.id as string}
+            ListFooterComponent={renderFooter}
+            onEndReached={() => handleEndReached(userId)}
+            onEndReachedThreshold={0.5}
+            removeClippedSubviews={true}
+            showsVerticalScrollIndicator={false}
+            onRefresh={() => fetchFriends(1, userId)}
+            refreshing={loading}/>
 
-  const Header = () => (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        backgroundColor: "white",
-        borderBottomWidth: 1,
-        borderColor: "#e0e0e0",
-        marginTop: Platform.OS === 'ios' ? 30 : 0,
-      }}
-    >
-      <TouchableOpacity onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-        {localStrings.ListFriends.ListFriends}
-      </Text>
-      <View />
-    </View>
-  );
-  useEffect(() => {
-    if (userId) {
-      fetchFriends(page, userId);
-    }
-  }, [userId]);
-  return (
-    <ActionSheetProvider>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        <Header />
-        <View style={{ flex: 1, paddingHorizontal: 16 }}>
-          {loading && page === 1 ? (
-            <ActivityIndicator size="large" color="blue" />
-          ) : (
-            <SectionList
-              sections={[{ title: "", data: friends as any }]}
-              renderItem={renderFriend}
-              keyExtractor={(item) => item.id}
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.5}
-              ListFooterComponent={
-                loading && hasMore ? (
-                  <ActivityIndicator size="small" color="blue" />
-                ) : friends?.length === 0 ?
-                  (
-                    <>
-                      <Image
-                        source={{
-                          uri: "https://res.cloudinary.com/dkf51e57t/image/upload/v1729847545/Search-rafiki_uuq8tx.png",
-                        }}
-                        style={{
-                          width: "100%",
-                          height: 280,
-                          resizeMode: "contain",
-                        }}
-                      />
-                      <TouchableOpacity onPress={() => router.push("/(tabs)/search")}>
-                        <Text
-                          style={{
-                            paddingHorizontal: 20,
-                            color: "gray",
-                            textAlign: "center",
-                            fontSize: 16,
-                          }}
-                        >
-                          {localStrings.Public.FriendFind}
-                        </Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : null
-              }
-            />
-          )}
+           
         </View>
         <Toast />
       </View>

@@ -64,7 +64,7 @@ const MessagesFeature = () => {
                 if (UserIds) {
                   try {
                     const conversationId = await createConversation({
-                      name: `${user?.family_name} ${user?.name}, ${friend.family_name} ${friend.name}`,
+                      name: `chat`,
                       user_ids: UserIds.filter(
                         (id): id is string => id !== undefined
                       ),
@@ -105,15 +105,15 @@ const MessagesFeature = () => {
 
   const renderFooter = useCallback(() => {
     return (
-      <>
+      <View>
         {loading ? (
           <View style={{ paddingVertical: 20 }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
         ) : (
-          <></>
+          <View></View>
         )}
-      </>
+      </View>
     );
   }, [loading]);
   useEffect(() => {
@@ -222,14 +222,22 @@ const MessagesFeature = () => {
       </View>
       <Modal
         popup
+        maskClosable
         visible={showGroupModel}
         animationType="slide-up"
         onClose={() => {
           setShowGroupModel(false);
         }}
-        maskClosable
       >
-        <AddGroupModel />
+        <View
+          style={{
+            backgroundColor: backgroundColor,
+            paddingTop: Platform.OS === "ios" ? 30 : 0,
+            height: 500,
+          }}>
+            <AddGroupModel /> 
+          </View>
+       
       </Modal>
     </KeyboardAvoidingView>
   );

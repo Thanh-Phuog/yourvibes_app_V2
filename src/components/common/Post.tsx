@@ -35,7 +35,7 @@ const Post: React.FC<IPost> = React.memo(({
   noComment = false,
   isVisible = false,
 }) => {
-  const { brandPrimary, brandPrimaryTap, backgroundColor } = useColor();
+  const { brandPrimary, brandPrimaryTap, backgroundColor, borderColor } = useColor();
   const { user, localStrings } = useAuth();
   const [shareForm] = Form.useForm();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -160,7 +160,7 @@ const Post: React.FC<IPost> = React.memo(({
 
     <Card style={{
       margin: 10,
-      borderColor: isParentPost ? brandPrimary : "white",
+      borderColor: isParentPost ? brandPrimary : borderColor,
       backgroundColor: backgroundColor,
     }}
     >
@@ -180,15 +180,15 @@ const Post: React.FC<IPost> = React.memo(({
               </TouchableOpacity>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {likedPost?.is_advertisement ? (
-                  <>
+                  <View>
                     <Text style={{ color: brandPrimaryTap, fontSize: 12, opacity: 0.5, marginRight: 10 }}>{localStrings.Post.Sponsor}</Text>
                     <MaterialCommunityIcons name="advertisements" size={16} color={brandPrimaryTap} />
-                  </>)
+                  </View>)
                   : (
-                    <>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Text style={{ color: brandPrimaryTap, fontSize: 12, opacity: 0.5, marginRight: 10 }}>{getTimeDiff(likedPost?.created_at, localStrings)}</Text>
                       {renderPrivacyIcon()}
-                    </>
+                    </View>
                   )
                 }
 
@@ -199,7 +199,7 @@ const Post: React.FC<IPost> = React.memo(({
                 style={{ width: '8%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                 onPress={showAction}
               >
-                <Entypo name="dots-three-vertical" size={16} />
+                <Entypo name="dots-three-vertical" size={16} color={brandPrimaryTap} />
               </TouchableOpacity>
             )}
           </View>
@@ -226,7 +226,7 @@ const Post: React.FC<IPost> = React.memo(({
          {likedPost?.content && (
            <View style={{ paddingLeft: 10 }}>
             <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
-             <Text>{likedPost?.content}</Text>
+             <Text style ={{color: brandPrimary}} >{likedPost?.content}</Text>
             </TouchableOpacity>
            </View>
          )}
@@ -237,7 +237,7 @@ const Post: React.FC<IPost> = React.memo(({
         <View>
                   <View style={{ paddingLeft: 10 }}>
                   <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
-                    <Text>{likedPost?.content}</Text>
+                    <Text style={{color:brandPrimary}}>{likedPost?.content}</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={{padding: 5}}>
@@ -260,7 +260,7 @@ const Post: React.FC<IPost> = React.memo(({
             {likedPost?.content && (
               <View style={{ paddingBottom: 5, paddingLeft: 0 }}>
                  <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
-                  <Text>{likedPost?.content}</Text>
+                  <Text style={{color:brandPrimary}}>{likedPost?.content}</Text>
                  </TouchableOpacity>
                 
               </View>
@@ -280,7 +280,7 @@ const Post: React.FC<IPost> = React.memo(({
 
       {/* Footer */}
       {isParentPost || noFooter ? (
-        <></>
+        <View></View>
       ) : (
         <Card.Footer
           content={
@@ -306,18 +306,18 @@ const Post: React.FC<IPost> = React.memo(({
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity disabled={noComment} style={{ flexDirection: "row", alignItems: "center" }} onPress={() => {setShowCommentPopup(true); console.log("Modal Post ID:", likedPost?.id);
+              <TouchableOpacity disabled={noComment} style={{ flexDirection: "row", alignItems: "center" }} onPress={() => {setShowCommentPopup(true);
               }} >
                 <FontAwesome name="comments-o" size={20} color={brandPrimary} />
                 <Text style={{ marginLeft: 5, color: brandPrimary }}>{likedPost?.comment_count}</Text>
               </TouchableOpacity>
 
               {shareLoading ? (
-                <>
+                <View>
                   <ActivityIndicator size={'small'} />
-                </>
+                </View>
               ) : (
-                <>
+                <View>
                   <TouchableOpacity
                     onPress={() => {
                       // sharePost(likedPost?.id as string);
@@ -327,7 +327,7 @@ const Post: React.FC<IPost> = React.memo(({
                   >
                     <AntDesign name="sharealt" size={20} color={brandPrimary} />
                   </TouchableOpacity>
-                </>
+                </View>
               )}
             </View>
           }
@@ -349,13 +349,12 @@ const Post: React.FC<IPost> = React.memo(({
         animationType="slide-up"
         maskClosable
         onClose={() => setShowCommentPopup(false)}
+        style={{ backgroundColor: backgroundColor, width: '100%' }}
       >
-        {/* <View style={{height:600 }}> */}
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center" }}> 
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center", color: brandPrimary }}> 
             {localStrings.Public.Comment}
           </Text>
         <PostDetails postId={likedPost?.id as string} isModal={true} />
-        {/* </View> */}
       </Modal>
 
       {/* Share popup */}
@@ -391,7 +390,7 @@ const Post: React.FC<IPost> = React.memo(({
                   </View>
                   <View style={{ marginLeft: 10, flex: 1 }}>
                     <View style={{ flexDirection: 'column' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 16, color: brandPrimary }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
                       <Form.Item name="content" noStyle>
                         <MyInput
                           placeholder={localStrings.AddPost.WhatDoYouThink}
