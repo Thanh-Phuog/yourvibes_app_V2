@@ -251,7 +251,7 @@ const Ads = ({ postId }: { postId: string }) => {
 			{/* Header */}
 			<View
 				style={{
-					backgroundColor: backgroundColor,
+					backgroundColor: backGround,
 					paddingTop: Platform.OS === "ios" ? 40 : 0,
 				}}
 			>
