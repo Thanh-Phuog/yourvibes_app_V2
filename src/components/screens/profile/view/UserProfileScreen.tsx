@@ -118,7 +118,7 @@ const UserProfileScreen = ({ id }: { id: string }) => {
         <FlatList
           data={null}
           ListHeaderComponent={
-            <>
+            <View>
               <ProfileHeader
                 total={total}
                 friendCount={friendCount}
@@ -146,7 +146,7 @@ const UserProfileScreen = ({ id }: { id: string }) => {
                 resultCode={resultCode}
               />
               <Toast />
-            </>
+            </View>
           }
           renderItem={() => null}
           showsVerticalScrollIndicator={false}

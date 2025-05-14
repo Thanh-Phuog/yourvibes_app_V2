@@ -8,7 +8,6 @@ import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import { Entypo } from "@expo/vector-icons";
 import { useAuth } from "@/src/context/auth/useAuth";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { use } from "i18next";
 
 const MemberMessage = ({
   conversationDetail,
@@ -65,6 +64,8 @@ const MemberMessage = ({
   }, [localStrings]);
 
   const isCurrentUser = conversationDetail?.user?.id === user?.id;
+  console.log("isCurrentUser", isCurrentUser);
+  
   
 
   return (

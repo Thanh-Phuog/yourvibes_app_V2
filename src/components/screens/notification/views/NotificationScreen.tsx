@@ -10,11 +10,12 @@ import NotifiCationViewModel from '../viewModel/NotifiCationViewModel';
 import { defaultNotificationRepo } from '@/src/api/features/notification/NotifiCationRepo';
 import { useAuth } from '@/src/context/auth/useAuth';
 import Toast from 'react-native-toast-message';
+import { DateTransfer } from '@/src/utils/helper/DateTransfer';
 
 
 
 const NotificationScreen = () => {
-  const { brandPrimary, backgroundColor } = useColor();
+  const { brandPrimary, backgroundColor, backGround, brandPrimaryTap } = useColor();
   const { notifications, loading, fetchNotifications, loadMoreNotifi, updateNotification, updateAllNotification } = NotifiCationViewModel(defaultNotificationRepo);
   const { localStrings } = useAuth();
 
@@ -31,6 +32,7 @@ const NotificationScreen = () => {
   }
 
   const todayNotifi = notifications.filter((item) => item.created_at && isToday(item.created_at));
+  const yesterdayNotifi = notifications.filter((item) => item.created_at && !isToday(item.created_at) && new Date(item.created_at).getDate() === new Date(Date.now() - 86400000).getDate());
   const oldNotifi = notifications.filter((item) => item.created_at && !isToday(item.created_at));
 
 
@@ -69,7 +71,7 @@ const NotificationScreen = () => {
               <Ionicons name="arrow-back-outline" size={24} color={brandPrimary} />
             </TouchableOpacity>
 
-            <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 10 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 10 , color: brandPrimary }}>
               {localStrings.Notification.Notification}
             </Text>
 
@@ -83,14 +85,15 @@ const NotificationScreen = () => {
       {/* content */}
       {notifications.length > 0 ? (
         <FlatList
-        data={[{ type: "today", data: todayNotifi }, { type: "previous", data: oldNotifi }]}
+        data={[{ type: "today", data: todayNotifi }, { type: "previous", data: oldNotifi }, { type: "yesterday", data: yesterdayNotifi }]}
         keyExtractor={(item) => item.type}
         renderItem={({ item }) => {
           if (item.data.length === 0) return null;
           return (
-            <View style={{ backgroundColor: '#f0f0f0', padding: 10 }}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 5 }}>
-                {item.type === "today" ? "Hôm nay" : "Trước đó"}
+            <View style={{ backgroundColor: backGround, paddingHorizontal: 5 }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: brandPrimaryTap, marginBottom: 5 }}>
+                {item.type === "today" ? localStrings.Messages.Today : item.type === "yesterday" ? localStrings.Messages.Yesterday : DateTransfer(item.data[0].created_at)
+                }
               </Text>
               <FlatList
                 data={item.data}
@@ -116,11 +119,11 @@ const NotificationScreen = () => {
         />
       ) : (
         loading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: backGround }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
         ) : (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: backGround }}>
             <Text style={{ fontSize: 16, color: '#333' }}>{localStrings.Notification.NoNotification}</Text>
           </View>
         )

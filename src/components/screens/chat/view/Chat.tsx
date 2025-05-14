@@ -29,10 +29,12 @@ import Toast from "react-native-toast-message";
 import { useWebSocket } from "@/src/context/socket/useSocket";
 import UserProfileViewModel from "../../profile/viewModel/UserProfileViewModel";
 import AddUserGroup from "../component/AddUserGroup";
-import { CustomStatusCode } from "@/src/utils/helper/CustomStatus";
+import { DateTransfer } from "@/src/utils/helper/DateTransfer";
+import MyInput from "@/src/components/foundation/MyInput";
 
 const Chat = () => {
-  const { backgroundColor, brandPrimary, backGround } = useColor();
+  const { backgroundColor, brandPrimary, backGround, colorChat, borderColor } =
+    useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -51,8 +53,9 @@ const Chat = () => {
     loadMoreMessages,
     loadingMessages,
   } = useMessagesViewModel(defaultMessagesRepo);
-  const { createConversation, deleteConversation } = useConversationViewModel(defaultMessagesRepo);
-  const mergerMessages = [...socketMessages, ...messages];
+  const { createConversation, deleteConversation } =
+    useConversationViewModel(defaultMessagesRepo);
+  const merMessages = [...socketMessages, ...messages];
   const { conversation_id: rawConversationId, friend_id: rawFriendId } =
     useLocalSearchParams();
   const conversation_id = Array.isArray(rawConversationId)
@@ -81,23 +84,23 @@ const Chat = () => {
   }) => {
     setSelectedMessage(message);
   };
-  
+
   const handleSendMessages = async () => {
-      handleSendMessage({
-        content: newMessage,
-        conversation_id: currentConversationId,
-        parent_id: selectedMessage?.id || undefined,
-        user: {
-          id: user?.id,
-          avatar_url: user?.avatar_url,
-          family_name: user?.family_name,
-          name: user?.name,
-        },
-      });
-      setSelectedMessage(null);
-      messagerForm.setFieldsValue({ message: "" });
-    }
-  
+    handleSendMessage({
+      content: newMessage,
+      conversation_id: currentConversationId,
+      parent_id: selectedMessage?.id || undefined,
+      user: {
+        id: user?.id,
+        avatar_url: user?.avatar_url,
+        family_name: user?.family_name,
+        name: user?.name,
+      },
+    });
+    setSelectedMessage(null);
+    messagerForm.setFieldsValue({ message: "" });
+  };
+
   useEffect(() => {
     if (conversation_id) {
       if (typeof conversation_id === "string") {
@@ -120,11 +123,8 @@ const Chat = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
-  // useEffect(() => {
-  //   flatListRef.current?.scrollToEnd({ animated: true });
-  // }, [messages]);
 
-  const handleDeleteConversation =  () => {
+  const handleDeleteConversation = () => {
     Modal.alert(
       localStrings.Messages.DeleteConversation,
       localStrings.Messages.DeleteConversationConfirm,
@@ -146,7 +146,7 @@ const Chat = () => {
         },
       ]
     );
-  }
+  };
 
   const handleLeaveGroup = () => {
     Modal.alert(
@@ -174,64 +174,142 @@ const Chat = () => {
     );
   };
   // Tìm phần tử trong conversationsDetail tương ứng với user hiện tại
-  const currentUserDetail = conversationsDetail.find(item => item.user?.id === user?.id);
+  const currentUserDetail = conversationsDetail.find(
+    (item) => item.user?.id === user?.id
+  );
 
-  const showMessAction = useCallback(() => {
-    const options = [
-      localStrings.Messages.Member,
-      localStrings.Messages.AddUserGroup,
-      localStrings.Messages.LeaveGroup,
-      localStrings.Messages.DeleteConversation,
-      localStrings.Public.Cancel
-      ];
-    
-    // Ẩn "Xoá cuộc trò chuyện" (index 2) nếu không phải là conversation_role === 0
-    if (total > 2 && currentUserDetail?.conversation_role !== 0) {
-      options.splice(3, 1); // Xoá "DeleteConversation"
-    }
+const showMessAction = useCallback(() => {
+  const options = [
+    localStrings.Messages.Member,
+    localStrings.Messages.AddUserGroup,
+    localStrings.Messages.LeaveGroup,  // "LeaveGroup"
+    localStrings.Messages.DeleteConversation,
+    localStrings.Public.Cancel,
+  ];
 
-      
-    showActionSheetWithOptions(
-      {
-        title: localStrings.Public.Action,
-        options: options,
-        cancelButtonIndex: options.length - 1,
-        cancelButtonTintColor: "#F95454",
-      },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            setShowMember(true);
-            break;
-          case 1:
-            setShowUserGroupModel(true);
-            break;
-          case 2:
-            handleLeaveGroup();
-            break;
-            case 3:
-            handleDeleteConversation();
-            break;
-          default:
-            break;
-        }
+  // Ẩn "Xoá cuộc trò chuyện" (index 3) nếu không phải là conversation_role === 0
+  if (total > 2 && currentUserDetail?.conversation_role !== 0) {
+    options.splice(3, 1); // Xoá "DeleteConversation"
+  }
+
+  // Ẩn "LeaveGroup" nếu total === 2
+  if (total === 2) {
+    options.splice(2, 1); // Xoá "LeaveGroup" (index 2)
+  }
+
+  showActionSheetWithOptions(
+    {
+      title: localStrings.Public.Action,
+      options: options,
+      cancelButtonIndex: options.length - 1,
+      cancelButtonTintColor: "#F95454",
+    },
+    (buttonIndex) => {
+      switch (buttonIndex) {
+        case 0:
+          setShowMember(true);
+          break;
+        case 1:
+          setShowUserGroupModel(true);
+          break;
+        case 2:
+          handleLeaveGroup();
+          break;
+        case 3:
+          handleDeleteConversation();
+          break;
+        default:
+          break;
       }
-    );
-  }, [localStrings, conversationsDetail]);
+    }
+  );
+}, [localStrings, conversationsDetail, total]);
+
+
 
   const renderFooter = useCallback(() => {
     return (
-      <>
+      <View>
         {loadingMessages ? (
           <View style={{ paddingVertical: 20 }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
         ) : (
-          <></>
+          <View></View>
         )}
-      </>
+      </View>
     );
   }, [loadingMessages]);
+
+  const checkDate = (date: string) => {
+    const today = new Date();
+    const messageDate = new Date(date);
+
+    const isToday =
+      today.getDate() === messageDate.getDate() &&
+      today.getMonth() === messageDate.getMonth() &&
+      today.getFullYear() === messageDate.getFullYear();
+
+    if (isToday) return localStrings.Messages.Today;
+
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const isYesterday =
+      yesterday.getDate() === messageDate.getDate() &&
+      yesterday.getMonth() === messageDate.getMonth() &&
+      yesterday.getFullYear() === messageDate.getFullYear();
+
+    if (isYesterday) return localStrings.Messages.Yesterday;
+
+    return DateTransfer(date); // giả sử bạn có hàm này để format ngày
+  };
+  // Hàm chuyển UTC sang giờ Việt Nam
+  const convertToTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    const vnDate = new Date(utcDate.getTime() + 7 * 3600000); // Cộng thêm 7 giờ
+    return vnDate.toLocaleString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Nhóm tin nhắn theo ngày
+  const groupMessagesByDate = (messages: any[]) => {
+    const groupedMessages: { [key: string]: any[] } = {};
+    messages.forEach((message) => {
+      const date = checkDate(message.created_at); // Bạn có thể thay `checkDate` bằng bất kỳ logic xử lý ngày nào
+      if (!groupedMessages[date]) {
+        groupedMessages[date] = [];
+      }
+      groupedMessages[date].push(message);
+    });
+    return groupedMessages;
+  };
+
+  // Lấy nhóm tin nhắn
+  const groupedMessages = groupMessagesByDate(merMessages);
+
+  // Chuyển thành một mảng phẳng để sử dụng trong FlatList
+  const flatMessages = Object.keys(groupedMessages).flatMap((date) => {
+    // Thêm một phần tử "header" cho ngày
+    const headerItem = {
+      type: "header",
+      id: `header-${date}`,
+      date,
+    };
+
+    // Các tin nhắn trong ngày
+    const messageItems = groupedMessages[date].map((msg) => ({
+      ...msg,
+      type: "message", // Đánh dấu kiểu tin nhắn
+    }));
+
+    // Trả về header và các tin nhắn của ngày đó
+    return [...messageItems,headerItem];
+  });
+
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -255,16 +333,18 @@ const Chat = () => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            backgroundColor: "#fff",
+            backgroundColor: backgroundColor,
             zIndex: 10,
             borderBottomColor: "black",
             borderBottomWidth: 1,
           }}
         >
-          <TouchableOpacity onPress={() =>{
-            router.back()}
-          } >
-            <Feather name="arrow-left" size={24} color="black" />
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Feather name="arrow-left" size={24} color={brandPrimary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -272,14 +352,21 @@ const Chat = () => {
               fontSize: 18,
               fontWeight: "bold",
               flex: 1,
+              color: brandPrimary,
             }}
           >
-            
             {/* {conversationsDetail[0]?.conversation?.name ||
               } */}
-              {total === 2 ? (
-                conversationsDetail[0]?.user?.id === user?.id ? (conversationsDetail[1]?.user?.family_name + " " + conversationsDetail[1]?.user?.name) : (conversationsDetail[0]?.user?.family_name + " " + conversationsDetail[0]?.user?.name)
-              ) : (conversationsDetail[0]?.conversation?.name || `${userInfo?.family_name} ${userInfo?.name}`)}
+            {total === 2
+              ? conversationsDetail[0]?.user?.id === user?.id
+                ? conversationsDetail[1]?.user?.family_name +
+                  " " +
+                  conversationsDetail[1]?.user?.name
+                : conversationsDetail[0]?.user?.family_name +
+                  " " +
+                  conversationsDetail[0]?.user?.name
+              : conversationsDetail[0]?.conversation?.name ||
+                `${userInfo?.family_name} ${userInfo?.name}`}
           </Text>
           <TouchableOpacity
             style={{
@@ -290,168 +377,204 @@ const Chat = () => {
             }}
             onPress={showMessAction}
           >
-            <Entypo name="dots-three-vertical" size={16} />
+            <Entypo name="dots-three-vertical" size={16} color={brandPrimary} />
           </TouchableOpacity>
         </View>
 
         {/* Body */}
-        <View style={{ flex: 1, padding: 10 }}>
+        <View style={{ flex: 1, paddingBottom: 20 }}>
           {/* Chat */}
           <FlatList
             ref={flatListRef}
-            data={mergerMessages}
+            data={flatMessages}
             inverted
-            extraData={mergerMessages}
             keyExtractor={(item, index) =>
               item.id ? item.id.toString() : index.toString()
             }
-            renderItem={({ item }) =>
-              item.parent_id === null ? (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent:
-                      item.user.id === user?.id ? "flex-end" : "flex-start",
-                    marginBottom: 5,
-                    alignItems: "center",
-                  }}
-                >
-                  <View>
-                    {/* <Text style={{ fontSize: 12, color: "#999" }}>
-                      {item.user.family_name} {item.user.name}
-                    </Text> */}
+            renderItem={({ item }) => {
+              if (item.type === "header") {
+                // Render tiêu đề ngày
+                return (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "#999",
+                      textAlign: "center",
+                      marginVertical: 10,
+                    }}
+                  >
+                    {item.date}
+                  </Text>
+                );
+              }
+              return (
+                <View>
+                  {item.parent_id === null ? (
                     <View
                       style={{
-                        flexDirection:
-                          item.user.id === user?.id ? "row-reverse" : "row",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent:
+                          item.user.id === user?.id ? "flex-end" : "flex-start",
+                        marginBottom: 5,
                         alignItems: "center",
                       }}
                     >
-                      <Image
-                        source={{
-                          uri: item.user.avatar_url,
-                        }}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 25,
-                          backgroundColor: "#e0e0e0",
-                          marginLeft: item.user.id === user?.id ? 10 : 0,
-                          marginRight: item.user.id === user?.id ? 0 : 10,
-                        }}
-                      />
-                      <View
-                        style={{
-                          padding: 10,
-                          backgroundColor: backgroundColor,
-                          borderColor: "#ccc",
-                          borderWidth: 1,
-                          borderRadius: 10,
-                          alignSelf: "flex-end",
-                          marginBottom: 5,
-                          maxWidth: "80%",
-                          shadowColor: "#000",
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.25,
-                          shadowRadius: 3.84,
-                          alignItems:
-                            item.user.id === user?.id
-                              ? "flex-end"
-                              : "flex-start",
-                        }}
-                      >
-                        <TouchableOpacity
-                          onLongPress={() => handleReplyMessage(item)}
-                        >
-                          <View>
-                            <Text>{item.content}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              ) : (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent:
-                      item.user.id === user?.id ? "flex-end" : "flex-start",
-                    marginBottom: 5,
-                    alignItems: "center",
-                  }}
-                >
-                  <View>
-                    {/* <Text style={{ fontSize: 12, color: "#999" }}>
+                      <View>
+                        {/* <Text style={{ fontSize: 12, color: "#999" }}>
                       {item.user.family_name} {item.user.name}
                     </Text> */}
-                    <View
-                      style={{
-                        flexDirection:
-                          item.user.id === user?.id ? "row-reverse" : "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Image
-                        source={{
-                          uri: item.user.avatar_url,
-                        }}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 25,
-                          backgroundColor: "#e0e0e0",
-                          marginLeft: item.user.id === user?.id ? 10 : 0,
-                          marginRight: item.user.id === user?.id ? 0 : 10,
-                        }}
-                      />
-                      <View
-                        style={{
-                          padding: 10,
-                          backgroundColor: backgroundColor,
-                          borderColor: "#ccc",
-                          borderWidth: 1,
-                          borderRadius: 10,
-                          alignSelf: "flex-end",
-                          marginBottom: 5,
-                          maxWidth: "80%",
-                          shadowColor: "#000",
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.25,
-                          shadowRadius: 3.84,
-                          alignItems:
-                            item.user.id === user?.id
-                              ? "flex-end"
-                              : "flex-start",
-                        }}
-                      >
-                        <TouchableOpacity
-                          onLongPress={() => handleReplyMessage(item)}
+                        <View
+                          style={{
+                            flexDirection:
+                              item.user.id === user?.id ? "row-reverse" : "row",
+                            alignItems: "center",
+                          }}
                         >
-                          <View>
-                            <View
-                              style={{
-                                backgroundColor: "#f0f0f0",
-                                padding: 5,
-                                borderRadius: 8,
-                                marginBottom: 5,
-                              }}
+                          <Image
+                            source={{
+                              uri: item.user.avatar_url,
+                            }}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 25,
+                              backgroundColor: "#e0e0e0",
+                              marginLeft: item.user.id === user?.id ? 10 : 0,
+                              marginRight: item.user.id === user?.id ? 0 : 10,
+                            }}
+                          />
+                          <View
+                            style={{
+                              padding: 10,
+                              backgroundColor:
+                                item.user.id === user?.id
+                                  ? colorChat
+                                  : backgroundColor,
+                              borderColor: borderColor,
+                              borderWidth: 1,
+                              borderRadius: 10,
+                              alignSelf: "flex-end",
+                              marginBottom: 5,
+                              maxWidth: "80%",
+                              shadowColor: "#000",
+                              shadowOffset: { width: 0, height: 2 },
+                              shadowOpacity: 0.25,
+                              shadowRadius: 3.84,
+                              alignItems:
+                                item.user.id === user?.id
+                                  ? "flex-end"
+                                  : "flex-start",
+                            }}
+                          >
+                            <TouchableOpacity
+                              onLongPress={() => handleReplyMessage(item)}
                             >
-                              <Text style={{ fontSize: 14, color: "#666" }}>
-                                {localStrings.Messages.Reply}: {item.parent_content}
+                              <View>
+                                <Text style={{ color: brandPrimary }}>
+                                  {item.content}
+                                </Text>
+                              </View>
+                              <Text style={{ fontSize: 12, color: "#999" }}>
+                                {convertToTime(item.created_at)}
                               </Text>
-                            </View>
-                            <Text>{item.content}</Text>
+                              <View></View>
+                            </TouchableOpacity>
                           </View>
-                        </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
-                  </View>
+                  ) : (
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent:
+                          item.user.id === user?.id ? "flex-end" : "flex-start",
+                        marginBottom: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <View>
+                        {/* <Text style={{ fontSize: 12, color: "#999" }}>
+                      {item.user.family_name} {item.user.name}
+                    </Text> */}
+                        <View
+                          style={{
+                            flexDirection:
+                              item.user.id === user?.id ? "row-reverse" : "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Image
+                            source={{
+                              uri: item.user.avatar_url,
+                            }}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 25,
+                              backgroundColor: "#e0e0e0",
+                              marginLeft: item.user.id === user?.id ? 10 : 0,
+                              marginRight: item.user.id === user?.id ? 0 : 10,
+                            }}
+                          />
+                          <View
+                            style={{
+                              padding: 10,
+                              backgroundColor:
+                                item.user.id === user?.id
+                                  ? colorChat
+                                  : backgroundColor,
+                              borderColor: borderColor,
+                              borderWidth: 1,
+                              borderRadius: 10,
+                              alignSelf: "flex-end",
+                              marginBottom: 5,
+                              maxWidth: "80%",
+                              shadowColor: "#000",
+                              shadowOffset: { width: 0, height: 2 },
+                              shadowOpacity: 0.25,
+                              shadowRadius: 3.84,
+                              alignItems:
+                                item.user.id === user?.id
+                                  ? "flex-end"
+                                  : "flex-start",
+                            }}
+                          >
+                            <TouchableOpacity
+                              onLongPress={() => handleReplyMessage(item)}
+                            >
+                              <View>
+                                <View
+                                  style={{
+                                    backgroundColor: backGround,
+                                    padding: 5,
+                                    borderRadius: 8,
+                                    marginBottom: 5,
+                                  }}
+                                >
+                                  <Text style={{ fontSize: 14, color: "gray" }}>
+                                    {localStrings.Messages.Reply}:{" "}
+                                    {item.parent_content}
+                                  </Text>
+                                </View>
+                                <Text style={{ color: brandPrimary }}>
+                                  {item.content}
+                                </Text>
+                                <Text style={{ fontSize: 12, color: "#999" }}>
+                                  {convertToTime(item.created_at)}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  )}
                 </View>
-              )
-            }
+              );
+            }}
             onEndReachedThreshold={0.5}
             ListFooterComponent={renderFooter}
             onEndReached={() => loadMoreMessages(conversation_id)}
@@ -491,7 +614,7 @@ const Chat = () => {
               }}
             >
               <Form.Item noStyle name="message">
-                <Input
+                <MyInput
                   placeholder={localStrings.Messages.EnterMessage}
                   style={{
                     flex: 1,
@@ -499,12 +622,15 @@ const Chat = () => {
                     borderWidth: 1,
                     borderRadius: 5,
                     padding: 10,
-                    backgroundColor: "#fff",
+                    backgroundColor: backgroundColor,
                     shadowColor: "#000",
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
                     elevation: 5,
+                  }}
+                  inputStyle={{
+                    color: brandPrimary,
                   }}
                   value={newMessage}
                   onChangeText={(text) => setNewMessage(text)}
@@ -513,7 +639,7 @@ const Chat = () => {
 
               <View
                 style={{
-                  backgroundColor: "white",
+                  backgroundColor: backGround,
                   borderRadius: 50,
                   marginLeft: 10,
                   padding: 10,
@@ -550,12 +676,17 @@ const Chat = () => {
       >
         <FlatList
           data={conversationsDetail}
-          renderItem={({ item }) => <MemberMessage conversationDetail={item} currentUserId={currentUserDetail} />}
+          renderItem={({ item }) => (
+            <MemberMessage
+              conversationDetail={item}
+              currentUserId={currentUserDetail}
+            />
+          )}
           // keyExtractor={(item, index) => item.user.id?.toString() || index.toString()}
         />
       </Modal>
       <Modal
-      popup
+        popup
         maskClosable
         visible={showUserGroupModel}
         animationType="slide-up"
@@ -563,7 +694,15 @@ const Chat = () => {
           setShowUserGroupModel(false);
         }}
       >
+        <View
+                  style={{
+                    backgroundColor: backgroundColor,
+                    paddingTop: Platform.OS === "ios" ? 30 : 0,
+                    height: 500,
+                  }}>
+
         <AddUserGroup conversationsDetail={conversationsDetail} />
+                  </View>
       </Modal>
       <Toast />
     </KeyboardAvoidingView>

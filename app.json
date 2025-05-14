@@ -2,12 +2,16 @@
   "expo": {
     "name": "YourVibes",
     "slug": "yourvibes",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
-    "scheme": "com.phamminhthao.yourvibes",
-    "platforms": ["ios", "android"],
+    "scheme": "com.yourvibes",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "userInterfaceStyle": "automatic",
+    "entryPoint": "./node_modules/expo-router/entry.js",
     "jsEngine": "hermes",
     "splash": {
       "image": "./assets/images/yourvibes_splash.png",
@@ -16,15 +20,18 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.phamminhthao.yourvibes"
+      "bundleIdentifier": "com.yourvibes"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
-      "package": "com.phamminhthao.yourvibes",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
+      "package": "com.yourvibes",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -36,7 +43,10 @@
               "pathPrefix": "/records"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -47,21 +57,29 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font" 
+      "expo-font",
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "eas": {
-        "projectId": "80f3a944-5942-41ce-b3a3-673822a4cf5e"
+        "projectId": "36426c2f-7b3b-4313-9de9-ad19beccdd61"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/80f3a944-5942-41ce-b3a3-673822a4cf5e"
+      "url": "https://u.expo.dev/36426c2f-7b3b-4313-9de9-ad19beccdd61"
     }
   }
 }

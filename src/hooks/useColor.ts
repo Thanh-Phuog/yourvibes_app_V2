@@ -10,10 +10,12 @@ export const Color = {
   veryLightGray: "#F6F6F6",
   lightPink: "#FFCCFF",
   limeGreen: "#32CD32",
-  charcoalBlue: "#262930",
+  charcoalBlue: "#30333A",
   gunmetal: "#202427",
   steelGray: "#62676B",
-  darkSlate:"#31343B"
+  darkSlate:"#31343B",
+  lightSteelBlue: "#354E6C",
+  lightBlue: "#DDEFFF",
 }
 
 
@@ -28,8 +30,9 @@ const useColor = () => {
   const darkGray = Color.darkGray
   const borderBirth = Color.lightPink
   const colorOnl = Color.limeGreen
-  const borderColor = Color.steelGray
+  const [borderColor, setBorderColor] = useState(Color.lightGray);
   const darkSlate = Color.darkSlate
+  const [colorChat, setColorChat] = useState(Color.lightBlue);
 
 
 
@@ -40,17 +43,22 @@ const useColor = () => {
       setBackgroundColor(Color.gunmetal);
       setBackground(Color.charcoalBlue);
       setMenuItem(Color.steelGray);
+      setBorderColor(Color.steelGray);
+      setColorChat(Color.lightSteelBlue);
     } else { // light
       setBrandPrimary(Color.black);
       setBrandPrimaryTap(Color.darkGray);
       setBackgroundColor(Color.white);
       setBackground(Color.veryLightGray);
       setMenuItem(Color.white);
+      setBorderColor(Color.lightGray);
+      setColorChat(Color.lightBlue);
     }
   }
   , [theme]);
 
   return {
+    theme,
     brandPrimary,
     brandPrimaryTap,
     backgroundColor,
@@ -61,7 +69,8 @@ const useColor = () => {
     borderColor,
     menuItem,
     darkSlate,
-    darkGray
+    darkGray,
+    colorChat,
   }
 }
 

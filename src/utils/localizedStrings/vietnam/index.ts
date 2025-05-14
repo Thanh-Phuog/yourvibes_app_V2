@@ -66,6 +66,8 @@ export const VnLocalizedStrings = {
     Theme: "Chế độ",
     DarkMode: "Chế độ tối",
     LightMode: "Chế độ sáng",
+    AllUser: "Người dùng YourVibes",
+    UserNotFound: "Không tìm thấy người dùng",
   },
   Form: {
     Label: {
@@ -241,7 +243,7 @@ export const VnLocalizedStrings = {
   },
   Notification: {
     Notification: "Thông báo",
-    NoNotification: "Không có thông báo",
+    NoNotification: "Không có thông báo",  
     Items: {
       LikePost: "đã thích bài viết của bạn: ",
       SharePost: "đã chia sẻ bài viết của bạn: ",
@@ -338,6 +340,9 @@ Messages:{
   LeaveGroupConfirm: "Bạn có chắc chắn muốn rời khỏi nhóm này?",
   CantLeaveGroup: "Vui lòng chuyển quyền chủ phòng cho người khác trước khi rời nhóm",
   CantDeleteGroup: "Chỉ chủ phòng có quyền xóa nhóm này",
+  Today: "Hôm nay",
+  Yesterday: "Hôm qua",
+  NameGroup: "Vui lòng nhập tên nhóm!",
 },
 Suggested: {
   SuggestedFriends: "Những người bạn có thể biết",
@@ -354,6 +359,7 @@ Suggested: {
   WhyConclusion: "Chúng tôi sử dụng thuật toán để tìm những người bạn có thể quen biết hoặc muốn kết nối!"
 },
 People: {
+  People: "Mọi người",
   FetchUsersFailed: "Tải danh sách người dùng thất bại",
   ErrorFetchingUsers: "Lỗi khi tải danh sách người dùng",
   NoFriendRequests: "Không có lời mời kết bạn nào",

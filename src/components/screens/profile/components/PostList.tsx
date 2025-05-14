@@ -23,21 +23,21 @@ const PostList = React.memo(({
   onViewableItemsChanged: React.MutableRefObject<({ viewableItems }: any) => void>;
   visibleItems: string[];
 }) => {
-  const { backgroundColor, lightGray, grayBackground, brandPrimary } = useColor();
+  const { backgroundColor, lightGray, brandPrimary, borderColor } = useColor();
   const router = useRouter();
   const { localStrings, user } = useAuth();
 
   const renderFooter = useCallback(() => {
     return (
-      <>
+      <View>
         {loading ? (
           <View style={{ paddingVertical: 20 }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
         ) : (
-          <></>
+          <View></View>
         )}
-      </>
+      </View>
     );
   }, [loading]);
 
@@ -65,7 +65,7 @@ const PostList = React.memo(({
   }, [posts, loading, visibleItems]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: grayBackground }}>
+    <View style={{ flex: 1, backgroundColor: backgroundColor }}>
       {userProfile?.id === user?.id && (
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/add' })}
@@ -79,7 +79,7 @@ const PostList = React.memo(({
               marginTop: 10,
               backgroundColor: backgroundColor,
               borderWidth: 1,
-              borderColor: lightGray,
+              borderColor: borderColor,
               borderRadius: 10,
             }}
           >
@@ -94,8 +94,8 @@ const PostList = React.memo(({
                 backgroundColor: lightGray,
               }}
             />
-            <View style={{ marginLeft: 10, flex: 1 }}>
-              <Text>{userProfile?.family_name + ' ' + userProfile?.name || localStrings.Public.Username}</Text>
+            <View style={{ marginLeft: 10, flex: 1,  }}>
+              <Text style={{color: brandPrimary}}>{userProfile?.family_name + ' ' + userProfile?.name || localStrings.Public.Username}</Text>
               <Text style={{ color: 'gray' }}>{localStrings.Public.Today}</Text>
             </View>
           </View>

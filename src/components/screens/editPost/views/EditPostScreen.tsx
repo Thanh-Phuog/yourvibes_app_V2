@@ -30,7 +30,7 @@ import Post from '@/src/components/common/Post';
 const EditPostScreen = ({ id }: { id: string }) => {
   const { user, localStrings } = useAuth()
   const savedPost = usePostContext()
-  const { brandPrimary, backgroundColor, brandPrimaryTap, lightGray } = useColor();
+  const { brandPrimary, backgroundColor, brandPrimaryTap, lightGray, backGround } = useColor();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const {
@@ -129,7 +129,7 @@ const EditPostScreen = ({ id }: { id: string }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: backGround }}>
         {/* Header */}
         <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === 'ios' ? 30 : 0 }}>
           <StatusBar barStyle="dark-content" />
@@ -151,6 +151,7 @@ const EditPostScreen = ({ id }: { id: string }) => {
                 fontWeight: 'bold',
                 fontSize: 20,
                 marginLeft: 10,
+                color: brandPrimary,
               }}>
                 {localStrings.Post.EditPost}
               </Text>
@@ -177,9 +178,13 @@ const EditPostScreen = ({ id }: { id: string }) => {
           </View>
           <View style={{ marginLeft: 10, flex: 1 }}>
             <View style={{ flexDirection: 'column' }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 16, color: brandPrimary }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
               <MyInput
                 placeholder={localStrings.AddPost.WhatDoYouThink}
+                  inputStyle={{
+                  color: brandPrimary,
+                }}
+                placeholderTextColor="gray"
                 variant='outlined'
                 moreStyle={{ paddingLeft: 10, marginTop: 10, borderColor: brandPrimaryTap }}
                 textArea={{
@@ -195,7 +200,7 @@ const EditPostScreen = ({ id }: { id: string }) => {
 
         {/* Image Upload Section */}
         {!post?.parent_post ? (
-          <>
+          <View>
             <View style={{ paddingRight: 10, paddingLeft: 60 }}>
               <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                 {originalImageFiles.map((file, index) => (
@@ -223,7 +228,7 @@ const EditPostScreen = ({ id }: { id: string }) => {
                         padding: 2
                       }}
                     >
-                      <Ionicons name="close" size={18} color={brandPrimary} />
+                      <Ionicons name="close" size={18} color={backgroundColor} />
                     </TouchableOpacity>
                   </View>
                 ))}
@@ -248,7 +253,7 @@ const EditPostScreen = ({ id }: { id: string }) => {
                 </TouchableOpacity>
               </View>
             </View>
-          </>
+          </View>
         ) : (
           <Post post={post?.parent_post} isParentPost />
         )}

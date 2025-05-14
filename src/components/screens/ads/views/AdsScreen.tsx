@@ -19,7 +19,7 @@ import Toast from 'react-native-toast-message';
 
 const Ads = ({ postId }: { postId: string }) => {
 	const price = 30000;
-	const { brandPrimary, backgroundColor } = useColor();
+	const { brandPrimary, backgroundColor, backGround, borderColor } = useColor();
 	const [method, setMethod] = useState("momo");
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const { language, localStrings } = useAuth();
@@ -96,9 +96,9 @@ const Ads = ({ postId }: { postId: string }) => {
 	const renderAds = useCallback(() => {
 		if (loading) return null;
 		return (
-			<>
+			<View>
 				{post?.is_advertisement ? (
-					<>
+					<View>
 						{/* Lịch sử Quảng Cáo */}
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<View style={styles.activeIndicator}>
@@ -130,13 +130,13 @@ const Ads = ({ postId }: { postId: string }) => {
 								</View>
 							</View>
 						</View>
-					</>
+					</View>
 				) : (
-					<>
+					<View>
 						{/* Thông tin quảng cáo */}
 						<View style={{ flex: 1, paddingHorizontal: 10 }}>
 							<View>
-								<Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5 }}>
+								<Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5, color: brandPrimary }}>
 									{localStrings.Ads.TimeAndBudget}
 								</Text>
 								<Text style={{ color: "gray", fontSize: 14 }}>
@@ -156,7 +156,7 @@ const Ads = ({ postId }: { postId: string }) => {
 									flexDirection: "row",
 									alignItems: "center",
 									borderWidth: 1,
-									borderColor: "#ccc",
+									borderColor: borderColor,
 									padding: 10,
 									marginVertical: 10,
 									borderRadius: 10,
@@ -166,7 +166,7 @@ const Ads = ({ postId }: { postId: string }) => {
 								}}
 							>
 								<FontAwesome name="calendar" size={24} color={brandPrimary} />
-								<Text style={{ paddingLeft: 20 }}>
+								<Text style={{ paddingLeft: 20, color: brandPrimary }}>
 									{`${localStrings.Ads.TimeAds} ${DateTransfer(
 										date
 									)} (${diffDay} ${localStrings.Public.Day.toLowerCase()})`}
@@ -192,14 +192,14 @@ const Ads = ({ postId }: { postId: string }) => {
 									flexDirection: "row",
 									alignItems: "center",
 									borderWidth: 1,
-									borderColor: "#ccc",
+									borderColor: borderColor,
 									padding: 10,
 									marginVertical: 10,
 									borderRadius: 10,
 								}}
 							>
 								<Ionicons name="cash" size={24} color={brandPrimary} />
-								<Text style={{ paddingLeft: 20 }}>
+								<Text style={{ paddingLeft: 20, color: brandPrimary }}>
 									{localStrings.Ads.BudgetAds}{" "}
 									{CurrencyFormat(AdsCalculate(diffDay, price))}
 								</Text>
@@ -207,7 +207,7 @@ const Ads = ({ postId }: { postId: string }) => {
 
 							{/* Phương thức thanh toán */}
 							<View style={{ flexDirection: "row", marginTop: 10 }}>
-								<Text style={{ fontWeight: "bold", marginRight: 10 }}>
+								<Text style={{ fontWeight: "bold", marginRight: 10, color: brandPrimary }}>
 									{localStrings.Ads.PaymentMethod}
 								</Text>
 								<View
@@ -231,9 +231,9 @@ const Ads = ({ postId }: { postId: string }) => {
 								</View>
 							</View>
 						</View>
-					</>
+					</View>
 				)}
-			</>
+			</View>
 		)
 	}, [postId, adsLoading, ads, loading, post, showDatePicker]);
 
@@ -247,7 +247,7 @@ const Ads = ({ postId }: { postId: string }) => {
 	)
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1 , backgroundColor: backGround }}>
 			{/* Header */}
 			<View
 				style={{
@@ -286,7 +286,7 @@ const Ads = ({ postId }: { postId: string }) => {
 								color={brandPrimary}
 							/>
 						</TouchableOpacity>
-						<Text style={{ fontWeight: "bold", fontSize: 20, marginLeft: 10 }}>
+						<Text style={{ fontWeight: "bold", fontSize: 20, marginLeft: 10, color: brandPrimary }}>
 							{localStrings.Ads.Ads}
 						</Text>
 					</View>
@@ -320,7 +320,7 @@ const Ads = ({ postId }: { postId: string }) => {
 						}]}
 						onPress={() => setHistoryExpanded((prev) => !prev)}
 					>
-						<Text style={{ fontWeight: "bold", fontSize: 16 }}>
+						<Text style={{ fontWeight: "bold", fontSize: 16, color: brandPrimary }}>
 							{isHistoryExpanded ? localStrings.Ads.HideCampaign : localStrings.Ads.ShowCampaign}
 						</Text>
 						<Ionicons
@@ -339,34 +339,34 @@ const Ads = ({ postId }: { postId: string }) => {
 								renderItem={({ item, index }) => (
 									<View style={[styles.historyCard, { backgroundColor: backgroundColor }]}>
 										<View style={styles.historyHeader}>
-											<Text style={styles.historyTitle}>
+											<Text style={[styles.historyTitle, { color: brandPrimary }]}>
 												{localStrings.Ads.Campaign} #{index + 1}
 											</Text>
 											<FontAwesome name="calendar" size={20} color={brandPrimary} />
 										</View>
 										<View style={styles.historyContent}>
-											<Text style={styles.historyText}>
+											<Text style={[styles.historyText, { color: brandPrimary }]}>
 												<Text style={styles.boldText}>{localStrings.Ads.Campaign}:</Text>{" "}
 												{DateTransfer(item?.start_date)}
 											</Text>
-											<Text style={styles.historyText}>
+											<Text style={[styles.historyText, { color: brandPrimary }]}>
 												<Text style={styles.boldText}>{localStrings.Ads.End}:</Text>{" "}
 												{DateTransfer(item?.end_date)}
 											</Text>
 											{item?.bill?.status && (
-												<Text style={styles.historyText}>
+												<Text style={[styles.historyText, { color: brandPrimary }]}>
 													<Text style={styles.boldText}>{localStrings.Ads.RemainingTime}:</Text>
 													{item?.day_remaining ? `${item?.day_remaining} ${localStrings.Ads.Day}` : "Đã kết thúc"}
 												</Text>)}
-											<Text style={styles.historyText}>
+											<Text style={[styles.historyText, { color: brandPrimary }]}>
 												<Text style={styles.boldText}>{localStrings.Ads.Grant}:</Text>{" "}
 												{item?.bill?.price ? CurrencyFormat(item?.bill?.price) : NaN}
 											</Text>
-											<Text style={styles.historyText}>
+											<Text style={[styles.historyText, { color: brandPrimary }]}>
 												<Text style={styles.boldText}>{localStrings.Ads.PaymentMethod}:</Text>{" "}
 												{method === "momo" ? "MoMo" : "Khác"}
 											</Text>
-											<Text style={styles.historyText}>
+											<Text style={[styles.historyText, { color: brandPrimary }]}>
 												<Text style={styles.boldText}>{localStrings.Ads.Status}:</Text>{" "}
 												{item?.bill?.status ? localStrings.Ads.PaymentSuccess : localStrings.Ads.PaymentFailed}
 											</Text>
@@ -375,8 +375,8 @@ const Ads = ({ postId }: { postId: string }) => {
 								)}
 							/>
 						) : (
-							<View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 10, }}>
-								<Text style={{ fontSize: 16, fontWeight: "bold" }}>
+							<View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 10, backgroundColor: backGround }}>
+								<Text style={{ fontSize: 16, fontWeight: "bold", color: brandPrimary }}>
 									{localStrings.Ads.NoCampaign}
 								</Text>
 							</View>
@@ -400,8 +400,11 @@ const Ads = ({ postId }: { postId: string }) => {
 							})
 						}}
 						loading={adsLoading}
+						style={{
+							backgroundColor: backgroundColor
+						}}
 					>
-						<Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
+						<Text style={{ color: brandPrimary, fontWeight: "bold", fontSize: 16 }}>
 							{localStrings.Ads.Ads}
 						</Text>
 					</Button>
@@ -437,11 +440,6 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 		borderRadius: 10,
 		padding: 15,
-		// shadowColor: "#000",
-		// shadowOffset: { width: 0, height: 2 },
-		// shadowOpacity: 0.1,
-		// shadowRadius: 5,
-		// elevation: 3,
 		borderWidth: 1,
 		borderColor: "#eee",
 		backgroundColor: "white",

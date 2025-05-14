@@ -130,7 +130,7 @@ const AboutTab = ({
   }
 
   return (
-    <>
+    <View>
       {loading ? (
         <ActivityIndicator animating size="large" color={brandPrimaryTap} />
       ) : (
@@ -154,7 +154,7 @@ const AboutTab = ({
               )}
             </View>
             {resultCode === 20001 ? (
-              <>
+              <View>
                 {/* Email */}
                 <View
                   style={{
@@ -226,7 +226,7 @@ const AboutTab = ({
                     </Text>
                   </Text>
                 </View>
-              </>
+              </View>
             ) : resultCode === 50016 ? (
               <Text style={{ color: "gray", textAlign: "center" }}> {`${user?.family_name || ""} ${user?.name || ""} ${localStrings.Public.HideInfo}`} </Text>
             ) : resultCode === 50015 ? (
@@ -239,7 +239,7 @@ const AboutTab = ({
           </ScrollView>
         </View>
       )}
-    </>
+    </View>
   );
 };
 

@@ -55,7 +55,7 @@ const NewFeed = ({isActive}: {isActive: boolean}) => {
                   }}
                 />
                 <View style={{ marginLeft: 10, flex: 1 }}>
-                  <Text>
+                  <Text style={{ color: brandPrimary }}>
                     {user?.family_name + " " + user?.name ||
                       localStrings.Public.Username}
                   </Text>
@@ -81,10 +81,10 @@ const NewFeed = ({isActive}: {isActive: boolean}) => {
   return (
        <FlatList
             ListHeaderComponent={
-              <>
+              <View>
                 {renderAddPost()}
                 <FriendSuggestions />
-              </>
+              </View>
             }
             data={newFeeds}
             renderItem={({ item }) => (

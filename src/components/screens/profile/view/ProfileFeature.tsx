@@ -51,7 +51,7 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
 
   const renderTab = useCallback(() => {
     return (
-      <>
+      <View>
         <ProfileHeader
           total={total}
           friendCount={friendCount}
@@ -71,7 +71,7 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
           onViewableItemsChanged={onViewableItemsChanged}
           visibleItems={visibleItems}
         />
-      </>
+      </View>
     )
   }, [tab, posts, loading, friends, resultCode, visibleItems, user, total, friendCount]);
 
@@ -117,10 +117,10 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
         <FlatList
           data={null}
           ListHeaderComponent={
-            <>
+            <View>
               {renderTab()}
               <Toast />
-            </>
+            </View>
           }
           renderItem={() => null}
           showsVerticalScrollIndicator={false}

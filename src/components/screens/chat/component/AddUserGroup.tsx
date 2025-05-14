@@ -14,9 +14,15 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
      const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
      const { user } = useAuth();
      const [groupForm] = Form.useForm();
-     const { brandPrimary } = useColor();
-     const { friends, page, fetchFriends, loading, hasMore, handleEndReached } =
-       useListFriendsViewModel();
+     const { brandPrimary, backGround, backgroundColor } = useColor();
+    const { friends, page, fetchFriends, loading, hasMore } =
+      useListFriendsViewModel();
+    
+    const handleEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+      if (distanceFromEnd > 0) {
+        fetchFriends(page + 1, user?.id);
+      }
+    };
        const { createConversationDetail, } =
        useConversationDetailViewModel(defaultMessagesRepo);
 
@@ -38,7 +44,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
       const renderFriend = ({
         item,
       }: {
-        item: { id: string; avatar: string; family_name: string; name: string };
+        item: { id: string; avatar_url: string; family_name: string; name: string };
       }) => (
         <View
           style={{
@@ -55,7 +61,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
             onChange={() => toggleSelectFriend(item.id)}
           />
           <Image
-            source={{ uri: item.avatar }}
+            source={{ uri: item.avatar_url   }}
             style={{
               width: 40,
               height: 40,
@@ -64,7 +70,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
               marginRight: 10,
             }}
           />
-          <Text style={{ fontSize: 16, color: "black" }}>
+          <Text style={{ fontSize: 16, color: brandPrimary }}>
             {item.family_name} {item.name}
           </Text>
         </View>
@@ -101,14 +107,14 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
   return (
     <View>
       {filteredFriends.length === 0 ? (
-        <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20 }}>
+        <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20, color: brandPrimary, backgroundColor: backgroundColor }}>
           Không có bạn bè nào để thêm vào nhóm.
         </Text>
       ):(
-        <>
+        <View>
         <Form
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: backgroundColor,
         }}
         form={groupForm}
       >
@@ -123,7 +129,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
 
           <View
             style={{
-              backgroundColor: "white",
+              backgroundColor: backGround,
               borderRadius: 50,
               // marginLeft: 10,
               padding: 10,
@@ -146,9 +152,10 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100%",
+                
               }}
             >
-              <Text>Thêm thành viên</Text>
+              <Text style={{color: brandPrimary}}>Thêm thành viên</Text>
               {/* <FontAwesome name="send-o" size={30} color={brandPrimary} /> */}
               <AntDesign
                 name="addusergroup"
@@ -172,7 +179,7 @@ const AddUserGroup = ({conversationsDetail}: {conversationsDetail: ConversationD
           ) : null
         }
       />
-      </>
+      </View>
       )}
      
     </View>
