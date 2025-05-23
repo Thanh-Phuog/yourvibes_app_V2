@@ -242,14 +242,14 @@ const Post: React.FC<IPost> = React.memo(({
                   </View>
                   <View style={{padding: 5}}>
                     <View style={{ padding: 30, borderColor: "#000", borderWidth: 1, borderRadius: 5 }}>
-                      <Text style={{ textAlign: 'center', fontWeight: "bold", fontSize: 16 }}>
+                      <Text style={{ textAlign: 'center', fontWeight: "bold", fontSize: 16, color: brandPrimary }}>
                         {localStrings.Post.NoContent}
                       </Text>
                       <Text style={{ textAlign: 'center', color: "gray" }}>
                        <Entypo name="emoji-sad" size={24} color="gray" />
                       </Text>
                       <Text style={{ textAlign: 'center', fontSize: 14, color: "gray" }}>
-                        Nội dung đã bị xoá hoặc cài đặt quyền riêng tư bởi người dùng
+                        {localStrings.Post.NoContentDetail}
                       </Text>
                     </View>
                   </View>
