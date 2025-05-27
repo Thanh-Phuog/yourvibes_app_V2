@@ -9,7 +9,6 @@ import { UpdatePostRequestModel } from "./models/UpdatePostRequestModel";
 import { LikeUsersModel, LikeUsersResponseModel } from "./models/LikeUsersModel";
 import { SharePostRequestModel } from "./models/SharePostRequestModel";
 import { AdvertisePostRequestModel, AdvertisePostResponseModel, GetAdvertiseRequestModel } from "./models/AdvertisePostModel";
-import { ReportPostRequestModel } from "./models/ReportPost";
 
 interface IPostRepo {
 	createPost: (data: CreatePostRequestModel) => Promise<BaseApiResponseModel<PostResponseModel>>;
@@ -22,7 +21,7 @@ interface IPostRepo {
 	getPostLikes: (params: LikeUsersResponseModel) => Promise<BaseApiResponseModel<LikeUsersModel[]>>;
 	advertisePost: (params: AdvertisePostRequestModel) => Promise<BaseApiResponseModel<any>>;
 	getAdvertisePost: (params: AdvertisePostRequestModel) => Promise<BaseApiResponseModel<AdvertisePostResponseModel>>;
-	reportPost: (params: ReportPostRequestModel) => Promise<BaseApiResponseModel<any>>;
+	getPostsTrending: (data: GetUsersPostsRequestModel) => Promise<BaseApiResponseModel<PostResponseModel[]>>;
 }
 export class PostRepo implements IPostRepo {
 	async createPost(data: CreatePostRequestModel): Promise<BaseApiResponseModel<PostResponseModel>> {
@@ -68,8 +67,8 @@ export class PostRepo implements IPostRepo {
 		return client.get(ApiPath.ADVERTISE_POST , params);
 	}
 
-	async reportPost(params: ReportPostRequestModel): Promise<BaseApiResponseModel<any>> {
-		return client.post(ApiPath.REPORT_POST, params);
+	async getPostsTrending(data: GetUsersPostsRequestModel): Promise<BaseApiResponseModel<PostResponseModel[]>> {
+		return client.get(ApiPath.TRENDING_POST, data);
 	}
 }
 export const defaultPostRepo = new PostRepo();

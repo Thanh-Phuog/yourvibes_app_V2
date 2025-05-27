@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native';
 import { Image } from 'expo-image';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Button, Card, Form, Modal } from '@ant-design/react-native';
+import { ActivityIndicator, Button, Card, Form, Modal, Provider } from '@ant-design/react-native';
 import { Entypo, AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import useColor from '@/src/hooks/useColor';
 import { PostResponseModel } from '@/src/api/features/post/models/PostResponseModel';
@@ -35,7 +35,7 @@ const Post: React.FC<IPost> = React.memo(({
   noComment = false,
   isVisible = false,
 }) => {
-  const { brandPrimary, brandPrimaryTap, lightGray, backgroundColor } = useColor();
+  const { brandPrimary, brandPrimaryTap, backgroundColor, borderColor } = useColor();
   const { user, localStrings } = useAuth();
   const [shareForm] = Form.useForm();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -157,9 +157,11 @@ const Post: React.FC<IPost> = React.memo(({
   }, [likedPost?.is_liked]);
 
   return (
+
     <Card style={{
       margin: 10,
-      borderColor: isParentPost ? brandPrimary : "white",
+      borderColor: isParentPost ? brandPrimary : borderColor,
+      backgroundColor: backgroundColor,
     }}
     >
       {/* Header */}
@@ -174,19 +176,19 @@ const Post: React.FC<IPost> = React.memo(({
               <TouchableOpacity
                 onPress={() => router.push(`/(tabs)/user/${likedPost?.user?.id}`)}
               >
-                <Text style={{ fontWeight: 'bold', fontSize: 14 }}>{likedPost?.user?.family_name} {likedPost?.user?.name}</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 14, color: brandPrimary }}>{likedPost?.user?.family_name} {likedPost?.user?.name}</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {likedPost?.is_advertisement ? (
-                  <>
+                  <View>
                     <Text style={{ color: brandPrimaryTap, fontSize: 12, opacity: 0.5, marginRight: 10 }}>{localStrings.Post.Sponsor}</Text>
                     <MaterialCommunityIcons name="advertisements" size={16} color={brandPrimaryTap} />
-                  </>)
+                  </View>)
                   : (
-                    <>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Text style={{ color: brandPrimaryTap, fontSize: 12, opacity: 0.5, marginRight: 10 }}>{getTimeDiff(likedPost?.created_at, localStrings)}</Text>
                       {renderPrivacyIcon()}
-                    </>
+                    </View>
                   )
                 }
 
@@ -197,7 +199,7 @@ const Post: React.FC<IPost> = React.memo(({
                 style={{ width: '8%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                 onPress={showAction}
               >
-                <Entypo name="dots-three-vertical" size={16} />
+                <Entypo name="dots-three-vertical" size={16} color={brandPrimaryTap} />
               </TouchableOpacity>
             )}
           </View>
@@ -224,7 +226,7 @@ const Post: React.FC<IPost> = React.memo(({
          {likedPost?.content && (
            <View style={{ paddingLeft: 10 }}>
             <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
-             <Text>{likedPost?.content}</Text>
+             <Text style ={{color: brandPrimary}} >{likedPost?.content}</Text>
             </TouchableOpacity>
            </View>
          )}
@@ -233,35 +235,42 @@ const Post: React.FC<IPost> = React.memo(({
       ): (likedPost?.content &&
         likedPost?.parent_id ? (
         <View>
-          <View style={{ paddingLeft: 10 }}>
-          <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
-             <Text>{likedPost?.content}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ paddingLeft: 5, paddingRight: 5 }}>
-            <View style={{ padding: 10, borderColor: "#000", borderWidth: 1, borderRadius: 5 }}>
-              <Text style={{ textAlign: 'center', fontWeight: "bold", fontSize: 16 }}>
-                {localStrings.Post.NoContent}
-              </Text>
-            </View>
-          </View>
-          </View>
+                  <View style={{ paddingLeft: 10 }}>
+                  <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
+                    <Text style={{color:brandPrimary}}>{likedPost?.content}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{padding: 5}}>
+                    <View style={{ padding: 30, borderColor: "#000", borderWidth: 1, borderRadius: 5 }}>
+                      <Text style={{ textAlign: 'center', fontWeight: "bold", fontSize: 16, color: brandPrimary }}>
+                        {localStrings.Post.NoContent}
+                      </Text>
+                      <Text style={{ textAlign: 'center', color: "gray" }}>
+                       <Entypo name="emoji-sad" size={24} color="gray" />
+                      </Text>
+                      <Text style={{ textAlign: 'center', fontSize: 14, color: "gray" }}>
+                        {localStrings.Post.NoContentDetail}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
         ):(
           (
-            <View style={{ paddingLeft: 65, paddingRight: 35 }}>
+            <View style={{ paddingHorizontal: 20 }}>
             {likedPost?.content && (
-              <View style={{ paddingBottom: 12, paddingLeft: 0 }}>
-                    <TouchableOpacity onPress={() => {
-    console.log(`Navigating to /postDetails?postId=${likedPost?.id}`);
-    console.log("Navigating with postId:", likedPost?.id);
-
-    router.push(`/postDetails?postId=${likedPost?.id}`);
-  }}>
-             <Text>{likedPost?.content}</Text>
-            </TouchableOpacity>
+              <View style={{ paddingBottom: 5, paddingLeft: 0 }}>
+                 <TouchableOpacity onPress={() => router.push(`/postDetails?postId=${likedPost?.id}`)}>
+                  <Text style={{color:brandPrimary}}>{likedPost?.content}</Text>
+                 </TouchableOpacity>
+                
               </View>
             )}
-            {likedPost?.media && likedPost?.media?.length > 0 && <MediaView mediaItems={likedPost?.media} />}
+            {likedPost?.media && likedPost?.media?.length > 0 &&
+              <MediaView
+                mediaItems={likedPost?.media}
+                isVisible={isVisible}
+              />
+            }
           </View>
     
           )
@@ -271,7 +280,7 @@ const Post: React.FC<IPost> = React.memo(({
 
       {/* Footer */}
       {isParentPost || noFooter ? (
-        <></>
+        <View></View>
       ) : (
         <Card.Footer
           content={
@@ -297,18 +306,18 @@ const Post: React.FC<IPost> = React.memo(({
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity disabled={noComment} style={{ flexDirection: "row", alignItems: "center" }} onPress={() => {setShowCommentPopup(true); console.log("Modal Post ID:", likedPost?.id);
+              <TouchableOpacity disabled={noComment} style={{ flexDirection: "row", alignItems: "center" }} onPress={() => {setShowCommentPopup(true);
               }} >
                 <FontAwesome name="comments-o" size={20} color={brandPrimary} />
                 <Text style={{ marginLeft: 5, color: brandPrimary }}>{likedPost?.comment_count}</Text>
               </TouchableOpacity>
 
               {shareLoading ? (
-                <>
+                <View>
                   <ActivityIndicator size={'small'} />
-                </>
+                </View>
               ) : (
-                <>
+                <View>
                   <TouchableOpacity
                     onPress={() => {
                       // sharePost(likedPost?.id as string);
@@ -318,7 +327,7 @@ const Post: React.FC<IPost> = React.memo(({
                   >
                     <AntDesign name="sharealt" size={20} color={brandPrimary} />
                   </TouchableOpacity>
-                </>
+                </View>
               )}
             </View>
           }
@@ -340,13 +349,12 @@ const Post: React.FC<IPost> = React.memo(({
         animationType="slide-up"
         maskClosable
         onClose={() => setShowCommentPopup(false)}
+        style={{ backgroundColor: backgroundColor, width: '100%' }}
       >
-        <View style={{height:600 }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center" }}> 
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center", color: brandPrimary }}> 
             {localStrings.Public.Comment}
           </Text>
         <PostDetails postId={likedPost?.id as string} isModal={true} />
-        </View>
       </Modal>
 
       {/* Share popup */}
@@ -382,7 +390,7 @@ const Post: React.FC<IPost> = React.memo(({
                   </View>
                   <View style={{ marginLeft: 10, flex: 1 }}>
                     <View style={{ flexDirection: 'column' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 16, color: brandPrimary }}>{user?.family_name + " " + user?.name || localStrings.Public.UnknownUser}</Text>
                       <Form.Item name="content" noStyle>
                         <MyInput
                           placeholder={localStrings.AddPost.WhatDoYouThink}

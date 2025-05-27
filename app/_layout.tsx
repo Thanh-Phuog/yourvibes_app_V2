@@ -1,3 +1,4 @@
+"use client";
 import { Provider } from "@ant-design/react-native";
 import { Stack } from "expo-router";
 import { Platform, StatusBar, View } from "react-native";
@@ -6,23 +7,32 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "@/src/context/auth/useAuth";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { PostProvider } from "@/src/context/post/usePostContext";
+import { WebSocketProvider } from "@/src/context/socket/useSocket";
 
 export default function RootLayout() {
-  const screens = ["index", "login", "signUp", "forgotPassword", "(tabs)"];
-
-  const { brandPrimary, brandPrimaryTap, backgroundColor } = useColor();
-
+  
+  
   return (
     <AuthProvider>
+      <App/>
+    </AuthProvider>
+  );
+}
+
+function App() {
+  const screens = ["index", "login", "signUp", "forgotPassword", "(tabs)"];
+  const { brandPrimary, brandPrimaryTap, backgroundColor, backGround } = useColor();
+  return (
+    <WebSocketProvider>
       <PostProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ActionSheetProvider>
             <View
               style={{
                 flex: 1,
-                backgroundColor: backgroundColor,
+                backgroundColor: backGround,
               }}
-            >
+              >
               <Provider
                 theme={{
                   primary_button_fill: brandPrimary,
@@ -32,11 +42,11 @@ export default function RootLayout() {
                   brand_primary: brandPrimary,
                   prefix_padding: 0,
                 }}
-              >
+                >
                 <StatusBar
                   backgroundColor={"transparent"}
                   barStyle={"dark-content"}
-                />
+                  />
                 <Stack screenOptions={{ headerShown: false }}>
                   {screens?.map((screen, index) => (
                     <Stack.Screen key={index} name={screen} />
@@ -47,6 +57,6 @@ export default function RootLayout() {
           </ActionSheetProvider>
         </GestureHandlerRootView>
       </PostProvider>
-    </AuthProvider>
+      </WebSocketProvider>
   );
 }

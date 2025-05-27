@@ -29,15 +29,15 @@ const SearchScreen = React.memo(() => {
 
   const renderFooter = useCallback(() => {
     return (
-      <>
+      <View>
         {loading ? (
           <View style={{ paddingVertical: 20 }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
         ) : (
-          <></>
+          <View></View>
         )}
-      </>
+      </View>
     );
   }, [loading]);
 
@@ -52,7 +52,7 @@ const SearchScreen = React.memo(() => {
   return (
     <View style={{ flex: 1 }}>
       {/* Header */}
-      <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === 'ios' ? 40 : 0 }}>
+      <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === 'ios' ? 40 : 10 }}>
         <StatusBar barStyle="dark-content" />
         <View
           style={{
@@ -83,13 +83,16 @@ const SearchScreen = React.memo(() => {
               variant="outlined"
               allowClear={{
                 clearIcon: (
-                  <Ionicons name="close-outline" size={16} color={"white"} />
+                  <Ionicons name="close-outline" size={16} color={brandPrimary} />
                 ),
               }}
               moreStyle={{
                 width: "93%",
                 paddingLeft: 10,
               }}
+           inputStyle={{
+                  color: brandPrimary,
+                }}
               autoFocus
               prefix={
                 <Ionicons
@@ -110,7 +113,7 @@ const SearchScreen = React.memo(() => {
           <View style={{ marginTop: 10, paddingBottom: 60 }}>
             {keyword && (
               <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 18, color: brandPrimary }}>
                   {localStrings.Public.Everyone}
                 </Text>
               </View>
@@ -154,6 +157,7 @@ const SearchScreen = React.memo(() => {
                           marginLeft: 10,
                           fontWeight: "bold",
                           fontSize: 16,
+                          color: brandPrimary,
                         }}
                       >
                         {item?.family_name + " " + item?.name}
@@ -169,29 +173,7 @@ const SearchScreen = React.memo(() => {
                 showsVerticalScrollIndicator={false}
               />
             ) : (
-              // users?.map(user => (
-              //   <TouchableOpacity key={user?.id} style={{
-              //     paddingHorizontal: 10,
-              //     paddingVertical: 5,
-              //     display: 'flex',
-              //     flexDirection: 'row',
-              //     justifyContent: 'space-between',
-              //     alignItems: 'center',
-              //   }}>
-              //     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: "60%" }}>
-              //       <Image
-              //         source={{ uri: user?.avatar_url }}
-              //         style={{
-              //           width: 50,
-              //           height: 50,
-              //           borderRadius: 50,
-              //         }}
-              //       />
-              //       <Text style={{ marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{user?.family_name + ' ' + user?.name}</Text>
-              //     </View>
-              //   </TouchableOpacity>
-              // ))
-              <>
+              <View>
                 <Image
                   source={{
                     uri: "https://res.cloudinary.com/dkf51e57t/image/upload/v1729847545/Search-rafiki_uuq8tx.png",
@@ -214,7 +196,7 @@ const SearchScreen = React.memo(() => {
                     ? localStrings.Search.NoUsers
                     : localStrings.Search.TrySearch}
                 </Text>
-              </>
+              </View>
             )}
           </View>
         </View>

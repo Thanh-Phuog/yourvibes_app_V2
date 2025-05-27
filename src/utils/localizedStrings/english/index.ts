@@ -1,3 +1,4 @@
+import AddUserGroup from "@/src/components/screens/chat/component/AddUserGroup";
 
 export const ENGLocalizedStrings = {
   Public: {
@@ -52,10 +53,20 @@ export const ENGLocalizedStrings = {
     ReportComment: "Report Comment",
     Day: "Day",
     ListUserLikePost: "List User Like Your Post",
-    WhoLike:"Discover who liked the post!",
+    WhoLike: "Discover who liked the post!",
     HideInfo: "has hidden personal information",
     FriendOnly: "only friends can see",
-
+    Trending: "Trending",
+    BirthdayFriend: "Birthday Friend",
+    NewFeed: "New Feed",
+    NoBirthdays: "No birthdays today",
+    HappyBirthday: "Happy birthday, my friend!",
+    FriendRequests: "Friend Requests",
+    Theme: "Theme",
+    DarkMode: "Dark Mode",
+    LightMode: "Light Mode",
+    AllUser: "Users YourVibes",
+    UserNotFound: "User not found",
   },
   Form: {
     Label: {
@@ -88,7 +99,8 @@ export const ENGLocalizedStrings = {
       ConfirmPasswordTypeMessage: "Confirm password is invalid!",
       OTPTypeMessage: "OTP code must be a 6-digit string!",
       PhoneTypeMessage: "Phone number must be a 10-digit string!",
-      PleaseOldPasswordDifferentNewPassword:"New password must be different from old password!",
+      PleaseOldPasswordDifferentNewPassword:
+        "New password must be different from old password!",
     },
   },
   Login: {
@@ -119,6 +131,7 @@ export const ENGLocalizedStrings = {
     CreatePostFailed: "Create post failed!",
     EmptyContent: "Missing content or media file",
     PickImgFailed: "Pick images failed!",
+    CensorPost: "Your post is under review, please wait.",
   },
   ObjectPostPrivacy: {
     PublicDescription: "Everyone on YourVibes",
@@ -137,7 +150,8 @@ export const ENGLocalizedStrings = {
     ProfilePrivacy: "Profile's privacy",
     Contents: {
       WhoCanSee: "Who can see your information?",
-      DefaultPrivacy2: ", but you can change the privacy for your account details.",
+      DefaultPrivacy2:
+        ", but you can change the privacy for your account details.",
     },
   },
   Post: {
@@ -152,11 +166,14 @@ export const ENGLocalizedStrings = {
     SharePost: "Share",
     DeleteNewFeed: "Delete (hide) new feed",
     NoContent: "Content is empty",
+    NoContentDetail:
+      "This content has been removed or made private by the user!",
     Sponsor: "Sponsored",
+    NoTrendingPosts: "No trending posts found",
   },
-  PostDetails:{
+  PostDetails: {
     ViewReplies: "View replies",
-    HideReplies:"Hide replies",
+    HideReplies: "Hide replies",
     Save: "Save",
     Cancel: "Cancel",
     Error: "Error",
@@ -164,7 +181,7 @@ export const ENGLocalizedStrings = {
     ReportComment: "Report comment",
     EditComment: "Edit comment",
     DeleteComment: "Delete comment",
-    ActionOptions:"Action options",
+    ActionOptions: "Action options",
     ReportSusesfully: "Reported succeeded!",
     Success: "Success",
     EditCommentSuccess: "Edit comment successful!",
@@ -233,8 +250,24 @@ export const ENGLocalizedStrings = {
       CommentPost: "commented on your post: ",
       Friend: "sent you a friend request.",
       AcceptFriend: "accepted your friend request.",
-    NewPost: "posted a new post.",
-    LikeComment: "liked your comment: ",
+      NewPost: "posted a new post.",
+      LikeComment: "liked your comment: ",
+      NewPostPersonal: "Your post has been successfully published:",
+      NewPostError: "Your post encountered an error",
+      BlockCreatePost: "Your post has been blocked",
+      nsfw: "due to containing sensitive content",
+      political: "due to containing inappropriate political content",
+      violence: "due to containing violent content",
+      abuse: "due to containing content that harms children",
+      DeactivatePostContent:
+        "Your post has been blocked for violating our terms and conditions. If you believe this is a mistake, please contact our support team for review.",
+      ActivacePostContent:
+        "Your post has been reactivated after review. Thank you for your patience.",
+      DeactivateCommentContent:
+        "Your comment has been blocked for violating our terms and conditions. If you believe this is a mistake, please contact our support team for review.",
+      ActivaceCommentContent:
+        "Your comment has been reactivated after review. Thank you for your patience.",
+      NewMessage: "You have a new message.",
     },
   },
   ListFriends: {
@@ -258,14 +291,14 @@ export const ENGLocalizedStrings = {
     AdvertisePostFailed: "Advertise post failed!",
     AdvertisePostSuccess: "Advertise post successful!",
     ActiveCampaign: "Active campaign",
-    HideCampaign:"Hide history campaign",
-    ShowCampaign:"Show history campaign",
+    HideCampaign: "Hide history campaign",
+    ShowCampaign: "Show history campaign",
     Campaign: "Campaign",
-    End:"End",
-    RemainingTime:"Remaining time",
-    Day:"Day",
-    Grant:"Grant", 
-    Status:"Status",
+    End: "End",
+    RemainingTime: "Remaining time",
+    Day: "Day",
+    Grant: "Grant",
+    Status: "Status",
     PaymentSuccess: "Payment successful.",
     PaymentFailed: "Payment failed.",
     NoCampaign: "No campaign found",
@@ -302,6 +335,61 @@ export const ENGLocalizedStrings = {
   },
   Messages: {
     Messages: "Messages",
+    Admin: "Admin",
     EnterMessage: "Enter message",
+    Member: "Members",
+    DeleteMember: "Delete member",
+    Reply: "Reply",
+    AddUserGroup: "Add user to group",
+    DeleteConversation: "Delete conversation",
+    LeaveGroup: "Leave the group",
+    DeleteConversationConfirm:
+      "Are you sure you want to delete this conversation?",
+    LeaveGroupConfirm: "Are you sure you want to leave this group?",
+    CantLeaveGroup:
+      "Please transfer the group ownership to someone else before leaving the group",
+    CantDeleteGroup: "Only the group owner has the right to delete this group",
+    Today: "Today",
+    Yesterday: "Yesterday",
+    NameGroup: "Please enter a group name!",
   },
-}
+  Suggested: {
+    SuggestedFriends: "Suggested Friends",
+    Hide: "Hide",
+    SeeMore: "See more",
+    Why: "Why do I see these friends?",
+    Dont: "I don't want to see these friends",
+    FriendRequestSent: "Waiting...",
+    AddFriend: "Add friend",
+    WhyExplanation: "These suggestions are based on factors such as:",
+    WhyFactor1: "Mutual friends",
+    WhyFactor2: "Similar interests",
+    WhyFactor3: "Recent activity on social media",
+    WhyConclusion:
+      "We use an algorithm to find people you might know or want to connect with!",
+  },
+  People: {
+    People: "People",
+    FetchUsersFailed: "Failed to fetch users!",
+    ErrorFetchingUsers: "Error fetching users!",
+    NoFriendRequests: "No friend requests",
+    ErrorFriendRequests: "Error fetching friend requests!",
+    AcceptScuccess: "Accept friend request successfully!",
+    AcceptFailed: "Accept friend request failed!",
+    AcceptError: "Error accepting friend request!",
+    DeclineSuccess: "Decline friend request successfully!",
+    DeclineFailed: "Decline friend request failed!",
+    DeclineError: "Error declining friend request!",
+    FriendRequestSent: "Friend request sent!",
+    FriendRequestSentSuccess: "Friend request sent successfully!",
+    FriendRequestFailed: "Friend request failed!",
+    FriendRequestError: "Error sending friend request!",
+    FriendRequestCanceled: "Friend request canceled!",
+    FriendRequestCancelFailed: "Friend request cancel failed!",
+    FriendRequestSentFailed: "Friend request sent failed!",
+    FriendRequestSentError: "Error sending friend request!",
+    FriendRequestCanceledSuccess: "Friend request canceled successfully!",
+    FriendRequestCanceledFailed: "Friend request cancel failed!",
+    FriendRequestCanceledError: "Error canceling friend request!",
+  },
+};

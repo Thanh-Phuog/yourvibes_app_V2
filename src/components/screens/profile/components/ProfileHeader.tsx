@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useAuth } from "@/src/context/auth/useAuth";
 import useColor from "@/src/hooks/useColor";
@@ -8,13 +8,16 @@ import { Button, Modal } from "@ant-design/react-native";
 import UserProfileViewModel from "../viewModel/UserProfileViewModel";
 import { FriendStatus } from "@/src/api/baseApiResponseModel/baseApiResponseModel";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
+import useConversationViewModel from "../../messages/viewModel/ConversationViewModel";
+import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
+import { router } from "expo-router";
 
 const ProfileHeader = ({
   total,
   friendCount,
-  user,
+  userInfo,
   loading,
   sendFriendRequest,
   sendRequestLoading,
@@ -27,7 +30,7 @@ const ProfileHeader = ({
 }: {
   total: number;
   friendCount: number;
-  user: UserModel;
+  userInfo: UserModel;
   loading?: boolean;
   sendFriendRequest?: (userId: string) => void | Promise<void>;
   sendRequestLoading?: boolean;
@@ -36,13 +39,15 @@ const ProfileHeader = ({
   acceptFriendRequest?: (userId: string) => void | Promise<void>;
   unFriend?: (userId: string) => void | Promise<void>;
   newFriendStatus?: FriendStatus | undefined;
-  setNewFriendStatus?: React.Dispatch<React.SetStateAction<FriendStatus | undefined>>
+  setNewFriendStatus?: React.Dispatch<
+    React.SetStateAction<FriendStatus | undefined>
+  >;
 }) => {
   const { lightGray, brandPrimary, brandPrimaryTap, backgroundColor } =
     useColor();
-  const { localStrings, language, isLoginUser } = useAuth();
+  const { localStrings, language, isLoginUser, user } = useAuth();
   const { showActionSheetWithOptions } = useActionSheet();
-
+  const { createConversation } = useConversationViewModel(defaultMessagesRepo);
   const showAction = useCallback(() => {
     const options = [localStrings.Public.UnFriend, localStrings.Public.Cancel];
 
@@ -63,7 +68,7 @@ const ProfileHeader = ({
                 { text: localStrings.Public.Cancel, style: "cancel" },
                 {
                   text: localStrings.Public.Confirm,
-                  onPress: () => unFriend && unFriend(user?.id as string),
+                  onPress: () => unFriend && unFriend(userInfo?.id as string),
                 },
               ]
             );
@@ -79,7 +84,7 @@ const ProfileHeader = ({
         }
       }
     );
-  }, [user, localStrings]);
+  }, [userInfo, localStrings]);
 
   const renderFriendButton = useCallback(() => {
     switch (newFriendStatus) {
@@ -88,7 +93,7 @@ const ProfileHeader = ({
           <Button
             type="ghost"
             onPress={() => {
-              sendFriendRequest && sendFriendRequest(user?.id as string);
+              sendFriendRequest && sendFriendRequest(userInfo?.id as string);
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -143,7 +148,8 @@ const ProfileHeader = ({
             <Button
               type="ghost"
               onPress={() => {
-                cancelFriendRequest && cancelFriendRequest(user?.id as string);
+                cancelFriendRequest &&
+                  cancelFriendRequest(userInfo?.id as string);
               }}
               loading={sendRequestLoading}
             >
@@ -187,7 +193,8 @@ const ProfileHeader = ({
                 style={{ width: "48%" }}
                 type="primary"
                 onPress={() => {
-                  acceptFriendRequest && acceptFriendRequest(user?.id as string);
+                  acceptFriendRequest &&
+                    acceptFriendRequest(userInfo?.id as string);
                 }}
                 loading={sendRequestLoading}
               >
@@ -197,7 +204,8 @@ const ProfileHeader = ({
                 style={{ width: "48%" }}
                 type="ghost"
                 onPress={() => {
-                  refuseFriendRequest && refuseFriendRequest(user?.id as string);
+                  refuseFriendRequest &&
+                    refuseFriendRequest(userInfo?.id as string);
                 }}
               >
                 {localStrings.Public.RefuseFriendRequest}
@@ -207,98 +215,167 @@ const ProfileHeader = ({
         );
       default:
         return (
-          <Button type="ghost" onPress={() => { }}>
+          <Button type="ghost" onPress={() => {}}>
             <Text style={{ color: brandPrimary, fontSize: 16 }}>
               {localStrings.Public.AddFriend}
             </Text>
           </Button>
         );
     }
-  }, [newFriendStatus, localStrings, sendRequestLoading, user]);
+  }, [newFriendStatus, localStrings, sendRequestLoading, userInfo]);
 
   const renderUserInformation = useCallback(() => {
     return (
-      <>
-          {/* Cover Image */}
-          <View
-            style={{ width: "100%", height: 200, backgroundColor: lightGray }}
-          >
+      <View>
+        {/* Cover Image */}
+        <View
+          style={{ width: "100%", height: 200, backgroundColor: lightGray }}
+        >
+          <Image
+            source={{ uri: userInfo?.capwall_url }}
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: lightGray,
+            }}
+          />
+        </View>
+
+        {/* Profile Image */}
+        <View style={{ alignItems: "center", marginTop: -60 }}>
+          <View style={{ position: "relative" }}>
             <Image
-              source={{ uri: user?.capwall_url }}
+              source={{ uri: userInfo?.avatar_url }}
               style={{
-                width: "100%",
-                height: "100%",
+                width: 120,
+                height: 120,
+                borderRadius: 60,
                 backgroundColor: lightGray,
               }}
             />
           </View>
+        </View>
 
-          {/* Profile Image */}
-          <View style={{ alignItems: "center", marginTop: -60 }}>
-            <View style={{ position: "relative" }}>
-              <Image
-                source={{ uri: user?.avatar_url }}
-                style={{
-                  width: 120,
-                  height: 120,
-                  borderRadius: 60,
-                  backgroundColor: lightGray,
-                }}
-              />
-            </View>
-          </View>
-
-          {/* User Information */}
-          <View style={{ alignItems: "center", marginTop: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+        {/* User Information */}
+        <View style={{ alignItems: "center", marginTop: 10 }}>
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: brandPrimary }}>
+            {" "}
+            {userInfo?.family_name}{" "}
+            {userInfo?.name || localStrings.Public.Username}
+          </Text>
+          <Text style={{ color: "gray", marginTop: 4 }}>
+            {userInfo?.biography || localStrings.Public.Biography}
+          </Text>
+          <View style={{ flexDirection: "row", marginTop: 10 }}>
+            <Text style={{ marginHorizontal: 20, fontWeight: "bold", color: brandPrimaryTap }}>
               {" "}
-              {user?.family_name} {user?.name || localStrings.Public.Username}
+              {total || userInfo?.post_count} {localStrings.Public.Post}
+              {language === "en" &&
+              (total || user?.post_count) &&
+              ((total && total > 1) ||
+                (userInfo?.post_count && userInfo?.post_count > 1))
+                ? "s"
+                : ""}
             </Text>
-            <Text style={{ color: "gray", marginTop: 4 }}>
-              {user?.biography || localStrings.Public.Biography}
+            <Text style={{ marginHorizontal: 20, fontWeight: "bold", color: brandPrimaryTap }}>
+              {friendCount} {localStrings.Public.Friend}
             </Text>
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
-              <Text style={{ marginHorizontal: 20, fontWeight: "bold" }}>
-                {" "}
-                {total || user?.post_count} {localStrings.Public.Post}
-                {language === "en" &&
-                  (total || user?.post_count) &&
-                  ((total && total > 1) ||
-                    (user?.post_count && user?.post_count > 1))
-                  ? "s"
-                  : ""}
-              </Text>
-              <Text style={{ marginHorizontal: 20, fontWeight: "bold" }}>
-                {friendCount} {localStrings.Public.Friend}
-              </Text>
-            </View>
           </View>
+        </View>
 
-          {/* Friend Button */}
-          {!isLoginUser(user?.id as string) && (
-            <View style={{ marginHorizontal: 10, marginTop: 10 }}>
+        {/* Friend Button */}
+        {!isLoginUser(userInfo?.id as string) && (
+          <View style={{ marginTop: 10, flexDirection: "row" }}>
+            <View style={{ marginHorizontal: 10, marginTop: 10, flex: 1 }}>
               {renderFriendButton()}
             </View>
-          )}
-        </>
-    )
-  }, [isLoginUser, language, renderFriendButton, total, user, friendCount, localStrings]);
+            <TouchableOpacity
+              style={{
+                backgroundColor: brandPrimary,
+                paddingVertical: 10,
+                borderRadius: 5,
+                alignItems: "center",
+                marginTop: 10,
+                marginHorizontal: 10, flex: 1
+              }}
+              onPress={async () => {
+                const UserIds = [userInfo?.id];
+                if (UserIds) {
+                  try {
+                    const conversationId = await createConversation({
+                      // name: `${user?.family_name} ${user?.name}, ${userInfo.family_name} ${userInfo.name}`,
+                      name: "Chat",
+                      user_ids: UserIds.filter(
+                        (id): id is string => id !== undefined
+                      ),
+                    });
+
+                    if (conversationId) {
+                      console.log(
+                        "Before API call - conversationId:",
+                        conversationId,
+                        typeof conversationId
+                      );
+
+                      router.push(`/chat?conversation_id=${conversationId}`);
+                    } else {
+                      console.error("Conversation ID không hợp lệ");
+                    }
+                  } catch (error) {
+                    console.error("Lỗi khi tạo cuộc trò chuyện:", error);
+                  }
+                } else {
+                  router.push(`/chat?friend_id=${userInfo.id}`);
+                }
+              }}
+            >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="chatbubble-ellipses"
+                size={20}
+                color={backgroundColor}
+              />
+              <Text
+                style={{
+                  color: backgroundColor,
+                  fontSize: 16,
+                  marginHorizontal: 10,
+                  fontWeight: "bold",
+                }}
+              >
+                {localStrings.Messages.Messages}
+              </Text>
+            </View>
+            </TouchableOpacity>
+            </View>
+        )}
+      </View>
+    );
+  }, [
+    isLoginUser,
+    language,
+    renderFriendButton,
+    total,
+    user,
+    friendCount,
+    localStrings,
+    brandPrimary,
+  ]);
 
   useEffect(() => {
-    if (user && user?.friend_status && setNewFriendStatus) setNewFriendStatus(user?.friend_status);
+    if (user && user?.friend_status && setNewFriendStatus)
+      setNewFriendStatus(user?.friend_status);
   }, [user]);
 
   return (
-    <>
+    <View>
       {loading ? (
         <ActivityIndicator size="large" color={lightGray} />
       ) : (
-        <>
-          {renderUserInformation()}
-        </>
+        <View>{renderUserInformation()}</View>
       )}
       <Toast />
-    </>
+    </View>
   );
 };
 

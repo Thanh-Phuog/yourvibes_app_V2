@@ -9,13 +9,15 @@ export const ApiPath = {
   PROFILE: getApiPath("users/"),
   SEARCH: getApiPath("users/"),
   CHANGE_PASSWORD: getApiPath("users/change_password"),
-  REPORT_USER: getApiPath("users/report/"),
 
   //Friend
   FRIEND_REQUEST: getApiPath("users/friends/friend_request/"),
   FRIEND_RESPONSE: getApiPath("users/friends/friend_response/"),
   UNFRIEND: getApiPath("users/friends/"),
   LIST_FRIENDS: getApiPath("users/friends/"),
+  
+  NON_FRIENDS: getApiPath("users/friends/non_friend"),
+  BIRTHDAY_FRIENDS: getApiPath("users/friends/birthday"),
 
   // Post
   CREATE_POST: getApiPath("posts/"),
@@ -26,8 +28,12 @@ export const ApiPath = {
   LIKE_POST: getApiPath("posts/like_post/"),
   SHARE_POST: getApiPath("posts/share_post/"),
   ADVERTISE_POST: getApiPath("advertise/"),
+  
+  TRENDING_POST: getApiPath("posts/trending"),
 
-  REPORT_POST: getApiPath("posts/report/"),
+
+    //Report
+    REPORT: getApiPath("report/"),
 
   //Comment
   CREATE_COMMENT: getApiPath("comments/"),
@@ -36,17 +42,15 @@ export const ApiPath = {
   DELETE_COMMENT: getApiPath("comments/"),
   GET_COMMENT_REPLIES: getApiPath("comments/"),
 
-  REPORT_COMMENT: getApiPath("comments/report/"),
-
   //Like Comment
   GET_LIKE_COMMENT: getApiPath("comments/like_comment/"),
   POST_LIKE_COMMENT: getApiPath("comments/like_comment/"),
 
   // Notification
-  GET_WS_PATH: getWSPath("users/notifications/ws/"),
-  GET_NOTIFICATIONS: getApiPath("users/notifications"),
-  READ_NOTIFICATION: getApiPath("users/notifications/"),
-  READ_ALL_NOTIFICATION: getApiPath("users/notifications/"),
+  GET_WS_PATH_NOTIFICATION: getWSPath("notification/ws/"),
+  GET_NOTIFICATIONS: getApiPath("notification"),
+  READ_NOTIFICATION: getApiPath("notification/"),
+  READ_ALL_NOTIFICATION: getApiPath("notification/"),
 
   //New Feeds
   GET_NEW_FEEDS: getApiPath("posts/new_feeds/"),
@@ -55,6 +59,31 @@ export const ApiPath = {
   //Forgot Password
   GET_OTP_FORGOOT_PASSWORD: getApiPath("users/get_otp_forgot_user_password"),
   FORGOT_PASSWORD: getApiPath("users/forgot_user_password"),
+
+  //Suggestion
+  GET_SUGGESTION: getApiPath('users/friends/suggestion'),
+
+  //Conversation
+  GET_CONVERSATION: getApiPath("conversations/"),
+  CREATE_CONVERSATION: getApiPath("conversations/"),
+  DELETE_CONVERSATION: getApiPath("conversations/"),
+  UPDATE_CONVERSATION: getApiPath("conversations/"),
+
+  //Message
+  GET_WS_PATH_MESSAGE: getWSPath("messages/ws/"),
+  GET_MESSAGES_BY_CONVERSATION_ID: getApiPath("messages/get_by_conversation_id/"),
+  CREATE_MESSAGE: getApiPath("messages/"),
+  GET_MESSAGE_BY_ID: getApiPath("messages/message/"),
+  DELETE_MESSAGE: getApiPath("messages/message/"),
+
+
+  //Conversation_Detail
+  GET_CONVERSATION_DETAIL: getApiPath("conversation_details/get_by_id/"),
+  CREATE_CONVERSATION_DETAIL: getApiPath("conversation_details/"),
+  DELETE_CONVERSATION_DETAIL: getApiPath("conversation_details/delete/"),
+  UPDATE_CONVERSATION_DETAIL: getApiPath("conversation_details/update"),
+  CREATE_MANY_CONVERSATION_DETAIL: getApiPath("conversation_details/create_many"),
+  TRANSFER_OWNER_ROLE: getApiPath("conversation_details/transfer_owner_role"),
 };
 
 function getApiPath(path: string) {

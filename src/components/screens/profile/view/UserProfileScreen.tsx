@@ -12,7 +12,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import Toast from 'react-native-toast-message';
 
 const UserProfileScreen = ({ id }: { id: string }) => {
-  const { backgroundColor } = useColor();
+  const { backGround, backgroundColor,brandPrimary } = useColor();
   const { localStrings } = useAuth();
   const [tab, setTab] = useState(0);
   const { showActionSheetWithOptions } = useActionSheet();
@@ -80,7 +80,7 @@ const UserProfileScreen = ({ id }: { id: string }) => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: backgroundColor, width: '100%' }}
+      style={{ flex: 1, backgroundColor: backGround, width: '100%' }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={{ flex: 1 }}>
@@ -94,16 +94,16 @@ const UserProfileScreen = ({ id }: { id: string }) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: '#fff',
+            backgroundColor: backgroundColor,
             zIndex: 10,
             borderBottomColor: 'black',
             borderBottomWidth: 1,
           }}
         >
           <TouchableOpacity onPress={() => router.back()}>
-            <Feather name="arrow-left" size={24} color="black" />
+            <Feather name="arrow-left" size={24} color={brandPrimary} />
           </TouchableOpacity>
-          <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold', flex: 1 }}>
+          <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold', flex: 1, color: brandPrimary }}>
             {userInfo?.family_name} {userInfo?.name || localStrings.Public.Username}
           </Text>
           <TouchableOpacity
@@ -118,11 +118,11 @@ const UserProfileScreen = ({ id }: { id: string }) => {
         <FlatList
           data={null}
           ListHeaderComponent={
-            <>
+            <View>
               <ProfileHeader
                 total={total}
                 friendCount={friendCount}
-                user={userInfo as UserModel}
+                userInfo={userInfo as UserModel}
                 loading={profileLoading}
                 sendFriendRequest={sendFriendRequest}
                 sendRequestLoading={sendRequestLoading}
@@ -146,7 +146,7 @@ const UserProfileScreen = ({ id }: { id: string }) => {
                 resultCode={resultCode}
               />
               <Toast />
-            </>
+            </View>
           }
           renderItem={() => null}
           showsVerticalScrollIndicator={false}

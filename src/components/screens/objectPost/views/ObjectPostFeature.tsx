@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 
 const ObjectPostFeature = () => {
 	const { localStrings } = useAuth();
-	const { brandPrimary, backgroundColor } = useColor();
+	const { brandPrimary, backgroundColor, brandPrimaryTap, backGround } = useColor();
 	const { savedPrivacy, setSavedPrivacy } = usePostContext();
 	const [selectedOption, setSelectedOption] = useState<Privacy>(savedPrivacy || Privacy.PUBLIC);
 
@@ -35,9 +35,12 @@ const ObjectPostFeature = () => {
 		];
 
 	return (
-		<View style={{ flex: 1, backgroundColor: backgroundColor }}>
+		<View style={{ flex: 1, backgroundColor: backGround }}>
 			{/* Header */}
-			<View>
+			<View style={{
+				backgroundColor: backgroundColor,
+			}}>
+				{/* Status bar */}
 				<StatusBar barStyle="dark-content" />
 				<View style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', height: 60, paddingBottom: 10 }}>
 					<View style={{
@@ -55,6 +58,7 @@ const ObjectPostFeature = () => {
 							fontWeight: 'bold',
 							fontSize: 20,
 							marginLeft: 10,
+							color: brandPrimary,
 						}}>
 							{localStrings.ObjectPostPrivacy.PostPrivacy}
 						</Text>
@@ -64,13 +68,13 @@ const ObjectPostFeature = () => {
 			<View style={{ borderBottomWidth: 1, borderColor: '#ccc', marginVertical: 10 }} />
 
 			{/* Content */}
-			<View style={{ flex: 1, paddingHorizontal: 10 }}>
-				<Text style={{ fontWeight: 'bold', fontSize: 18 }}>{localStrings.ObjectPostPrivacy.Contents.WhoCanSee}</Text>
-				<Text style={{ paddingTop: 10 }}>{localStrings.ObjectPostPrivacy.Contents.CanFind}</Text>
-				<Text style={{ paddingTop: 10 }}>
+			<View style={{ flex: 1, paddingHorizontal: 10}}>
+				<Text style={{ fontWeight: 'bold', fontSize: 18, color: brandPrimary }}>{localStrings.ObjectPostPrivacy.Contents.WhoCanSee}</Text>
+				<Text style={{ paddingTop: 10, color: brandPrimaryTap}}>{localStrings.ObjectPostPrivacy.Contents.CanFind}</Text>
+				<Text style={{ paddingTop: 10, color: brandPrimaryTap }}>
 					{localStrings.ObjectPostPrivacy.Contents.DefaultPrivacy1}<Text style={{ fontWeight: 'bold' }}>{localStrings.Public.Public}</Text>{localStrings.ObjectPostPrivacy.Contents.DefaultPrivacy2}
 				</Text>
-				<Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 10 }}>{localStrings.ObjectPostPrivacy.ChoosePrivacy}</Text>
+				<Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 10, color: brandPrimary }}>{localStrings.ObjectPostPrivacy.ChoosePrivacy}</Text>
 				<View style={styles.container}>
 					{options.map((option) => (
 						<TouchableOpacity
@@ -79,7 +83,7 @@ const ObjectPostFeature = () => {
 							onPress={() => handleSelect(option.value)}
 						>
 							<View style={styles.checkbox}>
-								{selectedOption === option.value && <Ionicons name="checkmark" size={20} color="#000" />}
+								{selectedOption === option.value && <Ionicons name="checkmark" size={20} color={brandPrimaryTap} />}
 							</View>
 							<Ionicons name={option.icon} size={24} color={brandPrimary} style={styles.icon} />
 							<View>
@@ -95,7 +99,7 @@ const ObjectPostFeature = () => {
 			<View style={{ paddingHorizontal: 10, paddingBottom: 20 }}>
 				<TouchableOpacity
 					style={{
-						backgroundColor: brandPrimary,
+						backgroundColor: backgroundColor,
 						borderColor: brandPrimary,
 						height: 45,
 						borderRadius: 30,
@@ -104,7 +108,7 @@ const ObjectPostFeature = () => {
 					}}
 					onPress={handleSavePrivacy}
 				>
-					<Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>{localStrings.Public.Save}</Text>
+					<Text style={{ color: brandPrimary, fontWeight: 'bold', fontSize: 16 }}>{localStrings.Public.Save}</Text>
 				</TouchableOpacity>
 			</View>
 			<Toast />

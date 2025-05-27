@@ -34,3 +34,23 @@ export interface NewFeedMediaModel {
     status?: boolean
     id?: string
 }
+
+//interface Suggestion
+export interface SuggestionUserModel {
+    id?: string,
+    family_name?: string,
+    name?: string,
+    avatar_url?: string,
+    is_send_friend_request?: boolean,
+}
+
+export interface SuggestionResponseModel {
+    code: number;
+    message: string;
+    data: SuggestionUserModel[];
+    paging: {
+        limit: number;
+        page: number;
+        total: number;
+    };
+}

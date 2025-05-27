@@ -1,4 +1,5 @@
 import messages from "@/app/messages";
+import AddUserGroup from "@/src/components/screens/chat/component/AddUserGroup";
 
 export const VnLocalizedStrings = {
   Public: {
@@ -55,7 +56,19 @@ export const VnLocalizedStrings = {
     ListUserLikePost: "Danh sách người thích bài viết",
     WhoLike: "Khám phá ai đã thích bài viết!",
     HideInfo: "đã ẩn thông tin cá nhân",
-    FriendOnly: "chỉ bạn bè được xem"
+    FriendOnly: "chỉ bạn bè được xem",
+    Trending: "Xu hướng",
+    BirthdayFriend: "Sinh nhật bạn bè",
+    NewFeed: "Bảng tin",
+    NoBirthdays: "Không có ngày sinh nhật nào",
+    HappyBirthday:
+      "Hãy gửi lời chúc mừng sinh nhật đến những người bạn của bạn!",
+    FriendRequests: "Lời mời kết bạn",
+    Theme: "Chế độ",
+    DarkMode: "Chế độ tối",
+    LightMode: "Chế độ sáng",
+    AllUser: "Người dùng YourVibes",
+    UserNotFound: "Không tìm thấy người dùng",
   },
   Form: {
     Label: {
@@ -88,7 +101,8 @@ export const VnLocalizedStrings = {
       ConfirmPasswordTypeMessage: "Xác nhận mật khẩu không hợp lệ!",
       OTPTypeMessage: "Mã OTP phải là chuỗi 6 số!",
       PhoneTypeMessage: "Số điện thoại phải là chuỗi 10 số!",
-      PleaseOldPasswordDifferentNewPassword: "Mật khẩu mới phải khác mật khẩu cũ!",
+      PleaseOldPasswordDifferentNewPassword:
+        "Mật khẩu mới phải khác mật khẩu cũ!",
     },
   },
   Login: {
@@ -119,6 +133,7 @@ export const VnLocalizedStrings = {
     CreatePostFailed: "Đăng bài thất bại!",
     EmptyContent: "Thiếu nội dung hoặc file media",
     PickImgFailed: "Tải file thất bại!",
+    CensorPost: "Bài viết của bạn đang được kiểm duyệt, vui lòng chờ.",
   },
   ObjectPostPrivacy: {
     PublicDescription: "Bất kỳ ai ở trên YourVibes",
@@ -154,8 +169,11 @@ export const VnLocalizedStrings = {
     SharePostFailed: "Chia sẻ bài viết thất bại!",
     SharePost: "Chia sẻ",
     DeleteNewFeed: "Ẩn bài viết",
-    NoContent: "Nội dung không hiển thị",
+    NoContent: "Nội dung không tồn tại!",
+    NoContentDetail:
+      "Nội dung đã bị xoá hoặc cài đặt quyền riêng tư bởi người dùng!",
     Sponsor: "Được tài trợ",
+    NoTrendingPosts: "Chưa có bài viết trending nào",
   },
   PostDetails: {
     ViewReplies: "Xem phản hồi",
@@ -238,7 +256,23 @@ export const VnLocalizedStrings = {
       AcceptFriend: "đã chấp nhận lời mời kết bạn của bạn.",
       NewPost: "đã đăng một bài viết mới.",
       LikeComment: "đã thích bình luận của bạn: ",
-    }
+      NewPostPersonal: "bài viết của bạn đăng thành công:",
+      NewPostError: "bài viết của bạn bị lỗi",
+      BlockCreatePost: "bài viết của bạn đã bị chặn",
+      nsfw: "vì chứa nội dung nhạy cảm",
+      political: "vì chứa nội dung chính trị không phù hợp",
+      violence: "vì chứa nội dung bạo lực",
+      abuse: "vì chứa nội dung xâm hại trẻ em",
+      DeactivatePostContent:
+        "bài viết của bạn đã bị chặn vì vi phạm các điều khoản và điều kiện của chúng tôi. Nếu bạn nghĩ rằng đây là một sai lầm, vui lòng liên hệ với bộ phận hỗ trợ của chúng tôi để được xem xét lại.",
+      ActivacePostContent:
+        "bài viết của bạn đã được kích hoạt lại sau khi xem xét. Cảm ơn bạn đã kiên nhẫn chờ đợi.",
+      DeactivateCommentContent:
+        "bình luận của bạn đã bị chặn vì vi phạm các điều khoản và điều kiện của chúng tôi. Nếu bạn nghĩ rằng đây là một sai lầm, vui lòng liên hệ với bộ phận hỗ trợ của chúng tôi để được xem xét lại.",
+      ActivaceCommentContent:
+        "bình luận của bạn đã được kích hoạt lại sau khi xem xét. Cảm ơn bạn đã kiên nhẫn chờ đợi.",
+      NewMessage: "Có tin nhắn mới.",
+    },
   },
   ListFriends: {
     ListFriends: "Danh sách bạn bè",
@@ -301,9 +335,59 @@ export const VnLocalizedStrings = {
     ConformChangePasswordSuccess: "Thay đổi mật khẩu thành công!",
     ConformChangePasswordFailed: "Thay đổi mật khẩu thất bại!",
   },
-Messages:{
-  Messages: "Tin nhắn",
-  EnterMessage: "Nhập tin nhắn",
-  
-},
+  Messages: {
+    Messages: "Tin nhắn",
+    Admin: "Chủ phòng",
+    EnterMessage: "Nhập tin nhắn",
+    Member: "Thành viên",
+    DeleteMember: "Xoá thành viên",
+    Reply: "Trả lời",
+    AddUserGroup: "Thêm thành viên",
+    DeleteConversation: "Xóa cuộc trò chuyện",
+    LeaveGroup: "Rời khỏi nhóm",
+    DeleteConversationConfirm: "Bạn có chắc chắn muốn xóa cuộc trò chuyện này?",
+    LeaveGroupConfirm: "Bạn có chắc chắn muốn rời khỏi nhóm này?",
+    CantLeaveGroup:
+      "Vui lòng chuyển quyền chủ phòng cho người khác trước khi rời nhóm",
+    CantDeleteGroup: "Chỉ chủ phòng có quyền xóa nhóm này",
+    Today: "Hôm nay",
+    Yesterday: "Hôm qua",
+    NameGroup: "Vui lòng nhập tên nhóm!",
+  },
+  Suggested: {
+    SuggestedFriends: "Những người bạn có thể biết",
+    Hide: "Ẩn",
+    SeeMore: "Xem thêm",
+    Why: "Tại sao tôi lại thấy những người bạn này?",
+    Dont: "Tôi không muốn thấy những người bạn này",
+    AddFriend: "Kết bạn",
+    FriendRequestSent: "Đã gửi..",
+    WhyExplanation: "Những gợi ý này dựa trên các yếu tố như:",
+    WhyFactor1: "Bạn bè chung",
+    WhyFactor2: "Sở thích tương đồng",
+    WhyFactor3: "Hoạt động gần đây trên mạng xã hội",
+    WhyConclusion:
+      "Chúng tôi sử dụng thuật toán để tìm những người bạn có thể quen biết hoặc muốn kết nối!",
+  },
+  People: {
+    People: "Mọi người",
+    FetchUsersFailed: "Tải danh sách người dùng thất bại",
+    ErrorFetchingUsers: "Lỗi khi tải danh sách người dùng",
+    NoFriendRequests: "Không có lời mời kết bạn nào",
+    ErrorFriendRequests: "Lỗi khi tải danh sách lời mời kết bạn",
+    AcceptScuccess: "Chấp nhận lời mời thành công",
+    AcceptFailed: "Chấp nhận lời mời thất bại",
+    AcceptError: "Lỗi khi chấp nhận lời mời",
+    DeclineSuccess: "Từ chối lời mời thành công",
+    DeclineFailed: "Từ chối lời mời thất bại",
+    DeclineError: "Lỗi khi từ chối lời mời",
+    FriendRequestSent: "Đã gửi lời mời kết bạn",
+    FriendRequestSentError: "Lỗi khi gửi lời mời kết bạn",
+    FriendRequestSentSuccess: "Gửi lời mời kết bạn thành công",
+    FriendRequestCanceled: "Đã hủy lời mời kết bạn",
+    FriendRequestCanceledError: "Lỗi khi hủy lời mời kết bạn",
+    FriendRequestCanceledSuccess: "Hủy lời mời kết bạn thành công",
+    FriendRequestSentFailed: "Gửi lời mời kết bạn thất bại",
+    FriendRequestCanceledFailed: "Hủy lời mời kết bạn thất bại",
+  },
 };

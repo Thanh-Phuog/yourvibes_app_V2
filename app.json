@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
-    "scheme": "com.tranquockhang18102004.yourvibes",
+    "scheme": "com.yourvibes",
     "platforms": [
       "ios",
       "android"
@@ -20,7 +20,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tranquockhang18102004.yourvibes"
+      "bundleIdentifier": "com.yourvibes"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +31,7 @@
         "INTERNET",
         "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.tranquockhang18102004.yourvibes",
+      "package": "com.yourvibes",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -64,21 +64,22 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "eas": {
-        "projectId": "bfa9ab76-c551-4f68-b26f-f1c888ef9f2c"
+        "projectId": "36426c2f-7b3b-4313-9de9-ad19beccdd61"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/bfa9ab76-c551-4f68-b26f-f1c888ef9f2c"
+      "url": "https://u.expo.dev/36426c2f-7b3b-4313-9de9-ad19beccdd61"
     }
   }
 }

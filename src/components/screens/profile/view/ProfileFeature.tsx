@@ -18,7 +18,7 @@ import { UserModel } from "@/src/api/features/authenticate/model/LoginModel";
 import Toast from "react-native-toast-message";
 
 const ProfileFeatures = ({ tab }: { tab: number }) => {
-  const { backgroundColor } = useColor();
+  const { backGround, backgroundColor, brandPrimary } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const {
@@ -51,11 +51,11 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
 
   const renderTab = useCallback(() => {
     return (
-      <>
+      <View>
         <ProfileHeader
           total={total}
           friendCount={friendCount}
-          user={user as UserModel}
+          userInfo={user as UserModel}
           loading={false}
         />
         <ProfileTabs
@@ -71,13 +71,13 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
           onViewableItemsChanged={onViewableItemsChanged}
           visibleItems={visibleItems}
         />
-      </>
+      </View>
     )
   }, [tab, posts, loading, friends, resultCode, visibleItems, user, total, friendCount]);
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: backgroundColor, width: "100%" }}
+      style={{ flex: 1, backgroundColor: backGround, width: "100%" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={{ flex: 1 }}>
@@ -91,14 +91,14 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            backgroundColor: "#fff",
+            backgroundColor: backgroundColor,
             zIndex: 10,
             borderBottomColor: "black",
             borderBottomWidth: 1,
           }}
         >
           <TouchableOpacity onPress={() => router.push("/home")}>
-            <Feather name="arrow-left" size={24} color="black" />
+            <Feather name="arrow-left" size={24} color={brandPrimary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -106,6 +106,7 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
               fontSize: 18,
               fontWeight: "bold",
               flex: 1,
+              color: brandPrimary,
             }}
           >
             {user?.family_name} {user?.name || localStrings.Public.Username}
@@ -116,10 +117,10 @@ const ProfileFeatures = ({ tab }: { tab: number }) => {
         <FlatList
           data={null}
           ListHeaderComponent={
-            <>
+            <View>
               {renderTab()}
               <Toast />
-            </>
+            </View>
           }
           renderItem={() => null}
           showsVerticalScrollIndicator={false}

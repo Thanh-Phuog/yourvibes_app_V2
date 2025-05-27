@@ -26,29 +26,25 @@ const useListFriendsViewModel = (userId?: string) => {
     try {
       setLoading(true);
       const response = await defaultProfileRepo.getListFriends({
-        limit: 10,
-        page: 1,
+        limit: 15,
+        page: page,
         user_id: userId,
       });
       if (response?.data ) {
-        if (Array.isArray(response?.data)) {
-          const friends = response.data.map(
-            (friendResponse: FriendResponseModel) => ({
-              id: friendResponse.id,
-              family_name: friendResponse.family_name,
-              name: friendResponse.name,
-              avatar: friendResponse.avatar_url,
-            })
-          ) as FriendResponseModel[];
-          setFriends(friends);
+       if (page === 1) {
+          setFriends(response?.data || []);}
+        else {
+          setFriends((prevFriends) => [...prevFriends, ...(response?.data || [])]);
+        }
           setFriendCount(friends.length); //Đếm số lượng bạn bè
+          const { page: currentPage, limit: currentLimit, total: totalRecords } = response?.paging;
+          setPage(currentPage);
+          setHasMore(currentPage * currentLimit < totalRecords);
         } else {
          console.log("Không có bạn bè nào.");
          setFriends([]);
          
         }
-      }
-      return friends;
     } catch (error: any) {
       console.error(error);
       Toast.show({
@@ -64,9 +60,12 @@ const useListFriendsViewModel = (userId?: string) => {
     friend?.name?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleEndReached = () => {
+  const handleEndReached = (userId?: string) => {
     if (!loading && hasMore) {
+      console.log("Đang tải thêm bạn bè...");
+      
       setPage((prevPage) => prevPage + 1);
+      fetchFriends(page + 1, userId);
     }
   };
 
