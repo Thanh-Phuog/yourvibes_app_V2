@@ -163,18 +163,10 @@ const AddPostScreen = () => {
               alignItems: "flex-end",
               height: 60,
               paddingBottom: 10,
+              paddingLeft: 10,
             }}
           >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                paddingHorizontal: 10,
-                alignItems: "center",
-                backgroundColor: backgroundColor,
-                justifyContent: "space-between",
-              }}
-            >
+          
               <TouchableOpacity
                 onPress={() => {
                   router.back();
@@ -192,7 +184,6 @@ const AddPostScreen = () => {
               >
                 {localStrings.AddPost.NewPost}
               </Text>
-            </View>
           </View>
         </View>
 

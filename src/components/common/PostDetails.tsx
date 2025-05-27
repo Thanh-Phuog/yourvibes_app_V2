@@ -464,7 +464,7 @@ function PostDetails({
           )}
 
           {/* FlatList */}
-          {!post ? (
+        {loading ? (
             <View
               style={{
                 flex: 1,
@@ -474,7 +474,21 @@ function PostDetails({
             >
               <ActivityIndicator size="large" color="#0000ff" />
               <Text>Loading...</Text>
-            </View>
+            </View>):!post ? (
+
+<View
+  style={{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+>
+  <FontAwesome name="exclamation-circle" color="#ff4d4f" size={40}/>
+  <Text style={{ fontSize: 18, color: "gray", marginTop: 10 }}>
+    Không tìm thấy bài viết
+  </Text>
+</View>
+
           ) : (
            <View style={{ flex: 1, paddingBottom: 20 }}>
               {renderFlatList(comments)}
@@ -580,6 +594,11 @@ function PostDetails({
                   </View>
                 </View>
               </Form>
+               <UserLikePostModal
+              isVisible={isVisible}
+              setIsVisible={setIsVisible}
+              userLikePost={userLikePost}
+            />
             </View>
           )}
           {/* Modal edit comment */}

@@ -166,7 +166,8 @@ export const ENGLocalizedStrings = {
     SharePost: "Share",
     DeleteNewFeed: "Delete (hide) new feed",
     NoContent: "Content is empty",
-    NoContentDetail: "This content has been removed or made private by the user!",
+    NoContentDetail:
+      "This content has been removed or made private by the user!",
     Sponsor: "Sponsored",
     NoTrendingPosts: "No trending posts found",
   },
@@ -257,6 +258,7 @@ export const ENGLocalizedStrings = {
       nsfw: "due to containing sensitive content",
       political: "due to containing inappropriate political content",
       violence: "due to containing violent content",
+      abuse: "due to containing content that harms children",
       DeactivatePostContent:
         "Your post has been blocked for violating our terms and conditions. If you believe this is a mistake, please contact our support team for review.",
       ActivacePostContent:
@@ -341,9 +343,11 @@ export const ENGLocalizedStrings = {
     AddUserGroup: "Add user to group",
     DeleteConversation: "Delete conversation",
     LeaveGroup: "Leave the group",
-    DeleteConversationConfirm: "Are you sure you want to delete this conversation?",
+    DeleteConversationConfirm:
+      "Are you sure you want to delete this conversation?",
     LeaveGroupConfirm: "Are you sure you want to leave this group?",
-    CantLeaveGroup: "Please transfer the group ownership to someone else before leaving the group",
+    CantLeaveGroup:
+      "Please transfer the group ownership to someone else before leaving the group",
     CantDeleteGroup: "Only the group owner has the right to delete this group",
     Today: "Today",
     Yesterday: "Yesterday",

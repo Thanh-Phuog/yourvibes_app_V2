@@ -194,6 +194,9 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({
         if (content.includes("political")) {
           return localStrings.Notification.Items.political;
         }
+          if (content.includes("abuse")) {
+            return localStrings.Notification.Items.abuse;
+          }
         return content;
       };
       Toast.show({

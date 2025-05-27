@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Animated,
+  ScrollView,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { defaultFriendRepo } from "@/src/api/features/friends/FriendRepo";
@@ -20,11 +21,15 @@ import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import FriendRequestAndUserViewModel from "../viewModel/FriendAndBirthViewModel";
 import { GetUserNonFriendsModel } from "@/src/api/features/friends/models/GetUserNonFriends";
 import Birth from "./BirthDay";
+import UserNonFriend from "./User";
+import FriendRequest from "./FriendRequest";
 
 const FriendRequestAndUser = ({ isActive }: { isActive: boolean }) => {
   const { user, localStrings } = useAuth();
   const { brandPrimary, backgroundColor, lightGray, borderColor } = useColor();
   const [showModalBirth, setShowModalBirth] = useState(false);
+  const [showModalFriendRequest, setShowModalFriendRequest] = useState(false);
+  const [showModalUser, setShowModalUser] = useState(false);
   const {
     acceptFriendRequest,
     refuseFriendRequest,
@@ -48,13 +53,6 @@ const FriendRequestAndUser = ({ isActive }: { isActive: boolean }) => {
     hasMoreFriendRequest,
     onViewableItemsChanged,
   } = FriendRequestAndUserViewModel(defaultFriendRepo);
-
-  useEffect(() => {
-    if (user && isActive) {
-      fetchUserNonFriend();
-      fetchFriendRequests();
-    }
-  }, [isActive]);
 
   const renderFooterUser = () => {
     if (!hasMoreBirthday) return null;
@@ -125,287 +123,88 @@ const FriendRequestAndUser = ({ isActive }: { isActive: boolean }) => {
     [cancelFriendRequest, sendFriendRequest, sendRequestLoading]
   );
 
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={{}}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 5,
-          }}
-        >
-          <TouchableOpacity onPress={() => setShowModalBirth(true)}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: brandPrimary,
-                letterSpacing: 0.5,
-              }}
-            >
-              {localStrings.Public.BirthdayFriend}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ height: 1, backgroundColor: borderColor }} />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 5,
-          }}
-        >
-          <Text
-            style={{
-              fontWeight: "700",
-              fontSize: 16,
-              color: brandPrimary,
-              letterSpacing: 0.5,
-            }}
-          >
-            {localStrings.Public.FriendRequests}
-          </Text>
-        </View>
-        <View style={{ height: 1, backgroundColor: borderColor }} />
-        {loadingFriendRequests ? (
-          <View style={{ paddingVertical: 10, alignItems: "center" }}>
-            <ActivityIndicator size="large" color={brandPrimary} />
-          </View>
-        ) : (
-          incomingFriendRequests.length > 0 && (
-            <FlatList
-              data={incomingFriendRequests}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      padding: 12,
-                      marginVertical: 6,
-                      backgroundColor: backgroundColor,
-                      borderRadius: 10,
-                      marginHorizontal: 10,
-                      shadowColor: "#ff1f5",
-                      marginBottom: 16,
-                      elevation: 6, // tương đương boxShadow
-                    }}
-                    activeOpacity={0.8}
-                    onPress={() => router.push(`/(tabs)/user/${item.id}`)}
-                  >
-                    <Image
-                      source={{ uri: item.avatar_url }}
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 22,
-                        borderWidth: 2,
-                        borderColor: lightGray || "#FF6699",
-                        marginRight: 12,
-                      }}
-                    />
-                    <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          fontWeight: "600",
-                          fontSize: 15,
-                          color: "#1f2937",
-                        }}
-                      >
-                        {item.family_name + " " + item.name}
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Button
-                          style={{ width: "45%", height: 30 }}
-                          type="primary"
-                          onPress={() => {
-                            acceptFriendRequest &&
-                              acceptFriendRequest(item?.id as string);
-                          }}
-                          loading={sendRequestLoading}
-                        >
-                          <Text
-                            style={{
-                              color: "#ffffff",
-                              fontSize: 13,
-                            }}
-                          >
-                            {localStrings.Public.AcceptFriendRequest}
-                          </Text>
-                        </Button>
-                        <Button
-                          style={{ width: "45%", height: 30 }}
-                          type="ghost"
-                          onPress={() => {
-                            refuseFriendRequest &&
-                              refuseFriendRequest(item?.id as string);
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 13,
-                            }}
-                          >
-                            {localStrings.Public.RefuseFriendRequest}
-                          </Text>
-                        </Button>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }}
-              ListFooterComponent={renderFooterFriend}
-              onEndReachedThreshold={0.5}
-              onEndReached={loadMoreFriendRequests}
-              refreshing={loadingFriendRequests}
-              onRefresh={onRefreshFriendRequest}
-              showsVerticalScrollIndicator={false}
-              removeClippedSubviews={true}
-              onViewableItemsChanged={onViewableItemsChanged.current}
-              viewabilityConfig={{
-                itemVisiblePercentThreshold: 50,
-              }}
-            />
-          )
-        )}
-      </View>
+  const sections = [
+  {
+    key: "birth",
+    title: localStrings.Public.BirthdayFriend,
+    onPress: () => setShowModalBirth(true),
+    content: <Birth limit={4} />,
+  },
+  {
+    key: "request",
+    title: localStrings.Public.FriendRequests,
+    onPress: () => setShowModalFriendRequest(true),
+    content: <FriendRequest limit={4} />,
+  },
+  {
+    key: "users",
+    title: localStrings.Public.AllUser,
+    onPress: () => setShowModalUser(true),
+    content: <UserNonFriend limit={4} />,
+  },
+];
 
-      <View style={{}}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 5,
-          }}
-        >
-          <Text
-            style={{
-              fontWeight: "700",
-              fontSize: 16,
-              color: brandPrimary,
-              letterSpacing: 0.5,
-            }}
-          >
-            {localStrings.Public.AllUser}
-          </Text>
-        </View>
-        <View style={{ height: 1, backgroundColor: borderColor }} />
-        {loadingNonFriend ? (
-          <View style={{ paddingVertical: 10, alignItems: "center" }}>
-            <ActivityIndicator size="large" color={brandPrimary} />
-          </View>
-        ) : userNonFriend.length > 0 ? (
-          <FlatList
-            data={userNonFriend}
-            keyExtractor={(item) => item.id.toString()}
-            extraData={userNonFriend}
-            renderItem={({ item }) => {
-              return (
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    padding: 12,
-                    marginVertical: 2,
-                    backgroundColor: backgroundColor,
-                    borderRadius: 10,
-                    shadowColor: "#ff1f5",
-                    elevation: 6, // tương đương boxShadow
-                  }}
-                  activeOpacity={0.8}
-                  onPress={() => router.push(`/(tabs)/user/${item.id}`)}
-                >
-                  <Image
-                    source={{ uri: item.avatar_url }}
-                    style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 22,
-                      borderWidth: 2,
-                      borderColor: lightGray || "#FF6699",
-                      marginRight: 12,
-                    }}
-                  />
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontWeight: "600",
-                        fontSize: 15,
-                        color: brandPrimary,
-                      }}
-                    >
-                      {item.family_name + " " + item.name}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "40%",
-                      }}
-                    >
-                      {renderButtonFriendRequest(item)}
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-            ListFooterComponent={renderFooterUser}
-            onEndReachedThreshold={0.5}
-            onEndReached={loadMoreNonFriend}
-            refreshing={loadingNonFriend}
-            onRefresh={onRefreshNonFriend}
-            showsVerticalScrollIndicator={false}
-            removeClippedSubviews={true}
-            onViewableItemsChanged={onViewableItemsChanged.current}
-            viewabilityConfig={{
-              itemVisiblePercentThreshold: 50,
-            }}
-          />
-        ) : (
-          <View style={{ paddingVertical: 10 }}>
-            <Text
-              style={{ color: lightGray, fontSize: 13, textAlign: "center" }}
-            >
-              {localStrings.Public.UserNotFound}
-            </Text>
-          </View>
-        )}
-      </View>
-            <Modal
+  return (
+<FlatList
+  data={sections}
+  keyExtractor={(item) => item.key}
+  contentContainerStyle={{ padding: 10, paddingBottom: 20 }}
+  renderItem={({ item }) => (
+    <View style={{ marginBottom: 10 }}>
+      <TouchableOpacity onPress={item.onPress}>
+        <Text style={{
+          fontSize: 16,
+          fontWeight: "700",
+          color: brandPrimary,
+          letterSpacing: 0.5,
+        }}>
+          {item.title}
+        </Text>
+      </TouchableOpacity>
+      <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 5 }} />
+      {item.content}
+    </View>
+  )}
+  ListFooterComponent={
+    <>
+      <Modal
         popup
         maskClosable
         visible={showModalBirth}
         animationType="slide-up"
-        onClose={() => {
-          setShowModalBirth(false);
-        }}
+        onClose={() => setShowModalBirth(false)}
       >
-        <View
-                  style={{
-                    backgroundColor: backgroundColor,
-                    height: 500,
-                  }}>
-
-          <Birth/>
-                  </View>
+        <View style={{ backgroundColor: backgroundColor, height: 500 }}>
+          <Birth />
+        </View>
       </Modal>
-    </View>
+
+      <Modal
+        popup
+        maskClosable
+        visible={showModalUser}
+        animationType="slide-up"
+        onClose={() => setShowModalUser(false)}
+      >
+        <View style={{ backgroundColor: backgroundColor, height: 500 }}>
+          <UserNonFriend />
+        </View>
+      </Modal>
+
+      <Modal
+        popup
+        maskClosable
+        visible={showModalFriendRequest}
+        animationType="slide-up"
+        onClose={() => setShowModalFriendRequest(false)}
+      >
+        <View style={{ backgroundColor: backgroundColor, height: 500 }}>
+          <FriendRequest />
+        </View>
+      </Modal>
+    </>
+  }
+/>
   );
 };
 

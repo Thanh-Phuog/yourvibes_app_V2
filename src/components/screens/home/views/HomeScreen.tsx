@@ -56,7 +56,7 @@ const HomeScreen = () => {
       </View>
 
       {/* Tabs */}
-      <View style={{ flex: 1 }}>
+
         <Tabs
           tabs={tabs}
           swipeable={false}
@@ -71,24 +71,7 @@ const HomeScreen = () => {
             height: 2,
             borderRadius: 2,
           }}
-          renderTabBar={(props) => (
-            <Tabs.DefaultTabBar
-              {...props}
-              styles={{
-                container: {
-                  backgroundColor: backgroundColor,
-                  borderTopLeftRadius: 16,
-                  borderTopRightRadius: 16,
-                  overflow: "hidden",
-                },
-              }}
-            />
-          )}
-          style={{
-            marginTop: 10,
-            borderRadius: 16,
-            overflow: "hidden",
-          }}
+
         >
           <View style={{ flex: 1 }}>
             <NewFeed isActive={activeTab === 0} />
@@ -102,7 +85,7 @@ const HomeScreen = () => {
             <FriendRequestAndUser isActive={activeTab === 2} />
           </View>
         </Tabs>
-      </View>
+
 
       <Toast />
     </View>

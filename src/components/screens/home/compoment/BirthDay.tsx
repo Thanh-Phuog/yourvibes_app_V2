@@ -20,7 +20,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import useConversationViewModel from "../../messages/viewModel/ConversationViewModel";
 import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 
-const Birth = () => {
+const Birth = ({ limit }: { limit?: number }) => {
   const { user, localStrings } = useAuth();
   const { brandPrimary, backgroundColor, lightGray, borderBirth, backGround } =
     useColor();
@@ -39,6 +39,8 @@ const Birth = () => {
   } = FriendRequestAndUserViewModel(defaultFriendRepo);
 
   const { createConversation } = useConversationViewModel(defaultMessagesRepo);
+
+  const limitedData = limit ? birthdayFriends.slice(0, limit) : birthdayFriends;
 
   useEffect(() => {
     if (user) {
@@ -65,7 +67,7 @@ const Birth = () => {
 
   return (
     <View style={{}}>
-      <View
+      {/* <View
         style={{
           flexDirection: "column",
         }}
@@ -89,10 +91,10 @@ const Birth = () => {
         >
           {localStrings.Public.HappyBirthday}
         </Text>
-      </View>
+      </View> */}
       {birthdayFriends.length > 0 ? (
         <FlatList
-          data={birthdayFriends}
+          data={limitedData}
           renderItem={({ item }) => {
             return (
               <View>
@@ -107,7 +109,7 @@ const Birth = () => {
                     shadowColor: "#ff1f5",
                     marginBottom: 10,
                     elevation: 6,
-                    backgroundColor: backGround,
+                    backgroundColor: backgroundColor,
                   }}
                 >
                   <TouchableOpacity
