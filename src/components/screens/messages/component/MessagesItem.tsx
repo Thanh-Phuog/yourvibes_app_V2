@@ -15,8 +15,9 @@ const MessagerItem = ({
 }: {
   conversation: ConversationResponseModel;
 }) => {
-  const {user, localStrings } = useAuth();
-  const {backgroundColor, brandPrimaryTap, backGround} = useColor();
+  const { user, localStrings } = useAuth();
+  const { backgroundColor, brandPrimaryTap, backGround } = useColor();
+  
   const {
     id,
     name,
@@ -26,7 +27,8 @@ const MessagerItem = ({
     last_message,
     last_message_status,
   } = conversation;
-  const {UpdateConversationDetail} = useConversationDetailViewModel(defaultMessagesRepo);
+  const { UpdateConversationDetail } =
+    useConversationDetailViewModel(defaultMessagesRepo);
   const handeUpdateConversation = async () => {
     try {
       await UpdateConversationDetail({
@@ -36,7 +38,7 @@ const MessagerItem = ({
     } catch (error) {
       console.log("Error updating conversation:", error);
     }
-  }
+  };
 
   return (
     <TouchableOpacity
@@ -76,6 +78,8 @@ const MessagerItem = ({
               {family_name} {name}
             </Text>
             <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
               style={{
                 color: last_message_status === false ? "gray" : brandPrimaryTap,
                 fontWeight: last_message_status === false ? "normal" : "bold",

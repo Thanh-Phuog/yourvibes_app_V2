@@ -158,7 +158,7 @@ const AddGroupModel = () => {
         >
           <Form.Item noStyle name="message"    rules={[{ required: true, message: localStrings.Messages.NameGroup}]}>
             <Input
-              placeholder={"Type your message here"}
+              placeholder={localStrings.Messages.NameGroupPlaceholder}
               style={{
                 flex: 1,
                 borderColor: "#ccc",

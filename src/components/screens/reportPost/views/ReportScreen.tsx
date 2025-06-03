@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 import { defaultReportRepo } from '@/src/api/features/report/ReportRepo';
 
 const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?: string; commentId?: string }) => {
-  const { brandPrimary, backgroundColor } = useColor();
+  const { brandPrimary, backgroundColor, backGround } = useColor();
   const [reportReason, setReportReason] = useState('');
   const { localStrings } = useAuth();
   const { reportLoading, report  } = ReportViewModel(defaultReportRepo);
@@ -39,7 +39,7 @@ const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?:
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: backGround }}>
         {/* Header */}
         <View style={{ backgroundColor: backgroundColor, paddingTop: Platform.OS === 'ios' ? 20 : 0 }}>
           <StatusBar barStyle="dark-content" />
@@ -48,7 +48,7 @@ const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?:
               <TouchableOpacity onPress={() => { router.back(); }}>
                 <Ionicons name="arrow-back-outline" size={24} color={brandPrimary} />
               </TouchableOpacity>
-              <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 10 }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 10, color: brandPrimary }}>
                 {localStrings.Public.ReportFriend}
               </Text>
             </View>
@@ -56,17 +56,17 @@ const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?:
         </View>
 
         {/* Content */}
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1,}}>
           {/* Nội dung báo cáo */}
           <View style={{ flex: 1, paddingHorizontal: 10 }}>
             <Text style={{
-              fontWeight: 'bold', fontSize: 18, paddingBlockStart: 10, textAlign: 'center'
+              fontWeight: 'bold', fontSize: 18, paddingBlockStart: 10, textAlign: 'center', color: brandPrimary
             }}>
               {postId && localStrings.Report.ReportPost}
               {userId && localStrings.Report.ReportUser}
               {commentId && localStrings.Report.ReportComment}
             </Text>
-            <Text style={{ marginVertical: 10, color: '#666', textAlign: 'center' }}>
+            <Text style={{ marginVertical: 10, color: 'gray', textAlign: 'center' }}>
               {localStrings.Report.Note}
             </Text>
 
@@ -79,6 +79,8 @@ const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?:
                 padding: 10,
                 marginVertical: 10,
                 textAlignVertical: 'top',
+                color: brandPrimary,
+                backgroundColor: backgroundColor,
               }}
               multiline
               value={reportReason}
@@ -94,7 +96,7 @@ const ReportScreen = ({ postId, userId, commentId }: { postId?: string; userId?:
           }}
           loading={reportLoading}
           >
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>{localStrings.Public.ReportFriend}</Text>
+            <Text style={{ color:  backGround, fontWeight: 'bold', fontSize: 16 }}>{localStrings.Public.ReportFriend}</Text>
           </Button>
         </View>
         <Toast />

@@ -199,6 +199,7 @@ const FriendRequestAndUserViewModel = (repo: FriendRepo) => {
     totalNonFriend,
     pageNonFriend,
     setPageNonFriend,
+    setUserNonFriend,
   }
 }
 

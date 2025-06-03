@@ -334,6 +334,7 @@ export const ENGLocalizedStrings = {
     ConformChangePasswordFailed: "Change password failed!",
   },
   Messages: {
+    CreateGroup: "Create group",
     Messages: "Messages",
     Admin: "Admin",
     EnterMessage: "Enter message",
@@ -352,6 +353,8 @@ export const ENGLocalizedStrings = {
     Today: "Today",
     Yesterday: "Yesterday",
     NameGroup: "Please enter a group name!",
+    NameGroupPlaceholder: "Group name",
+    InfoGroup: "Group information",
   },
   Suggested: {
     SuggestedFriends: "Suggested Friends",

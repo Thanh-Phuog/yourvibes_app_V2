@@ -11,7 +11,7 @@ import { defaultProfileRepo } from '@/src/api/features/profile/ProfileRepository
 
 const ObjectProfile = () => {
 	const { user, localStrings } = useAuth();
-	const { brandPrimary, backgroundColor } = useColor();
+	const { brandPrimary, backgroundColor, brandPrimaryTap } = useColor();
 	const [selectedOption, setSelectedOption] = useState(user?.privacy);
 	const {loading, updateProfile} = UpdateProfileViewModel(defaultProfileRepo);
 	
@@ -58,6 +58,7 @@ const ObjectProfile = () => {
 							fontWeight: 'bold',
 							fontSize: 20,
 							marginLeft: 10,
+							color: brandPrimary,
 						}}>
 							{localStrings.ObjectProfile.ProfilePrivacy}
 						</Text>
@@ -68,11 +69,11 @@ const ObjectProfile = () => {
 
 			{/* Content */}
 			<View style={{ flex: 1, paddingHorizontal: 10 }}>
-				<Text style={{ fontWeight: 'bold', fontSize: 18 }}>{localStrings.ObjectProfile.Contents.WhoCanSee}</Text>
-				<Text style={{ paddingTop: 10 }}>
+				<Text style={{ fontWeight: 'bold', fontSize: 18, color: brandPrimaryTap }}>{localStrings.ObjectProfile.Contents.WhoCanSee}</Text>
+				<Text style={{ paddingTop: 10, color: brandPrimaryTap }}>
 					{localStrings.ObjectPostPrivacy.Contents.DefaultPrivacy1}<Text style={{ fontWeight: 'bold' }}>{localStrings.Public.Public}</Text>{localStrings.ObjectProfile.Contents.DefaultPrivacy2}
 				</Text>
-				<Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 10 }}>{localStrings.ObjectPostPrivacy.ChoosePrivacy}</Text>
+				<Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 10, color: brandPrimaryTap }}>{localStrings.ObjectPostPrivacy.ChoosePrivacy}</Text>
 				<View style={styles.container}>
 					{options.map((option) => (
 						<TouchableOpacity
@@ -81,7 +82,7 @@ const ObjectProfile = () => {
 							onPress={() => handleSelect(option.value)}
 						>
 							<View style={styles.checkbox}>
-								{selectedOption === option.value && <Ionicons name="checkmark" size={20} color="#000" />}
+								{selectedOption === option.value && <Ionicons name="checkmark" size={20} color={brandPrimary} />}
 							</View>
 							<Ionicons name={option.icon} size={24} color={brandPrimary} style={styles.icon} />
 							<View>

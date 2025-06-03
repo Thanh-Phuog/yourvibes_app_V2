@@ -2,7 +2,7 @@ import { TransferToFormData } from "@/src/utils/helper/TransferToFormData";
 import { ApiPath } from "../../ApiPath";
 import { BaseApiResponseModel } from "../../baseApiResponseModel/baseApiResponseModel";
 import client from "../../client";
-import { ConversationResponseModel, CreateConversationModel, GetConversationModel } from "./models/Conversation";
+import { ConversationResponseModel, CreateConversationModel, GetConversationModel, UpdateConversationModel } from "./models/Conversation";
 import { ConversationDetailResponseModel, CreateConversationDetail, ConversationDetailRequestModel, GetConversationDetailById } from "./models/ConversationDetail";
 import { CreateMessageModel, GetMessagesByConversationIdModel, MessageResponseModel } from "./models/Messages";
 
@@ -15,9 +15,9 @@ interface IMessagesRepo {
 
     //Conversations
     createConversation(data: CreateConversationModel): Promise<BaseApiResponseModel<ConversationResponseModel>>;
-    // getConversationById(id: string): Promise<BaseApiResponseModel<ConversationResponseModel>>;
     getConversations(data: GetConversationModel): Promise<BaseApiResponseModel<ConversationResponseModel[]>>;
     deleteConversation(id: string): Promise<BaseApiResponseModel<any>>;
+    UpdateConversation(id: string,data: UpdateConversationModel): Promise<BaseApiResponseModel<ConversationResponseModel>>;
 
     //Conversation details
     getConversationDetails(data: GetConversationDetailById): Promise<BaseApiResponseModel<ConversationDetailResponseModel[]>>;
@@ -33,11 +33,6 @@ export class MessagesRepo implements IMessagesRepo {
     }
 
     async getMessagesByConversationId(data: GetMessagesByConversationIdModel): Promise<BaseApiResponseModel<MessageResponseModel[]>> {
-    //   const queryParams = new URLSearchParams({
-    //       conversation_id: data.conversation_id,
-    //       page: data.page.toString(),
-    //       limit: data.limit.toString(),
-    //     }).toString();
 
         return client.get(ApiPath.GET_MESSAGES_BY_CONVERSATION_ID, data );
     }
@@ -60,10 +55,6 @@ export class MessagesRepo implements IMessagesRepo {
         return client.post(ApiPath.CREATE_CONVERSATION, tranferedData, { headers: { "Content-Type": "multipart/form-data" } });
     }
 
-    // async getConversationById(id: string): Promise<BaseApiResponseModel<ConversationResponseModel>> {
-    //     return client.get(ApiPath.GET_CONVERSATION_BY_ID + id);
-    // }
-
     async getConversations(data: GetConversationModel): Promise<BaseApiResponseModel<ConversationResponseModel[]>> {
         const queryParams = new URLSearchParams({
             page: data.page.toString(),
@@ -75,6 +66,11 @@ export class MessagesRepo implements IMessagesRepo {
 
     async deleteConversation(id: string): Promise<BaseApiResponseModel<any>> {
         return client.delete(ApiPath.DELETE_CONVERSATION + id);
+    }
+
+    async UpdateConversation(id: string,data: UpdateConversationModel): Promise<BaseApiResponseModel<ConversationResponseModel>> {
+        const tranferedData = TransferToFormData(data);
+        return client.patch(ApiPath.UPDATE_CONVERSATION + id, tranferedData, { headers: { "Content-Type": "multipart/form-data" } });
     }
 
     //Conversation details  

@@ -1,5 +1,5 @@
 import { MessagesRepo } from "@/src/api/features/messages/MessagesRepo";
-import { ConversationResponseModel, CreateConversationModel } from "@/src/api/features/messages/models/Conversation";
+import { ConversationResponseModel, CreateConversationModel, UpdateConversationModel } from "@/src/api/features/messages/models/Conversation";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 
@@ -87,7 +87,41 @@ console.log("res", response);
         }
     }
 
-    return {conversations, loading, createConversation, conversationId, fetchConversations, pageCv, hasMore, loadMoreConversations, deleteConversation};
+    const updateConversation = async (data: UpdateConversationModel) => {
+        console.log("UpdateConversationModel", data);
+        
+        try {
+            setLoading(true);
+            const response = await repo.UpdateConversation(data.id, data);
+            console.log("UpdateConversationResponse", response);
+            
+            if (!response?.error) {
+                Toast.show({
+                    type: 'success',
+                    text1: "Update Conversation Success",
+                });
+                return response?.data;
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: "Update Conversation Failed",
+                    text2: response?.error?.message || "An error occurred",
+                });
+            }
+        } catch (error: any) {
+            console.error(error);
+            Toast.show({
+                type: 'error',
+                text1: "Update Conversation Failed",
+                text2: error?.message || "An error occurred",
+            });
+        }
+         finally {
+            setLoading(false);
+        }
+    }
+
+    return {conversations, loading, createConversation, conversationId, fetchConversations, pageCv, hasMore, loadMoreConversations, deleteConversation, updateConversation};
 
 }
 

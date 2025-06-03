@@ -97,7 +97,7 @@ const Ads = ({ postId }: { postId: string }) => {
 		if (loading) return null;
 		return (
 			<View>
-				{post?.is_advertisement ? (
+				{post?.is_advertisement === 1 ? (
 					<View>
 						{/* Lịch sử Quảng Cáo */}
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -387,7 +387,7 @@ const Ads = ({ postId }: { postId: string }) => {
 			</View>
 
 			{/* Footer */}
-			{!post?.is_advertisement && (
+			{post?.is_advertisement !== 1 && (
 				<View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
 					<Button
 						type="primary"

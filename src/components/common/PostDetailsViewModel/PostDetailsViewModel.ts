@@ -260,6 +260,7 @@ const usePostDetailsViewModel = (
   }
 
   const handleAddComment = async (comment: string) => {
+    
     if (comment.trim()) {
       const commentData: CreateCommentsRequestModel = {
         post_id: postId,
@@ -289,6 +290,7 @@ const usePostDetailsViewModel = (
   };
 
   const handleAddReply = async (comment: string) => {
+    
     if (comment.trim()) {
       const parentId = replyToReplyId || replyToCommentId;
 

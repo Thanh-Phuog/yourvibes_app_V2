@@ -12,8 +12,8 @@ import Triending from "../compoment/Triending";
 import FriendRequestAndUser from "../compoment/FriendRequestAndUser";
 
 const HomeScreen = () => {
-  const { brandPrimary, backgroundColor, backGround } = useColor();
-  const { user, localStrings, theme } = useAuth();
+  const { brandPrimary, backgroundColor, backGround, theme} = useColor();
+  const { user, localStrings } = useAuth();
 
   const [activeTab, setActiveTab] = useState(0); // 👉 Theo dõi tab hiện tại
 

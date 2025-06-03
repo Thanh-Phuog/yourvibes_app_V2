@@ -13,6 +13,17 @@ export interface GetConversationModel {
     page : number
 }
 
+export interface UpdateConversationModel {
+    id : string
+    name ?: string
+    image ?: {
+        uri ?: string
+        name ?: string
+        type ?: string
+    }
+}
+
+
 export interface ConversationResponseModel {
     id?: string
     name?: string

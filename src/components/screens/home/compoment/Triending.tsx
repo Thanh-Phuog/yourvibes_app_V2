@@ -16,7 +16,7 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
     loadingTrending,
     loadMoreTriendingPosts,
     fetchTrendingPosts,
-    // onRefresh,
+    onRefresh,
     triendingPosts,
     visibleItems,
     onViewableItemsChanged,
@@ -119,7 +119,7 @@ const Triending = ({ isActive }: { isActive: boolean }) => {
           onEndReachedThreshold={0.5}
           removeClippedSubviews={true}
           showsVerticalScrollIndicator={false}
-          // onRefresh={onRefresh}
+          onRefresh={onRefresh}
           refreshing={isLoadingMore}
           onViewableItemsChanged={onViewableItemsChanged.current}
           viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
