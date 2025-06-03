@@ -73,7 +73,6 @@ const TrendingViewModel = (repo: PostRepo) => {
 const loadMoreTriendingPosts = () => {
   if (hasMore && !loadingTrending && !isLoadingMore) {
     const nextPage = pageTrend + 1;
-    console.log("Calling trending API page:", nextPage);
     fetchTrendingPosts(nextPage); // 👈 gọi fetch đúng page
   }
 };

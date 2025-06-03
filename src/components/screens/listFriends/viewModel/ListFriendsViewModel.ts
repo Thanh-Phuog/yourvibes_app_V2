@@ -62,7 +62,6 @@ const useListFriendsViewModel = (userId?: string) => {
 
   const handleEndReached = (userId?: string) => {
     if (!loading && hasMore) {
-      console.log("Đang tải thêm bạn bè...");
       
       setPage((prevPage) => prevPage + 1);
       fetchFriends(page + 1, userId);

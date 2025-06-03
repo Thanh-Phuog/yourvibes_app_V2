@@ -52,6 +52,7 @@ const FriendRequestAndUser = ({ isActive }: { isActive: boolean }) => {
     hasMoreBirthday,
     hasMoreFriendRequest,
     onViewableItemsChanged,
+    onRefreshBirthday,
   } = FriendRequestAndUserViewModel(defaultFriendRepo);
 
   const renderFooterUser = () => {
@@ -123,6 +124,19 @@ const FriendRequestAndUser = ({ isActive }: { isActive: boolean }) => {
     [cancelFriendRequest, sendFriendRequest, sendRequestLoading]
   );
 
+  const onRefreshAll = () => {
+  onRefreshBirthday();
+  onRefreshFriendRequest();
+  onRefreshNonFriend();
+};
+
+useFocusEffect(
+  useCallback(() => {
+    onRefreshAll();
+  }, [])
+);
+
+
   const sections = [
   {
     key: "birth",
@@ -160,6 +174,12 @@ const FriendRequestAndUser = ({ isActive }: { isActive: boolean }) => {
         }}>
           {item.title}
         </Text>
+        <Entypo
+          name="chevron-down"
+          size={20}
+          color={brandPrimary}
+          style={{ position: "absolute", right: 10, top: 5,  }}
+        />
       </TouchableOpacity>
       <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 5 }} />
       {item.content}

@@ -7,15 +7,24 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  TextInput,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { use, useCallback, useEffect, useRef, useState } from "react";
 import useColor from "@/src/hooks/useColor";
 import { useAuth } from "@/src/context/auth/useAuth";
-import { Entypo, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  Feather,
+  FontAwesome,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Form,
+  Button,
   Input,
   Modal,
 } from "@ant-design/react-native";
@@ -31,15 +40,24 @@ import UserProfileViewModel from "../../profile/viewModel/UserProfileViewModel";
 import AddUserGroup from "../component/AddUserGroup";
 import { DateTransfer } from "@/src/utils/helper/DateTransfer";
 import MyInput from "@/src/components/foundation/MyInput";
+import * as ImagePicker from "expo-image-picker";
+import a from "@ant-design/react-native/lib/modal/alert";
 
 const Chat = () => {
-  const { backgroundColor, brandPrimary, backGround, colorChat, borderColor } =
-    useColor();
+  const {
+    backgroundColor,
+    brandPrimary,
+    backGround,
+    colorChat,
+    borderColor,
+    lightGray,
+  } = useColor();
   const { user, localStrings } = useAuth();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
   const [showMember, setShowMember] = React.useState(false);
   const [showUserGroupModel, setShowUserGroupModel] = React.useState(false);
+  const [showGroup, setShowGroup] = useState(false);
   const [messagerForm] = Form.useForm();
   const { socketMessages, setSocketMessages } = useWebSocket();
   const [initialized, setInitialized] = useState(false);
@@ -53,7 +71,7 @@ const Chat = () => {
     loadMoreMessages,
     loadingMessages,
   } = useMessagesViewModel(defaultMessagesRepo);
-  const { createConversation, deleteConversation } =
+  const { createConversation, deleteConversation, updateConversation, loading } =
     useConversationViewModel(defaultMessagesRepo);
   const merMessages = [...socketMessages, ...messages];
   const { conversation_id: rawConversationId, friend_id: rawFriendId } =
@@ -84,6 +102,11 @@ const Chat = () => {
   }) => {
     setSelectedMessage(message);
   };
+  const [newAvatar, setNewAvatar] = useState({
+    uri: "",
+    name: "",
+    type: "",
+  });
 
   const handleSendMessages = async () => {
     handleSendMessage({
@@ -122,7 +145,6 @@ const Chat = () => {
   }, [friend_id]);
 
   const flatListRef = useRef<FlatList>(null);
-
 
   const handleDeleteConversation = () => {
     Modal.alert(
@@ -178,58 +200,28 @@ const Chat = () => {
     (item) => item.user?.id === user?.id
   );
 
-const showMessAction = useCallback(() => {
-  // Khởi tạo danh sách tùy chọn
-  const options = [
-    localStrings.Messages.Member,
-    localStrings.Messages.AddUserGroup,
-    localStrings.Messages.LeaveGroup,
-    localStrings.Messages.DeleteConversation,
-    localStrings.Public.Cancel,
-  ];
+  const pickAvatarImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+        quality: 1,
+      });
 
-  // Xử lý ẩn từng mục nếu cần
-  if (total > 2 && currentUserDetail?.conversation_role !== 0) {
-    options.splice(options.indexOf(localStrings.Messages.DeleteConversation), 1);
-  }
-
-  if (total === 2) {
-    options.splice(options.indexOf(localStrings.Messages.LeaveGroup), 1);
-  }
-
-  // Hiển thị ActionSheet
-  showActionSheetWithOptions(
-    {
-      title: localStrings.Public.Action,
-      options: options,
-      cancelButtonIndex: options.length - 1,
-      cancelButtonTintColor: "#F95454",
-    },
-    (buttonIndex) => {
-      const selectedOption = buttonIndex !== undefined ? options[buttonIndex] : null;
-
-      // Thực hiện hành động tương ứng với lựa chọn
-      switch (selectedOption) {
-        case localStrings.Messages.Member:
-          setShowMember(true);
-          break;
-        case localStrings.Messages.AddUserGroup:
-          setShowUserGroupModel(true);
-          break;
-        case localStrings.Messages.LeaveGroup:
-          handleLeaveGroup();
-          break;
-        case localStrings.Messages.DeleteConversation:
-          handleDeleteConversation();
-          break;
-        default:
-          break;
+      if (!result?.canceled && result?.assets) {
+        setNewAvatar({
+          uri: result.assets[0].uri,
+          name: result.assets[0].fileName as string,
+          type: result.assets[0].mimeType as string,
+        });
       }
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: localStrings.AddPost.PickImgFailed,
+      });
     }
-  );
-}, [localStrings, conversationsDetail, total, currentUserDetail]);
-
-
+  };
 
   const renderFooter = useCallback(() => {
     return (
@@ -311,7 +303,7 @@ const showMessAction = useCallback(() => {
     }));
 
     // Trả về header và các tin nhắn của ngày đó
-    return [...messageItems,headerItem];
+    return [...messageItems, headerItem];
   });
 
   useFocusEffect(
@@ -321,6 +313,35 @@ const showMessAction = useCallback(() => {
       };
     }, [])
   );
+
+
+  const [name, setName] = useState("");
+const [isEditing, setIsEditing] = useState(false);
+
+  const handleSave = async () => {
+    await updateConversation({
+      id: currentConversationId,
+      name: name.trim(),
+      image: newAvatar?.uri ? newAvatar : undefined,
+    });
+    setShowGroup(false);
+    setIsEditing(false);
+  };
+
+// Cập nhật name khi conversationsDetail đã có dữ liệu
+useEffect(() => {
+  if (conversationsDetail?.length > 0) {
+    const computedName =
+      total === 2
+        ? conversationsDetail[0]?.user?.id === user?.id
+          ? conversationsDetail[1]?.user?.family_name + " " + conversationsDetail[1]?.user?.name
+          : conversationsDetail[0]?.user?.family_name + " " + conversationsDetail[0]?.user?.name
+        : conversationsDetail[0]?.conversation?.name || `${userInfo?.family_name} ${userInfo?.name}`;
+
+    setName(computedName || ""); // fallback nếu vẫn null
+  }
+}, [conversationsDetail, total]);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: backGround, width: "100%" }}
@@ -379,7 +400,9 @@ const showMessAction = useCallback(() => {
               justifyContent: "flex-start",
               alignItems: "center",
             }}
-            onPress={showMessAction}
+            onPress={() => {
+              setShowGroup(true);
+            }}
           >
             <Entypo name="dots-three-vertical" size={16} color={brandPrimary} />
           </TouchableOpacity>
@@ -699,15 +722,216 @@ const showMessAction = useCallback(() => {
         }}
       >
         <View
-                  style={{
-                    backgroundColor: backgroundColor,
-                    paddingTop: Platform.OS === "ios" ? 30 : 0,
-                    height: 500,
-                  }}>
-
-        <AddUserGroup conversationsDetail={conversationsDetail} />
-                  </View>
+          style={{
+            backgroundColor: backgroundColor,
+            paddingTop: Platform.OS === "ios" ? 30 : 0,
+            height: 500,
+          }}
+        >
+          <AddUserGroup conversationsDetail={conversationsDetail} />
+        </View>
       </Modal>
+      {/* Thông tin nhóm */}
+      <Modal
+  popup
+  maskClosable
+  visible={showGroup}
+  animationType="slide-up"
+  onClose={() => setShowGroup(false)}
+>
+  <View
+    style={{
+      backgroundColor: backgroundColor,
+      paddingTop: Platform.OS === "ios" ? 30 : 0,
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+      alignItems: "center",
+    }}
+  >
+    {/* Phần avatar, tên nhóm, số người */}
+    <View style={{ alignItems: "center", marginTop: -60 }}>
+      <View style={{ position: "relative" }}>
+        <Image
+          source={{
+            uri:
+              newAvatar?.uri ||
+              (total === 2
+                ? conversationsDetail[0]?.user?.id === user?.id
+                  ? conversationsDetail[1]?.user?.avatar_url || userInfo?.avatar_url
+                  : conversationsDetail[0]?.user?.avatar_url || userInfo?.avatar_url
+                : conversationsDetail[0]?.conversation?.image || userInfo?.avatar_url),
+          }}
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: 60,
+            backgroundColor: lightGray,
+          }}
+        />
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 10,
+            backgroundColor: backgroundColor,
+            borderRadius: 20,
+            padding: 5,
+          }}
+          onPress={pickAvatarImage}
+        >
+          <MaterialIcons name="camera-alt" size={20} color={brandPrimary} />
+        </TouchableOpacity>
+        {newAvatar?.uri && (
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 10,
+              backgroundColor: backgroundColor,
+              borderRadius: 20,
+              padding: 5,
+            }}
+            onPress={() => setNewAvatar({ uri: "", name: "", type: "" })}
+          >
+            <Ionicons name="close" size={20} color={brandPrimary} />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+   <View style={{ alignItems: "center", marginTop: 10 }}>
+  <View style={{ flexDirection: "row", alignItems: "center" }}>
+    {isEditing ? (
+      <TextInput
+        value={name}
+        onChangeText={setName}
+        autoFocus
+        style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: brandPrimary,
+          borderBottomWidth: 1,
+          borderBottomColor: brandPrimary,
+          paddingVertical: 2,
+          marginBottom: 5,
+          marginTop: 10,
+          textAlign: "center", // canh giữa text
+        }}
+      />
+    ) : (
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: brandPrimary,
+          marginBottom: 5,
+          marginTop: 10,
+          textAlign: "center", // canh giữa text
+        }}
+      >
+        {name}
+      </Text>
+    )}
+
+    <TouchableOpacity onPress={() => setIsEditing(!isEditing)} style={{ marginLeft: 8, marginTop: 10 }}>
+      <AntDesign name="edit" size={20} color={brandPrimary} />
+    </TouchableOpacity>
+  </View>
+</View>
+
+
+      <Text style={{ fontSize: 16, color: "#555", marginBottom: 20 }}>
+        {total} {localStrings.Messages.Member}
+      </Text>
+
+      <Button type="primary" loading={loading} onPress={handleSave}>
+        <Text
+          style={{
+            color: backGround,
+            textAlign: "center",
+            fontWeight: "bold",
+          }}
+        >
+          {localStrings.Public.Save}
+        </Text>
+      </Button>
+
+    {/* Phần danh sách các hành động */}
+    <View style={{ marginTop: 30, width: "100%" }}>
+      {[
+        localStrings.Messages.InfoGroup,
+        localStrings.Messages.Member,
+        localStrings.Messages.AddUserGroup,
+        localStrings.Messages.LeaveGroup,
+        // Xử lý điều kiện ẩn DeleteConversation giống logic bạn có
+        ...(total > 2 && currentUserDetail?.conversation_role !== 0
+          ? []
+          : [localStrings.Messages.DeleteConversation]),
+      ].map((option, idx) => (
+        <TouchableOpacity
+          key={idx}
+          style={{
+            paddingVertical: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: "#eee",
+          }}
+          onPress={() => {
+            switch (option) {
+              case localStrings.Messages.InfoGroup:
+                // Đang ở modal info rồi, có thể ko làm gì
+                break;
+              case localStrings.Messages.Member:
+                setShowMember(true);
+                setShowGroup(false);
+                break;
+              case localStrings.Messages.AddUserGroup:
+                setShowUserGroupModel(true);
+                setShowGroup(false);
+                break;
+              case localStrings.Messages.LeaveGroup:
+                handleLeaveGroup();
+                setShowGroup(false);
+                break;
+              case localStrings.Messages.DeleteConversation:
+                handleDeleteConversation();
+                setShowGroup(false);
+                break;
+              default:
+                break;
+            }
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              textAlign: "center",
+              color: brandPrimary,
+            }}
+          >
+            {option}
+          </Text>
+        </TouchableOpacity>
+      ))}
+
+      {/* Nút hủy modal */}
+      <TouchableOpacity
+        style={{ paddingVertical: 15, marginTop: 10 }}
+        onPress={() => setShowGroup(false)}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: "center",
+            color: "#F95454",
+            fontWeight: "bold",
+          }}
+        >
+          {localStrings.Public.Cancel}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
       <Toast />
     </KeyboardAvoidingView>
   );

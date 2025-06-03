@@ -25,7 +25,7 @@ function App() {
   return (
     <WebSocketProvider>
       <PostProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1, backgroundColor: backGround }}>
           <ActionSheetProvider>
             <View
               style={{
@@ -44,7 +44,7 @@ function App() {
                 }}
                 >
                 <StatusBar
-                  backgroundColor={"transparent"}
+                  backgroundColor={backGround}
                   barStyle={"dark-content"}
                   />
                 <Stack screenOptions={{ headerShown: false }}>

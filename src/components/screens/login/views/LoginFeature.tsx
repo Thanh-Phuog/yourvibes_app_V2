@@ -25,7 +25,7 @@ import { LoginRequestModel } from '@/src/api/features/authenticate/model/LoginMo
 const LoginFeature = () => {
   const router = useRouter();
   const [seePassword, setSeePassword] = useState(false);
-  const { backgroundColor } = useColor();
+  const { backgroundColor, theme } = useColor();
   const [signInForm] = Form.useForm();
   const { brandPrimary } = useColor();
   const { onLogin, localStrings } = useAuth();
@@ -66,7 +66,9 @@ const LoginFeature = () => {
             }}>
             <View style={{ width: '100%' }}>
               <Image
-                source={require('@/assets/images/yourvibes_black.png')}
+                source={theme === "dark"
+              ? require("@/assets/images/yourvibes_white.png")
+              : require("@/assets/images/yourvibes_black.png")}
                 style={{
                   width: '100%',
                   height: 80
@@ -80,7 +82,7 @@ const LoginFeature = () => {
               layout='vertical'
               style={{
                 width: '100%',
-                backgroundColor: "none",
+                backgroundColor: backgroundColor,
               }}
               form={signInForm}
             >
@@ -90,6 +92,7 @@ const LoginFeature = () => {
                   { required: true, message: localStrings.Form.RequiredMessages.EmailRequiredMessage },
                   { type: 'email', message: localStrings.Form.TypeMessage.EmailTypeMessage },
                 ]}
+                style={{ backgroundColor: backgroundColor }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Email}
@@ -100,6 +103,7 @@ const LoginFeature = () => {
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: localStrings.Form.RequiredMessages.PasswordRequiredMessage }]}
+                style={{ backgroundColor: backgroundColor }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Password}
@@ -125,8 +129,8 @@ const LoginFeature = () => {
                 </TouchableOpacity>
               </WingBlank>
               <WhiteSpace size="md" />
-              <Form.Item>
-                <Button type="primary" loading={loading} onPress={() => {
+              <Form.Item style={{ backgroundColor: backgroundColor }}>
+                <Button type="primary" loading={loading} style={{ backgroundColor: brandPrimary }} onPress={() => {
                   signInForm
                     .validateFields()
                     .then(() => {
@@ -141,7 +145,9 @@ const LoginFeature = () => {
                       console.log('error');
                     });
                 }}>
+                  <Text style={{ color: backgroundColor, fontWeight: 'bold', fontSize: 18 }}>
                   {localStrings.Login.LoginButton}
+                  </Text>
                 </Button>
               </Form.Item>
               <WhiteSpace size="xl" />
@@ -153,7 +159,11 @@ const LoginFeature = () => {
                 justifyContent: 'center',
               }}
             >
-              <Text>
+              <Text style={{
+                color: brandPrimary,
+                fontSize: 16,
+                textAlign: 'center',
+              }}>
                 {localStrings.Login.DontHaveAccout}
                 <Text style={{ fontWeight: 'bold' }}>{" " + localStrings.Login.SignUpNow}</Text>
               </Text>
@@ -161,6 +171,7 @@ const LoginFeature = () => {
             <WhiteSpace size="xl" />
             <Text style={{
               textAlign: 'center',
+              color: 'gray',
             }}>
               {localStrings.Login.Or}
             </Text>

@@ -12,7 +12,7 @@ interface MyInputProps extends InputProps {
 
 const MyInput: React.FC<MyInputProps> = (props: MyInputProps) => {
 
-  const {borderColor} = useColor();
+  const {brandPrimary} = useColor();
   if (props.textArea) {
     return (
       <Input.TextArea
@@ -23,6 +23,9 @@ const MyInput: React.FC<MyInputProps> = (props: MyInputProps) => {
           ...props?.moreStyle
           
         }}
+          inputStyle={{
+            color: brandPrimary,
+          }}
         {...props}
         {...props.textArea}
       />
@@ -36,6 +39,9 @@ const MyInput: React.FC<MyInputProps> = (props: MyInputProps) => {
         height: 54,
         ...styles[props?.variant || "borderless"],
         ...props?.moreStyle
+      }}
+      inputStyle={{
+        color: brandPrimary,
       }}
       {...props}
     />

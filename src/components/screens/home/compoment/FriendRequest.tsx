@@ -149,7 +149,8 @@ const FriendRequest = ({ limit }: { limit?: number }) => {
                         style={{
                           fontWeight: "600",
                           fontSize: 15,
-                          color: "#1f2937",
+                          color: brandPrimary,
+                          marginBottom: 8,
                         }}
                       >
                         {item.family_name + " " + item.name}
@@ -163,7 +164,7 @@ const FriendRequest = ({ limit }: { limit?: number }) => {
                         }}
                       >
                         <Button
-                          style={{ width: "45%", height: 30 }}
+                          style={{ width: "45%", height: 30, backgroundColor: brandPrimary }}
                           type="primary"
                           onPress={() => {
                             acceptFriendRequest &&
@@ -173,7 +174,7 @@ const FriendRequest = ({ limit }: { limit?: number }) => {
                         >
                           <Text
                             style={{
-                              color: "#ffffff",
+                              color: backgroundColor,
                               fontSize: 13,
                             }}
                           >
@@ -181,7 +182,8 @@ const FriendRequest = ({ limit }: { limit?: number }) => {
                           </Text>
                         </Button>
                         <Button
-                          style={{ width: "45%", height: 30 }}
+                          style={{ width: "45%", height: 30,    borderColor:borderColor,
+                            borderWidth: 1, }}
                           type="ghost"
                           onPress={() => {
                             refuseFriendRequest &&
@@ -191,6 +193,7 @@ const FriendRequest = ({ limit }: { limit?: number }) => {
                           <Text
                             style={{
                               fontSize: 13,
+                              color: brandPrimary,
                             }}
                           >
                             {localStrings.Public.RefuseFriendRequest}

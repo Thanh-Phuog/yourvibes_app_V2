@@ -30,7 +30,7 @@ const MessagesFeature = () => {
   const { localStrings } = useAuth();
   const { newMessageTrigger } = useWebSocket();
   const [showGroupModel, setShowGroupModel] = React.useState(false);
-  const { friends, page, fetchFriends } = useListFriendsViewModel();
+  const { friends, page, fetchFriends, handleEndReached } = useListFriendsViewModel();
   const {
     createConversation,
     loading,
@@ -41,26 +41,19 @@ const MessagesFeature = () => {
 
   const renderFriend = useCallback(() => {
     return (
-      <View style={{ paddingVertical: 20, overscrollBehavior: "auto" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            // flexWrap: "wrap",
-            // justifyContent: "space-between",
-          }}
-        >
-          {friends?.map((friend, index) => (
-            <TouchableOpacity
-              key={index}
+      <View style={{ paddingVertical: 20,flexDirection: "row", }}>
+       <FlatList
+          data={friends}
+          renderItem={({ item }) => (
+          <TouchableOpacity
+              key={item.id}
               style={{
-                width: "23%",
                 alignItems: "center",
-                // marginBottom: 10,
-                marginRight: 4,
-                marginLeft: 4,
+                padding: 10,
+               
               }}
               onPress={async () => {
-                const UserIds = [friend.id];
+                const UserIds = [item.id];
                 if (UserIds) {
                   try {
                     const conversationId = await createConversation({
@@ -79,13 +72,13 @@ const MessagesFeature = () => {
                     console.error("Lỗi khi tạo cuộc trò chuyện:", error);
                   }
                 } else {
-                  router.push(`/chat?friend_id=${friend.id}`);
+                  router.push(`/chat?friend_id=${item.id}`);
                 }
               }}
             >
               <Image
                 source={{
-                  uri: friend.avatar_url,
+                  uri: item.avatar_url,
                 }}
                 style={{
                   width: 50,
@@ -95,10 +88,15 @@ const MessagesFeature = () => {
                   marginRight: 10,
                 }}
               />
-              <Text style={{ color: brandPrimary }}>{friend.name}</Text>
+              <Text style={{ color: brandPrimary }}>{item.name}</Text>
             </TouchableOpacity>
-          ))}
-        </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          onEndReached={() => handleEndReached(user?.id)}
+        />
+
       </View>
     );
   }, [friends]);
@@ -229,6 +227,9 @@ const MessagesFeature = () => {
           setShowGroupModel(false);
         }}
       >
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center", color: brandPrimary }}> 
+                    {localStrings.Messages.CreateGroup}
+                  </Text>
         <View
           style={{
             backgroundColor: backgroundColor,

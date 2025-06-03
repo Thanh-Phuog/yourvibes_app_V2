@@ -43,7 +43,7 @@ const ProfileHeader = ({
     React.SetStateAction<FriendStatus | undefined>
   >;
 }) => {
-  const { lightGray, brandPrimary, brandPrimaryTap, backgroundColor } =
+  const { lightGray, brandPrimary, brandPrimaryTap, backgroundColor, borderColor } =
     useColor();
   const { localStrings, language, isLoginUser, user } = useAuth();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -141,6 +141,7 @@ const ProfileHeader = ({
                 marginBottom: 10,
                 fontSize: 14,
                 fontWeight: "bold",
+                color: brandPrimaryTap,
               }}
             >
               {localStrings.Profile.Friend.SendARequest}
@@ -177,6 +178,7 @@ const ProfileHeader = ({
                 marginBottom: 10,
                 fontSize: 14,
                 fontWeight: "bold",
+                color: brandPrimaryTap,
               }}
             >
               {localStrings.Profile.Friend.SendYouARequest}
@@ -185,12 +187,11 @@ const ProfileHeader = ({
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                display: "flex",
                 justifyContent: "space-between",
               }}
             >
               <Button
-                style={{ width: "48%" }}
+                style={{ width: "48%", backgroundColor: brandPrimary }}
                 type="primary"
                 onPress={() => {
                   acceptFriendRequest &&
@@ -198,17 +199,33 @@ const ProfileHeader = ({
                 }}
                 loading={sendRequestLoading}
               >
-                {localStrings.Public.AcceptFriendRequest}
+                <Text
+                  style={{
+                    color: backgroundColor,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {localStrings.Public.AcceptFriendRequest}
+                </Text>
               </Button>
               <Button
-                style={{ width: "48%" }}
+                style={{ width: "48%", borderColor: borderColor }}
                 type="ghost"
                 onPress={() => {
                   refuseFriendRequest &&
                     refuseFriendRequest(userInfo?.id as string);
                 }}
               >
-                {localStrings.Public.RefuseFriendRequest}
+                <Text
+                  style={{
+                    color: brandPrimary,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {localStrings.Public.RefuseFriendRequest}
+                </Text>
               </Button>
             </View>
           </View>
@@ -222,7 +239,7 @@ const ProfileHeader = ({
           </Button>
         );
     }
-  }, [newFriendStatus, localStrings, sendRequestLoading, userInfo]);
+  }, [newFriendStatus, localStrings, sendRequestLoading, userInfo, sendFriendRequest, cancelFriendRequest, acceptFriendRequest, refuseFriendRequest, unFriend, brandPrimary, backgroundColor, brandPrimaryTap]);
 
   const renderUserInformation = useCallback(() => {
     return (
@@ -289,16 +306,19 @@ const ProfileHeader = ({
             <View style={{ marginHorizontal: 10, marginTop: 10, flex: 1 }}>
               {renderFriendButton()}
             </View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: brandPrimary,
-                paddingVertical: 10,
-                borderRadius: 5,
-                alignItems: "center",
-                marginTop: 10,
-                marginHorizontal: 10, flex: 1
-              }}
-              onPress={async () => {
+            {/* Message Button */}
+            {newFriendStatus === FriendStatus.IsFriend && (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: brandPrimary,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  alignItems: "center",
+                  marginTop: 10,
+                  marginHorizontal: 10,
+                  flex: 1,
+                }}
+                onPress={async () => {
                 const UserIds = [userInfo?.id];
                 if (UserIds) {
                   try {
@@ -346,7 +366,7 @@ const ProfileHeader = ({
                 {localStrings.Messages.Messages}
               </Text>
             </View>
-            </TouchableOpacity>
+            </TouchableOpacity>)}
             </View>
         )}
       </View>

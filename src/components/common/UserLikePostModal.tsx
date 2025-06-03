@@ -5,6 +5,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { router } from 'expo-router';
 import { useAuth } from '@/src/context/auth/useAuth';
 import { LikeUsersModel } from '@/src/api/features/post/models/LikeUsersModel';
+import useColor from '@/src/hooks/useColor';
 
 const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
   isVisible: boolean;
@@ -12,6 +13,7 @@ const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
   userLikePost: LikeUsersModel[];
 }) => {
   const { localStrings } = useAuth();
+  const { brandPrimary, backGround, backgroundColor, borderColor, brandPrimaryTap } = useColor();
   return (
     <Modal
       visible={isVisible}
@@ -28,7 +30,7 @@ const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
       >
         <View
           style={{
-            backgroundColor: "white",
+            backgroundColor: backgroundColor,
             width: "100%",
             height: "100%",
           }}
@@ -41,18 +43,19 @@ const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
               marginTop: Platform.OS === "ios" ? 30 : 0,
 
               borderBottomWidth: 1,
-              borderBottomColor: 'black',
+              borderBottomColor: borderColor,
               marginBottom: 10,
             }}
           >
             <TouchableOpacity onPress={() => setIsVisible(false)}>
-              <AntDesign name="arrowleft" size={24} color="black" />
+              <AntDesign name="arrowleft" size={24} color={brandPrimary} />
             </TouchableOpacity>
             <Text
               style={{
                 fontSize: 18,
                 fontWeight: "bold",
                 marginLeft: 10,
+                color: brandPrimary,
               }}
             >
               {localStrings.Public.ListUserLikePost}
@@ -60,12 +63,11 @@ const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
           </View>
           <ScrollView
             style={{
-              flex: 1, // thiết lập chiều cao tự động
+              backgroundColor: backGround,
             }}
           >
-            {/* Danh sách user like post */}
             <View
-              style={{ flexDirection: "column", alignItems: "center" }}
+              style={{ flexDirection: "column", alignItems: "center", }}
             >
               {userLikePost?.map((like, index) => (
                 <View
@@ -75,7 +77,7 @@ const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
                     alignItems: "center",
                     paddingVertical: 10,
                     borderBottomWidth: 1,
-                    borderColor: "#e0e0e0",
+                    borderColor: borderColor,
                   }}
                 >
                   <TouchableOpacity
@@ -99,7 +101,7 @@ const UserLikePostModal = ({ isVisible, setIsVisible, userLikePost }: {
                         marginRight: 10,
                       }}
                     />
-                    <Text style={{ fontSize: 16, color: "black" }}>
+                    <Text style={{ fontSize: 16, color: brandPrimaryTap }}>
                       {like.family_name} {like.name}
                     </Text>
                   </TouchableOpacity>

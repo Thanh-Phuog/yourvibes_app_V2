@@ -91,7 +91,7 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
             const response = await repo.DeleteConversationDetail(data);
             
             if (!response?.error) {
-                router.back();
+                return response?.data;
             } else {
                 if (response?.error?.code === CustomStatusCode.CantLeaveConversationIfIsOwners ){
                        Toast.show({

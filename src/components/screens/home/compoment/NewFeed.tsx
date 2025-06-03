@@ -9,6 +9,7 @@ import { Image } from "expo-image";
 import { useAuth } from '@/src/context/auth/useAuth';
 import FriendSuggestions from '@/src/components/common/Suggestions/friendSuggestions';
 import Post from '@/src/components/common/Post';
+import a from '@ant-design/react-native/lib/modal/alert';
 
 const NewFeed = ({isActive}: {isActive: boolean}) => {
     const { brandPrimary, backgroundColor, lightGray } = useColor();
@@ -23,7 +24,14 @@ const NewFeed = ({isActive}: {isActive: boolean}) => {
         onViewableItemsChanged,
         visibleItems,
         page,
+        deleteNewFeed,
+        setNewFeeds,
       } = HomeViewModel(defaultNewFeedRepo);
+
+      const handleDeleteNewFeed = async (id: string) => {
+        await deleteNewFeed(id);
+        setNewFeeds((prevNewFeeds) => prevNewFeeds.filter((feed) => feed.id !== id));
+      };
 
         const renderAddPost = () => {
           return (
@@ -92,6 +100,7 @@ const NewFeed = ({isActive}: {isActive: boolean}) => {
                 key={item?.id}
                 post={item}
                 isVisible={visibleItems.includes(item?.id as string)}
+                deleteNewFeed={handleDeleteNewFeed}
               >
                 {item?.parent_post && (
                   <Post
@@ -100,6 +109,7 @@ const NewFeed = ({isActive}: {isActive: boolean}) => {
                     isVisible={visibleItems.includes(
                       item?.parent_post?.id as string
                     )}
+                    deleteNewFeed={handleDeleteNewFeed}
                   />
                 )}
               </Post>

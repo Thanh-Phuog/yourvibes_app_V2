@@ -15,7 +15,7 @@ import UpdateProfileViewModel from '../viewModel/UpdateProfileViewModel';
 import { defaultProfileRepo } from '@/src/api/features/profile/ProfileRepository';
 
 const UpdateProfileScreen = () => {
-  const { backgroundColor, lightGray, brandPrimary } = useColor();
+  const { backgroundColor, lightGray, brandPrimary, backGround } = useColor();
   const { user, localStrings } = useAuth();
   const [updatedForm] = Form.useForm();
   const [newAvatar, setNewAvatar] = useState({
@@ -100,7 +100,7 @@ const UpdateProfileScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: backgroundColor, width: '100%' }}
+      style={{ flex: 1, backgroundColor: backGround, width: '100%' }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -119,16 +119,15 @@ const UpdateProfileScreen = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                backgroundColor: '#fff',
                 zIndex: 10,
                 borderBottomColor: 'black',
                 borderBottomWidth: 1,
               }}
             >
               <TouchableOpacity onPress={() => router.back()}>
-                <Feather name="arrow-left" size={24} color="black" />
+                <Feather name="arrow-left" size={24} color={brandPrimary} />
               </TouchableOpacity>
-              <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold', flex: 1 }}>
+              <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold', flex: 1, color: brandPrimary }}>
                 {localStrings.UpdateProfile.UpdateProfile}
               </Text>
             </View>
@@ -212,8 +211,9 @@ const UpdateProfileScreen = () => {
             <WhiteSpace size="lg" />
             <Form
               layout="vertical"
-              style={{ width: "100%", backgroundColor: "none" }}
+              style={{ width: "100%", backgroundColor: backGround, paddingHorizontal: 16 }}
               form={updatedForm}
+
             >
               {/* Name */}
               <View
@@ -230,7 +230,7 @@ const UpdateProfileScreen = () => {
                   <Form.Item
                     name="family_name"
                     rules={[{ required: true, message: localStrings.Form.RequiredMessages.FamilyNameRequiredMessage }]}
-                    style={{ height: 65 }}
+                    style={{ height: 65, backgroundColor: backGround }}
                   >
                     <MyInput
                       placeholder={localStrings.Form.Label.FamilyName}
@@ -245,7 +245,7 @@ const UpdateProfileScreen = () => {
                   <Form.Item
                     name="name"
                     rules={[{ required: true, message: localStrings.Form.RequiredMessages.NameRequiredMessage }]}
-                    style={{ height: 65 }}
+                    style={{ height: 65, backgroundColor: backGround }}
                   >
                     <MyInput
                       placeholder={localStrings.Form.Label.Name}
@@ -264,7 +264,7 @@ const UpdateProfileScreen = () => {
                   { required: true, message: localStrings.Form.RequiredMessages.PhoneRequiredMessage },
                   { pattern: /^[0-9]{10}$/, message: localStrings.Form.TypeMessage.PhoneTypeMessage },
                 ]}
-                style={{ height: 65 }}
+                style={{ height: 65 , backgroundColor: backGround }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Phone}
@@ -286,7 +286,7 @@ const UpdateProfileScreen = () => {
                   rules={[
                     { required: true, message: localStrings.Form.RequiredMessages.BirthDayRequiredMessage },
                   ]}
-                  style={{ height: 65 }}
+                  style={{ height: 65, backgroundColor: backGround }}
                 >
                   <MyInput
                     placeholder={localStrings.Form.Label.BirthDay}
@@ -310,7 +310,7 @@ const UpdateProfileScreen = () => {
                   { required: true, message: localStrings.Form.RequiredMessages.EmailRequiredMessage },
                   { type: "email", message: localStrings.Form.TypeMessage.EmailTypeMessage },
                 ]}
-                style={{ height: 65 }}
+                style={{ height: 65 , backgroundColor: backGround }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Email}
@@ -323,7 +323,7 @@ const UpdateProfileScreen = () => {
               {/* Biography */}
               <Form.Item
                 name="biography"
-                style={{ height: 65 }}
+                style={{ height: 65 , backgroundColor: backGround }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Biography}
@@ -360,7 +360,7 @@ const UpdateProfileScreen = () => {
                   }}>
                   <Text
                     style={{
-                      color: "white",
+                      color: backGround,
                       textAlign: "center",
                       fontWeight: "bold",
                     }}

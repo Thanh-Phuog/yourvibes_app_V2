@@ -336,6 +336,7 @@ export const VnLocalizedStrings = {
     ConformChangePasswordFailed: "Thay đổi mật khẩu thất bại!",
   },
   Messages: {
+    CreateGroup: "Tạo nhóm",
     Messages: "Tin nhắn",
     Admin: "Chủ phòng",
     EnterMessage: "Nhập tin nhắn",
@@ -353,6 +354,8 @@ export const VnLocalizedStrings = {
     Today: "Hôm nay",
     Yesterday: "Hôm qua",
     NameGroup: "Vui lòng nhập tên nhóm!",
+    NameGroupPlaceholder: "Tên nhóm",
+    InfoGroup: "Thông tin nhóm",
   },
   Suggested: {
     SuggestedFriends: "Những người bạn có thể biết",

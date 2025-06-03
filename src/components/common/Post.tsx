@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Button, Card, Form, Modal, Provider } from '@ant-design/react-native';
@@ -24,7 +24,8 @@ interface IPost {
   noFooter?: boolean,
   children?: React.ReactNode,
   noComment?: boolean,
-  isVisible?: boolean
+  isVisible?: boolean,
+  deleteNewFeed?: (id: string) => void,
 }
 
 const Post: React.FC<IPost> = React.memo(({
@@ -34,6 +35,7 @@ const Post: React.FC<IPost> = React.memo(({
   children,
   noComment = false,
   isVisible = false,
+  deleteNewFeed,
 }) => {
   const { brandPrimary, brandPrimaryTap, backgroundColor, borderColor } = useColor();
   const { user, localStrings } = useAuth();
@@ -51,7 +53,6 @@ const Post: React.FC<IPost> = React.memo(({
     shareLoading,
     deletePost,
   } = EditPostViewModel(defaultPostRepo);
-  const { deleteNewFeed } = HomeViewModel(defaultNewFeedRepo)
 
   const showAction = () => {
     const options = user?.id === post?.user?.id ? [
@@ -84,7 +85,9 @@ const Post: React.FC<IPost> = React.memo(({
                 localStrings.DeletePost.DeleteConfirm,
                 [
                   { text: localStrings.Public.Cancel, style: 'cancel' },
-                  { text: localStrings.Public.Confirm, onPress: () => deletePost && deletePost(post?.id as string) },
+                  { text: localStrings.Public.Confirm, onPress: () => 
+                    deletePost && deletePost(post?.id as string),
+                  },
                 ]
               );
               break;
@@ -179,7 +182,7 @@ const Post: React.FC<IPost> = React.memo(({
                 <Text style={{ fontWeight: 'bold', fontSize: 14, color: brandPrimary }}>{likedPost?.user?.family_name} {likedPost?.user?.name}</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                {likedPost?.is_advertisement ? (
+                {likedPost?.is_advertisement === 1 ? (
                   <View>
                     <Text style={{ color: brandPrimaryTap, fontSize: 12, opacity: 0.5, marginRight: 10 }}>{localStrings.Post.Sponsor}</Text>
                     <MaterialCommunityIcons name="advertisements" size={16} color={brandPrimaryTap} />
@@ -346,15 +349,16 @@ const Post: React.FC<IPost> = React.memo(({
       <Modal 
         popup
         visible={showCommentPopup}
-        animationType="slide-up"
         maskClosable
+        animationType="slide-up"
         onClose={() => setShowCommentPopup(false)}
-        style={{ backgroundColor: backgroundColor, width: '100%' }}
+        style={{ backgroundColor: backgroundColor, width: '100%', maxHeight: '80%' }}
       >
         <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center", color: brandPrimary }}> 
             {localStrings.Public.Comment}
           </Text>
-        <PostDetails postId={likedPost?.id as string} isModal={true} />
+    <PostDetails postId={likedPost?.id as string} isModal={true} />
+
       </Modal>
 
       {/* Share popup */}
@@ -395,9 +399,9 @@ const Post: React.FC<IPost> = React.memo(({
                         <MyInput
                           placeholder={localStrings.AddPost.WhatDoYouThink}
                           variant='outlined'
-                          moreStyle={{ paddingLeft: 10, marginTop: 10, borderColor: brandPrimaryTap }}
+                          moreStyle={{ paddingLeft: 10, marginTop: 10, borderColor: brandPrimaryTap, }}
                           textArea={{
-                            autoSize: { minRows: 3, maxRows: 3 },
+                            autoSize: { minRows: 3, maxRows: 3, },
                           }}
                           autoFocus
                         />
