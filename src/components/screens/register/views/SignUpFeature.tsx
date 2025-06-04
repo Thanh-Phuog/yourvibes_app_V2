@@ -78,7 +78,7 @@ const SignUpFeature = () => {
             <WhiteSpace size="xl" />
             <Form
               layout="vertical"
-              style={{ width: "100%", backgroundColor: "none" }}
+              style={{ width: "100%",     backgroundColor: backgroundColor, }}
               form={signUpForm}
             >
               {/* Name */}
@@ -96,6 +96,7 @@ const SignUpFeature = () => {
                   <Form.Item
                     name="family_name"
                     rules={[{ required: true, message: localStrings.Form.RequiredMessages.FamilyNameRequiredMessage }]}
+                    style={{     backgroundColor: backgroundColor, }}
                   >
                     <MyInput
                       placeholder={localStrings.Form.Label.FamilyName}
@@ -110,6 +111,7 @@ const SignUpFeature = () => {
                   <Form.Item
                     name="name"
                     rules={[{ required: true, message: localStrings.Form.RequiredMessages.NameRequiredMessage }]}
+                    style={{     backgroundColor: backgroundColor, }}
                   >
                     <MyInput
                       placeholder={localStrings.Form.Label.Name}
@@ -127,6 +129,7 @@ const SignUpFeature = () => {
                   { required: true, message: localStrings.Form.RequiredMessages.PhoneRequiredMessage },
                   { pattern: /^[0-9]{10}$/, message: localStrings.Form.TypeMessage.PhoneTypeMessage },
                 ]}
+                style={{     backgroundColor: backgroundColor, }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Phone}
@@ -147,6 +150,7 @@ const SignUpFeature = () => {
                   rules={[
                     { required: true, message: localStrings.Form.RequiredMessages.BirthDayRequiredMessage },
                   ]}
+                  style={{     backgroundColor: backgroundColor, }}
                 >
                   <MyInput
                     placeholder={localStrings.Form.Label.BirthDay}
@@ -181,6 +185,7 @@ const SignUpFeature = () => {
                       { required: true, message: localStrings.Form.RequiredMessages.EmailRequiredMessage },
                       { type: "email", message: localStrings.Form.TypeMessage.EmailTypeMessage },
                     ]}
+                    style={{     backgroundColor: backgroundColor, }}
                   >
                     <MyInput
                       placeholder={localStrings.Form.Label.Email}
@@ -192,15 +197,16 @@ const SignUpFeature = () => {
 
                 {/* OTP button */}
                 <View style={{ width: "30%" }}>
-                  <Form.Item>
+                  <Form.Item style={{     backgroundColor: backgroundColor, }}>
                     <Button
                       type="primary"
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", backgroundColor: backgroundColor }}
                       onPress={() => {
                         setIsOtpClicked(true);
                         verifyOTP({ email: signUpForm.getFieldValue("email") });
                       }}
                       loading={otpLoading}
+                      
                     >
                       <Text
                         style={{
@@ -222,6 +228,7 @@ const SignUpFeature = () => {
                   { required: true, message: localStrings.Form.RequiredMessages.OTPRequiredMessage },
                   { pattern: /^[0-9]{6}$/, message: localStrings.Form.TypeMessage.OTPTypeMessage },
                 ]}
+                style={{     backgroundColor: backgroundColor, }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.OTP}
@@ -246,6 +253,7 @@ const SignUpFeature = () => {
                     }
                   }
                 ]}
+                style={{     backgroundColor: backgroundColor, }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.Password}
@@ -283,6 +291,7 @@ const SignUpFeature = () => {
                     }
                   }
                 ]}
+                style={{     backgroundColor: backgroundColor, }}
               >
                 <MyInput
                   placeholder={localStrings.Form.Label.ConfirmPassword}
@@ -301,7 +310,7 @@ const SignUpFeature = () => {
                   }
                 />
               </Form.Item>
-              Checkbox
+             
               <Form.Item
                 name={"agree"}
                 rules={[
@@ -315,15 +324,16 @@ const SignUpFeature = () => {
                   }
                 ]}
                 valuePropName="checked"
+                style={{     backgroundColor: backgroundColor, }}
               >
                 <Checkbox>
-                  <Text>{localStrings.SignUp.AgreePolicies}</Text>
+                  <Text style={{ color:brandPrimary }}>{localStrings.SignUp.AgreePolicies}</Text>
                 </Checkbox>
               </Form.Item>
               <WhiteSpace size="lg" />
               {/* Register button */}
-              <WingBlank size="lg">
-                <Button type="primary" loading={loading} onPress={() => {
+              <WingBlank size="lg" >
+                <Button type="primary" style={{ backgroundColor: brandPrimary }} loading={loading} onPress={() => {
                   signUpForm.validateFields()
                     .then(() => {
                       if (!isOtpClicked) {
@@ -344,7 +354,7 @@ const SignUpFeature = () => {
                 }}>
                   <Text
                     style={{
-                      color: "white",
+                      color: backgroundColor,
                       textAlign: "center",
                       fontWeight: "bold",
                     }}
@@ -360,7 +370,11 @@ const SignUpFeature = () => {
               onPress={() => router.push('/login')}
               style={{ alignItems: 'center', justifyContent: 'center' }}
             >
-              <Text>
+              <Text style={{
+                color: brandPrimary,
+                fontSize: 16,
+                textAlign: 'center',
+              }}>
                 {localStrings.SignUp.AlreadyHaveAccount}
                 <Text style={{ fontWeight: 'bold' }}>{" " + localStrings.SignUp.LoginNow}</Text>
               </Text>
