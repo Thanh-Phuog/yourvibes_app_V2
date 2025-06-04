@@ -52,7 +52,7 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
             const response = await repo.createConversationDetail(data);
             
             if (!response?.error) {
-                fetchConversationsDetail();
+               return response;
             }
         } catch (error: any) {
             console.error(error);
@@ -75,6 +75,7 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
             const response = await repo.UpdateConversationDetail(data);
 
             if (!response?.error) {
+                
                 return response?.data ;
             }
         } catch (error: any) {
@@ -91,7 +92,7 @@ const useConversationDetailViewModel = (repo: MessagesRepo) => {
             const response = await repo.DeleteConversationDetail(data);
             
             if (!response?.error) {
-                return response?.data;
+                return response;
             } else {
                 if (response?.error?.code === CustomStatusCode.CantLeaveConversationIfIsOwners ){
                        Toast.show({

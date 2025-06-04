@@ -8,30 +8,61 @@ import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import { Entypo } from "@expo/vector-icons";
 import { useAuth } from "@/src/context/auth/useAuth";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { Modal } from "@ant-design/react-native";
+import { CustomStatusCode } from "@/src/utils/helper/CustomStatus";
 
 const MemberMessage = ({
   conversationDetail,
   currentUserId,
+  setShowMember,
+  setConversationsDetail
 }: {
   conversationDetail: ConversationDetailResponseModel;
   currentUserId: ConversationDetailResponseModel | undefined;
+  setShowMember: (show: boolean) => void;
+  setConversationsDetail: React.Dispatch<React.SetStateAction<ConversationDetailResponseModel[]>>;
 }) => {
   const { localStrings, user } = useAuth();
-  // const {user, conversation, conversation_role } = conversationDetail
-  const { DeleteConversationDetail } =
+  const { DeleteConversationDetail, } =
     useConversationDetailViewModel(defaultMessagesRepo);
   const { showActionSheetWithOptions } = useActionSheet();
   const handleDeleteConversationDetail = async () => {
-    try {
-      await DeleteConversationDetail({
-        // conversation_id: conversation?.id,
-        // user_id: user?.id,
+   Modal.alert(
+      localStrings.Messages.DeleteMember,
+      localStrings.Messages.DeleteMemberConfirm,
+      [
+        {
+          text: localStrings.Public.Cancel,
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: localStrings.Public.Confirm,
+          onPress: async () => {
+             try {
+      const response = await DeleteConversationDetail({
         conversation_id: conversationDetail?.conversation?.id,
         user_id: conversationDetail?.user?.id,
       });
+      console.log("Delete response:", response);
+      
+      
+      if (response && response.code === CustomStatusCode.Success) {
+       // loại bỏ thành viên khỏi danh sách
+        setConversationsDetail((prevDetails) =>
+          prevDetails.filter(
+            (detail) => detail.user.id !== conversationDetail.user.id
+          )
+        );
+   
+       setShowMember(false);
+      }
     } catch (error) {
       console.error("Error deleting conversation detail:", error);
     }
+          },
+        },
+      ])
   };
 
   const showMemberAction = useCallback(() => {
@@ -62,11 +93,6 @@ const MemberMessage = ({
       }
     );
   }, [localStrings]);
-
-  const isCurrentUser = conversationDetail?.user?.id === user?.id;
-  console.log("isCurrentUser", isCurrentUser);
-  
-  
 
   return (
     <View

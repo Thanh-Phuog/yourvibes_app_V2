@@ -26,6 +26,8 @@ const EditPostViewModel = (repo: PostRepo) => {
     try {
       setUpdateLoading(true);
       const res = await repo.updatePost(data);
+      console.log("Update Post Response: ", res);
+      
       if (!res?.error) {
         Toast.show({
           type: "success",

@@ -20,18 +20,28 @@ import useConversationViewModel from "../viewModel/ConversationViewModel";
 import { defaultMessagesRepo } from "@/src/api/features/messages/MessagesRepo";
 import useConversationDetailViewModel from "../viewModel/ConversationDetailsViewModel";
 
-const AddGroupModel = () => {
+const AddGroupModel = ({
+  setShowGroupModel,
+}: {
+  setShowGroupModel: (show: boolean) => void;
+}) => {
   const { user, localStrings } = useAuth();
   const { backgroundColor, brandPrimary, backGround } = useColor();
   const [groupForm] = Form.useForm();
-  const { friends, page, fetchFriends, loading, hasMore, handleEndReached } =
-    useListFriendsViewModel();
-    
+  const {
+    friends,
+    page,
+    fetchFriends,
+    loading,
+    hasMore,
+    handleEndReached,
+  } = useListFriendsViewModel();
 
   const { createConversation } = useConversationViewModel(defaultMessagesRepo);
   const { createConversationDetail } =
     useConversationDetailViewModel(defaultMessagesRepo);
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
+  const [messageError, setMessageError] = useState<string>("");
 
   const toggleSelectFriend = (friendId: string) => {
     setSelectedFriends((prev) => {
@@ -64,7 +74,6 @@ const AddGroupModel = () => {
         style={{
           marginRight: 10,
           borderColor: brandPrimary,
-          
         }}
       />
       <Image
@@ -91,44 +100,34 @@ const AddGroupModel = () => {
 
   const handleCreateGroup = async () => {
     try {
+      // 1. Validate form (chỉ trường message)
+      await groupForm.validateFields(["message"]);
+      setMessageError(""); // Clear lỗi nếu validate thành công
+
       if (selectedFriends.length === 0) {
         Alert.alert(
-  "Thông báo", // Tiêu đề
-  "Bạn cần chọn ít nhất một người để tạo nhóm!", // Nội dung
-  [
-    {
-      text: "OK",
-    },
-  ]
-);
+          localStrings.Notification.Notification, // Tiêu đề
+          localStrings.Notification.SelectAtLeastOneFriend, // Nội dung
+          [
+            {
+              text: "OK",
+            },
+          ]
+        );
         return;
       }
 
       const UserIds = [...selectedFriends];
       if (UserIds) {
         try {
-          const friendNames = selectedFriends
-            .map((friendId) => {
-              const friend = friends.find((f) => f.id === friendId);
-              return friend ? `${friend.family_name} ${friend.name}` : null;
-            })
-            .filter(Boolean) // Lọc bỏ giá trị null
-            .join(", ");
-
           const conversationId = await createConversation({
-            // name: fullName,
             name: groupForm.getFieldValue("message"),
             user_ids: UserIds.filter((id): id is string => id !== undefined),
           });
 
           if (conversationId) {
-            console.log(
-              "Before API call - conversationId:",
-              conversationId,
-              typeof conversationId
-            );
-
             router.push(`/chat?conversation_id=${conversationId}`);
+            setShowGroupModel(false); // Đóng modal sau khi tạo nhóm thành công
           } else {
             console.error("Conversation ID không hợp lệ");
           }
@@ -136,16 +135,24 @@ const AddGroupModel = () => {
           console.error("Lỗi khi tạo cuộc trò chuyện:", error);
         }
       }
-    } catch (error) {
-      console.error("Lỗi khi thêm nhóm:", error);
+    } catch (error: any) {
+      // Nếu lỗi validate, lấy lỗi message để hiển thị
+      if (error?.errorFields && error.errorFields.length > 0) {
+        const messageErrorObj = error.errorFields.find(
+          (field: any) => field.name[0] === "message"
+        );
+        setMessageError(messageErrorObj ? messageErrorObj.errors[0] : "");
+      }
     }
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Form
         style={{
           backgroundColor: backgroundColor,
+          paddingHorizontal: 10,
+          paddingVertical: 5,
         }}
         form={groupForm}
       >
@@ -153,15 +160,19 @@ const AddGroupModel = () => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            padding: 10,
+            paddingBottom: 5,
           }}
         >
-          <Form.Item noStyle name="message"    rules={[{ required: true, message: localStrings.Messages.NameGroup}]}>
+          <Form.Item
+            noStyle
+            name="message"
+            rules={[{ required: true, message: localStrings.Messages.NameGroup }]}
+          >
             <Input
               placeholder={localStrings.Messages.NameGroupPlaceholder}
               style={{
                 flex: 1,
-                borderColor: "#ccc",
+                borderColor: messageError ? "red" : "#ccc",
                 borderWidth: 1,
                 borderRadius: 5,
                 padding: 10,
@@ -174,6 +185,10 @@ const AddGroupModel = () => {
               }}
               inputStyle={{
                 color: brandPrimary,
+              }}
+              onChangeText={() => {
+                // Xóa lỗi mỗi khi người dùng gõ
+                if (messageError) setMessageError("");
               }}
             />
           </Form.Item>
@@ -193,12 +208,7 @@ const AddGroupModel = () => {
               elevation: 5,
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                handleCreateGroup();
-              }}
-            >
-              {/* <FontAwesome name="send-o" size={30} color={brandPrimary} /> */}
+            <TouchableOpacity onPress={handleCreateGroup}>
               <AntDesign
                 name="addusergroup"
                 size={24}
@@ -208,17 +218,27 @@ const AddGroupModel = () => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Hiển thị lỗi message thủ công */}
+        {messageError !== "" && (
+          <Text style={{ color: "red", marginLeft: 5, marginBottom: 5 }}>
+            {messageError}
+          </Text>
+        )}
       </Form>
+
       <SectionList
         sections={[{ title: "", data: friends as any }]}
         renderItem={renderFriend}
         keyExtractor={(item) => item.id}
         onEndReachedThreshold={0.5}
+        onEndReached={() => handleEndReached()}
         ListFooterComponent={
           loading && hasMore ? (
             <ActivityIndicator size="small" color="blue" />
           ) : null
         }
+        style={{ flex: 1 }}
       />
     </View>
   );

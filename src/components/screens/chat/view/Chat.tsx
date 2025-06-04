@@ -71,7 +71,7 @@ const Chat = () => {
     loadMoreMessages,
     loadingMessages,
   } = useMessagesViewModel(defaultMessagesRepo);
-  const { createConversation, deleteConversation, updateConversation, loading } =
+  const { createConversation, deleteConversation, updateConversation, loadingMess } =
     useConversationViewModel(defaultMessagesRepo);
   const merMessages = [...socketMessages, ...messages];
   const { conversation_id: rawConversationId, friend_id: rawFriendId } =
@@ -86,6 +86,7 @@ const Chat = () => {
     pageDetail,
     DeleteConversationDetail,
     total,
+    setConversationsDetail,
   } = useConversationDetailViewModel(defaultMessagesRepo);
   const [currentConversationId, setCurrentConversationId] =
     useState(conversation_id);
@@ -319,13 +320,16 @@ const Chat = () => {
 const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = async () => {
-    await updateConversation({
+   const result = await updateConversation({
       id: currentConversationId,
       name: name.trim(),
       image: newAvatar?.uri ? newAvatar : undefined,
     });
-    setShowGroup(false);
-    setIsEditing(false);
+    if (result) {
+      fetchConversationsDetail(pageDetail, currentConversationId);
+      setShowGroup(false);
+      setIsEditing(false);
+    }
   };
 
 // Cập nhật name khi conversationsDetail đã có dữ liệu
@@ -707,9 +711,10 @@ useEffect(() => {
             <MemberMessage
               conversationDetail={item}
               currentUserId={currentUserDetail}
+              setShowMember={setShowMember}
+              setConversationsDetail={setConversationsDetail}
             />
           )}
-          // keyExtractor={(item, index) => item.user.id?.toString() || index.toString()}
         />
       </Modal>
       <Modal
@@ -728,7 +733,7 @@ useEffect(() => {
             height: 500,
           }}
         >
-          <AddUserGroup conversationsDetail={conversationsDetail} />
+          <AddUserGroup conversationsDetail={conversationsDetail} setShowUserGroupModel={setShowUserGroupModel} setConversationsDetail={setConversationsDetail} />
         </View>
       </Modal>
       {/* Thông tin nhóm */}
@@ -779,7 +784,9 @@ useEffect(() => {
           }}
           onPress={pickAvatarImage}
         >
-          <MaterialIcons name="camera-alt" size={20} color={brandPrimary} />
+          {total > 2 && currentUserDetail?.conversation_role === 0 && (      
+            <MaterialIcons name="camera-alt" size={20} color={brandPrimary} />
+          )}
         </TouchableOpacity>
         {newAvatar?.uri && (
           <TouchableOpacity
@@ -793,7 +800,9 @@ useEffect(() => {
             }}
             onPress={() => setNewAvatar({ uri: "", name: "", type: "" })}
           >
-            <Ionicons name="close" size={20} color={brandPrimary} />
+            {total > 2 && currentUserDetail?.conversation_role === 0 && (
+              <Ionicons name="close" size={20} color={brandPrimary} />
+            )}
           </TouchableOpacity>
         )}
       </View>
@@ -831,10 +840,11 @@ useEffect(() => {
         {name}
       </Text>
     )}
-
-    <TouchableOpacity onPress={() => setIsEditing(!isEditing)} style={{ marginLeft: 8, marginTop: 10 }}>
-      <AntDesign name="edit" size={20} color={brandPrimary} />
-    </TouchableOpacity>
+    {total > 2 && currentUserDetail?.conversation_role === 0 && (
+      <TouchableOpacity onPress={() => setIsEditing(!isEditing)} style={{ marginLeft: 8, marginTop: 10 }}>
+        <AntDesign name="edit" size={20} color={brandPrimary} />
+      </TouchableOpacity>
+    )}
   </View>
 </View>
 
@@ -843,7 +853,7 @@ useEffect(() => {
         {total} {localStrings.Messages.Member}
       </Text>
 
-      <Button type="primary" loading={loading} onPress={handleSave}>
+      <Button type="primary" loading={loadingMess} onPress={handleSave}>
         <Text
           style={{
             color: backGround,
@@ -856,79 +866,78 @@ useEffect(() => {
       </Button>
 
     {/* Phần danh sách các hành động */}
-    <View style={{ marginTop: 30, width: "100%" }}>
-      {[
-        localStrings.Messages.InfoGroup,
-        localStrings.Messages.Member,
-        localStrings.Messages.AddUserGroup,
-        localStrings.Messages.LeaveGroup,
-        // Xử lý điều kiện ẩn DeleteConversation giống logic bạn có
-        ...(total > 2 && currentUserDetail?.conversation_role !== 0
-          ? []
-          : [localStrings.Messages.DeleteConversation]),
-      ].map((option, idx) => (
-        <TouchableOpacity
-          key={idx}
-          style={{
-            paddingVertical: 15,
-            borderBottomWidth: 1,
-            borderBottomColor: "#eee",
-          }}
-          onPress={() => {
-            switch (option) {
-              case localStrings.Messages.InfoGroup:
-                // Đang ở modal info rồi, có thể ko làm gì
-                break;
-              case localStrings.Messages.Member:
-                setShowMember(true);
-                setShowGroup(false);
-                break;
-              case localStrings.Messages.AddUserGroup:
-                setShowUserGroupModel(true);
-                setShowGroup(false);
-                break;
-              case localStrings.Messages.LeaveGroup:
-                handleLeaveGroup();
-                setShowGroup(false);
-                break;
-              case localStrings.Messages.DeleteConversation:
-                handleDeleteConversation();
-                setShowGroup(false);
-                break;
-              default:
-                break;
-            }
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              textAlign: "center",
-              color: brandPrimary,
-            }}
-          >
-            {option}
-          </Text>
-        </TouchableOpacity>
-      ))}
-
-      {/* Nút hủy modal */}
-      <TouchableOpacity
-        style={{ paddingVertical: 15, marginTop: 10 }}
-        onPress={() => setShowGroup(false)}
+   <View style={{ marginTop: 30, width: "100%" }}>
+  {[
+    localStrings.Messages.InfoGroup,
+    localStrings.Messages.Member,
+    localStrings.Messages.AddUserGroup,
+    ...(total > 2 ? [localStrings.Messages.LeaveGroup] : []),
+    ...(total > 2 && currentUserDetail?.conversation_role !== 0
+      ? []
+      : [localStrings.Messages.DeleteConversation]),
+  ].map((option, idx) => (
+    <TouchableOpacity
+      key={idx}
+      style={{
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#eee",
+      }}
+      onPress={() => {
+        switch (option) {
+          case localStrings.Messages.InfoGroup:
+            break;
+          case localStrings.Messages.Member:
+            setShowMember(true);
+            setShowGroup(false);
+            break;
+          case localStrings.Messages.AddUserGroup:
+            setShowUserGroupModel(true);
+            setShowGroup(false);
+            break;
+          case localStrings.Messages.LeaveGroup:
+            handleLeaveGroup();
+            setShowGroup(false);
+            break;
+          case localStrings.Messages.DeleteConversation:
+            handleDeleteConversation();
+            setShowGroup(false);
+            break;
+          default:
+            break;
+        }
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 16,
+          textAlign: "center",
+          color: brandPrimary,
+        }}
       >
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: "center",
-            color: "#F95454",
-            fontWeight: "bold",
-          }}
-        >
-          {localStrings.Public.Cancel}
-        </Text>
-      </TouchableOpacity>
-    </View>
+        {option}
+      </Text>
+    </TouchableOpacity>
+  ))}
+
+  {/* Nút hủy modal */}
+  <TouchableOpacity
+    style={{ paddingVertical: 15, marginTop: 10 }}
+    onPress={() => setShowGroup(false)}
+  >
+    <Text
+      style={{
+        fontSize: 16,
+        textAlign: "center",
+        color: "#F95454",
+        fontWeight: "bold",
+      }}
+    >
+      {localStrings.Public.Cancel}
+    </Text>
+  </TouchableOpacity>
+</View>
+
   </View>
 </Modal>
 

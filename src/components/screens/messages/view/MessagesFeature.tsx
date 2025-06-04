@@ -33,7 +33,7 @@ const MessagesFeature = () => {
   const { friends, page, fetchFriends, handleEndReached } = useListFriendsViewModel();
   const {
     createConversation,
-    loading,
+    loadingMess,
     fetchConversations,
     conversations,
     loadMoreConversations,
@@ -104,7 +104,7 @@ const MessagesFeature = () => {
   const renderFooter = useCallback(() => {
     return (
       <View>
-        {loading ? (
+        {loadingMess ? (
           <View style={{ paddingVertical: 20 }}>
             <ActivityIndicator size="large" color={brandPrimary} />
           </View>
@@ -113,7 +113,7 @@ const MessagesFeature = () => {
         )}
       </View>
     );
-  }, [loading]);
+  }, [loadingMess]);
   useEffect(() => {
     if (user) {
       fetchFriends(page, user.id);
@@ -227,7 +227,7 @@ const MessagesFeature = () => {
           setShowGroupModel(false);
         }}
       >
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center", color: brandPrimary }}> 
+        <Text style={{ fontSize: 18, fontWeight: "bold", textAlign: "center", color: brandPrimary, backgroundColor: backgroundColor, padding: 10 }}> 
                     {localStrings.Messages.CreateGroup}
                   </Text>
         <View
@@ -236,7 +236,7 @@ const MessagesFeature = () => {
             paddingTop: Platform.OS === "ios" ? 30 : 0,
             height: 500,
           }}>
-            <AddGroupModel /> 
+            <AddGroupModel setShowGroupModel={setShowGroupModel} /> 
           </View>
        
       </Modal>

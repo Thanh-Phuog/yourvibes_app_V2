@@ -244,6 +244,7 @@ export const ENGLocalizedStrings = {
   Notification: {
     Notification: "Notification",
     NoNotification: "No notification",
+    SelectAtLeastOneFriend: "Please select at least one friend to create group!",
     Items: {
       LikePost: "liked your post: ",
       SharePost: "shared your post: ",
@@ -340,6 +341,7 @@ export const ENGLocalizedStrings = {
     EnterMessage: "Enter message",
     Member: "Members",
     DeleteMember: "Delete member",
+    DeleteMemberConfirm: "Are you sure you want to delete this member?",
     Reply: "Reply",
     AddUserGroup: "Add user to group",
     DeleteConversation: "Delete conversation",
@@ -353,7 +355,7 @@ export const ENGLocalizedStrings = {
     Today: "Today",
     Yesterday: "Yesterday",
     NameGroup: "Please enter a group name!",
-    NameGroupPlaceholder: "Group name",
+    NameGroupPlaceholder: "Name your group",
     InfoGroup: "Group information",
   },
   Suggested: {

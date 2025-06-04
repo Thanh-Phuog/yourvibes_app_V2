@@ -43,11 +43,17 @@ const ProfileHeader = ({
     React.SetStateAction<FriendStatus | undefined>
   >;
 }) => {
-  const { lightGray, brandPrimary, brandPrimaryTap, backgroundColor, borderColor } =
-    useColor();
+  const {
+    lightGray,
+    brandPrimary,
+    brandPrimaryTap,
+    backgroundColor,
+    borderColor,
+  } = useColor();
   const { localStrings, language, isLoginUser, user } = useAuth();
   const { showActionSheetWithOptions } = useActionSheet();
-  const { createConversation } = useConversationViewModel(defaultMessagesRepo);
+  const { createConversation, loadingMess } =
+    useConversationViewModel(defaultMessagesRepo);
   const showAction = useCallback(() => {
     const options = [localStrings.Public.UnFriend, localStrings.Public.Cancel];
 
@@ -113,7 +119,7 @@ const ProfileHeader = ({
         );
       case FriendStatus.IsFriend:
         return (
-          <Button type="primary" onPress={showAction}>
+          <Button type="primary" onPress={showAction} style={{ backgroundColor: brandPrimary }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <FontAwesome5
                 name="user-check"
@@ -239,7 +245,20 @@ const ProfileHeader = ({
           </Button>
         );
     }
-  }, [newFriendStatus, localStrings, sendRequestLoading, userInfo, sendFriendRequest, cancelFriendRequest, acceptFriendRequest, refuseFriendRequest, unFriend, brandPrimary, backgroundColor, brandPrimaryTap]);
+  }, [
+    newFriendStatus,
+    localStrings,
+    sendRequestLoading,
+    userInfo,
+    sendFriendRequest,
+    cancelFriendRequest,
+    acceptFriendRequest,
+    refuseFriendRequest,
+    unFriend,
+    brandPrimary,
+    backgroundColor,
+    brandPrimaryTap,
+  ]);
 
   const renderUserInformation = useCallback(() => {
     return (
@@ -275,7 +294,9 @@ const ProfileHeader = ({
 
         {/* User Information */}
         <View style={{ alignItems: "center", marginTop: 10 }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: brandPrimary }}>
+          <Text
+            style={{ fontSize: 16, fontWeight: "bold", color: brandPrimary }}
+          >
             {" "}
             {userInfo?.family_name}{" "}
             {userInfo?.name || localStrings.Public.Username}
@@ -284,7 +305,13 @@ const ProfileHeader = ({
             {userInfo?.biography || localStrings.Public.Biography}
           </Text>
           <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <Text style={{ marginHorizontal: 20, fontWeight: "bold", color: brandPrimaryTap }}>
+            <Text
+              style={{
+                marginHorizontal: 20,
+                fontWeight: "bold",
+                color: brandPrimaryTap,
+              }}
+            >
               {" "}
               {total || userInfo?.post_count} {localStrings.Public.Post}
               {language === "en" &&
@@ -294,7 +321,13 @@ const ProfileHeader = ({
                 ? "s"
                 : ""}
             </Text>
-            <Text style={{ marginHorizontal: 20, fontWeight: "bold", color: brandPrimaryTap }}>
+            <Text
+              style={{
+                marginHorizontal: 20,
+                fontWeight: "bold",
+                color: brandPrimaryTap,
+              }}
+            >
               {friendCount} {localStrings.Public.Friend}
             </Text>
           </View>
@@ -319,55 +352,60 @@ const ProfileHeader = ({
                   flex: 1,
                 }}
                 onPress={async () => {
-                const UserIds = [userInfo?.id];
-                if (UserIds) {
-                  try {
-                    const conversationId = await createConversation({
-                      // name: `${user?.family_name} ${user?.name}, ${userInfo.family_name} ${userInfo.name}`,
-                      name: "Chat",
-                      user_ids: UserIds.filter(
-                        (id): id is string => id !== undefined
-                      ),
-                    });
+                  const UserIds = [userInfo?.id];
+                  if (UserIds) {
+                    try {
+                      const conversationId = await createConversation({
+                        // name: `${user?.family_name} ${user?.name}, ${userInfo.family_name} ${userInfo.name}`,
+                        name: "Chat",
+                        user_ids: UserIds.filter(
+                          (id): id is string => id !== undefined
+                        ),
+                      });
 
-                    if (conversationId) {
-                      console.log(
-                        "Before API call - conversationId:",
-                        conversationId,
-                        typeof conversationId
-                      );
+                      if (conversationId) {
+                        console.log(
+                          "Before API call - conversationId:",
+                          conversationId,
+                          typeof conversationId
+                        );
 
-                      router.push(`/chat?conversation_id=${conversationId}`);
-                    } else {
-                      console.error("Conversation ID không hợp lệ");
+                        router.push(`/chat?conversation_id=${conversationId}`);
+                      } else {
+                        console.error("Conversation ID không hợp lệ");
+                      }
+                    } catch (error) {
+                      console.error("Lỗi khi tạo cuộc trò chuyện:", error);
                     }
-                  } catch (error) {
-                    console.error("Lỗi khi tạo cuộc trò chuyện:", error);
+                  } else {
+                    router.push(`/chat?friend_id=${userInfo.id}`);
                   }
-                } else {
-                  router.push(`/chat?friend_id=${userInfo.id}`);
-                }
-              }}
-            >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons
-                name="chatbubble-ellipses"
-                size={20}
-                color={backgroundColor}
-              />
-              <Text
-                style={{
-                  color: backgroundColor,
-                  fontSize: 16,
-                  marginHorizontal: 10,
-                  fontWeight: "bold",
                 }}
               >
-                {localStrings.Messages.Messages}
-              </Text>
-            </View>
-            </TouchableOpacity>)}
-            </View>
+                {loadingMess ? (
+                  <ActivityIndicator color={backgroundColor} />
+                ) : (
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Ionicons
+                      name="chatbubble-ellipses"
+                      size={20}
+                      color={backgroundColor}
+                    />
+                    <Text
+                      style={{
+                        color: backgroundColor,
+                        fontSize: 16,
+                        marginHorizontal: 10,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {localStrings.Messages.Messages}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
         )}
       </View>
     );
@@ -380,6 +418,7 @@ const ProfileHeader = ({
     friendCount,
     localStrings,
     brandPrimary,
+    loadingMess,
   ]);
 
   useEffect(() => {

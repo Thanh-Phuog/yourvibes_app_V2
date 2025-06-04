@@ -6,14 +6,14 @@ import Toast from "react-native-toast-message";
 const useConversationViewModel = (repo : MessagesRepo) => {
     const [conversations, setConversations] = useState<ConversationResponseModel[]>([]);
     const [conversationId, setConversationId] = useState<string>('');
-    const [loading, setLoading] = useState(false);
+    const [loadingMess, setloadingMess] = useState(false);
     const [total, setTotal] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [pageCv, setPageCv] = useState(1);
     
     const fetchConversations = async (newPage: number = 1) => {
         try {
-            setLoading(true);
+            setloadingMess(true);
             const response = await repo.getConversations({ 
                 page: newPage,
                 limit: 10 });
@@ -32,14 +32,13 @@ const useConversationViewModel = (repo : MessagesRepo) => {
         } catch (error: any) {
             console.error(error);
         } finally {
-            setLoading(false);
+            setloadingMess(false);
         }
     }
 
     const createConversation = async (data : CreateConversationModel) => {
         try {
-            
-            setLoading(true);
+            setloadingMess(true);
             const response = await repo.createConversation(data);  
             
             
@@ -59,13 +58,13 @@ const useConversationViewModel = (repo : MessagesRepo) => {
         } catch (error: any) {
             console.error(error);
         } finally {
-            setLoading(false);
+            setloadingMess(false);
         }
     }
 
 
     const loadMoreConversations = () => {
-        if (!loading && hasMore) {
+        if (!loadingMess && hasMore) {
             setPageCv((prevPage) => prevPage + 1);
             fetchConversations(pageCv + 1);
         }
@@ -73,7 +72,7 @@ const useConversationViewModel = (repo : MessagesRepo) => {
 
     const deleteConversation = async (id: string) => {
         try {
-            setLoading(true);
+            setloadingMess(true);
             const response = await repo.deleteConversation(id);
 console.log("res", response);
 
@@ -83,15 +82,13 @@ console.log("res", response);
         } catch (error: any) {
             console.error(error);
         } finally {
-            setLoading(false);
+            setloadingMess(false);
         }
     }
 
     const updateConversation = async (data: UpdateConversationModel) => {
-        console.log("UpdateConversationModel", data);
-        
         try {
-            setLoading(true);
+            setloadingMess(true);
             const response = await repo.UpdateConversation(data.id, data);
             console.log("UpdateConversationResponse", response);
             
@@ -117,11 +114,11 @@ console.log("res", response);
             });
         }
          finally {
-            setLoading(false);
+            setloadingMess(false);
         }
     }
 
-    return {conversations, loading, createConversation, conversationId, fetchConversations, pageCv, hasMore, loadMoreConversations, deleteConversation, updateConversation};
+    return {conversations, loadingMess, createConversation, conversationId, fetchConversations, pageCv, hasMore, loadMoreConversations, deleteConversation, updateConversation};
 
 }
 

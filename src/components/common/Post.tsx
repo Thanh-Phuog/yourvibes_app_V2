@@ -357,7 +357,9 @@ const Post: React.FC<IPost> = React.memo(({
         <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, textAlign: "center", color: brandPrimary }}> 
             {localStrings.Public.Comment}
           </Text>
+
     <PostDetails postId={likedPost?.id as string} isModal={true} />
+
 
       </Modal>
 

@@ -9,15 +9,16 @@ import useConversationDetailViewModel from '../../messages/viewModel/Conversatio
 import { defaultMessagesRepo } from '@/src/api/features/messages/MessagesRepo';
 import { AntDesign } from '@expo/vector-icons';
 import { ConversationDetailResponseModel } from '@/src/api/features/messages/models/ConversationDetail';
+import { CustomStatusCode } from '@/src/utils/helper/CustomStatus';
 
-const AddUserGroup = ({ conversationsDetail }: { conversationsDetail: ConversationDetailResponseModel[] }) => {
+const AddUserGroup = ({ conversationsDetail, setShowUserGroupModel, setConversationsDetail }: { conversationsDetail: ConversationDetailResponseModel[]; setShowUserGroupModel: (show: boolean) => void; setConversationsDetail: React.Dispatch<React.SetStateAction<ConversationDetailResponseModel[]>> }) => {
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
   const { user } = useAuth();
   const [groupForm] = Form.useForm();
   const { brandPrimary, backGround, backgroundColor } = useColor();
   const { friends, page, fetchFriends, loading, hasMore } = useListFriendsViewModel();
 
-  const { createConversationDetail } = useConversationDetailViewModel(defaultMessagesRepo);
+  const { createConversationDetail, fetchConversationsDetail } = useConversationDetailViewModel(defaultMessagesRepo);
 
   // Lọc bạn bè chưa có trong nhóm
   const filteredFriends = friends.filter(
@@ -62,13 +63,22 @@ const AddUserGroup = ({ conversationsDetail }: { conversationsDetail: Conversati
         return;
       }
 
-      await createConversationDetail({
+       const response = await createConversationDetail({
         conversation_id: conversationsDetail[0].conversation.id,
         user_ids: selectedFriends,
       });
 
-      // Có thể reset lựa chọn sau khi thêm thành công
-      setSelectedFriends([]);
+      if (response && response.code === CustomStatusCode.Success) {
+        
+         await fetchConversationsDetail(1, conversationsDetail[0].conversation.id);
+  
+
+
+  setShowUserGroupModel(false);
+  setSelectedFriends([]);
+        setShowUserGroupModel(false);
+        setSelectedFriends([]);
+      }
 
     } catch (error) {
       console.error("Error adding user to group:", error);

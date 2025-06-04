@@ -248,6 +248,7 @@ export const VnLocalizedStrings = {
   Notification: {
     Notification: "Thông báo",
     NoNotification: "Không có thông báo",
+    SelectAtLeastOneFriend: "Bạn cần chọn ít nhất một người để tạo nhóm!",
     Items: {
       LikePost: "đã thích bài viết của bạn: ",
       SharePost: "đã chia sẻ bài viết của bạn: ",
@@ -342,6 +343,7 @@ export const VnLocalizedStrings = {
     EnterMessage: "Nhập tin nhắn",
     Member: "Thành viên",
     DeleteMember: "Xoá thành viên",
+    DeleteMemberConfirm: "Bạn có chắc chắn muốn xóa thành viên này?",
     Reply: "Trả lời",
     AddUserGroup: "Thêm thành viên",
     DeleteConversation: "Xóa cuộc trò chuyện",
@@ -354,7 +356,7 @@ export const VnLocalizedStrings = {
     Today: "Hôm nay",
     Yesterday: "Hôm qua",
     NameGroup: "Vui lòng nhập tên nhóm!",
-    NameGroupPlaceholder: "Tên nhóm",
+    NameGroupPlaceholder: "Hãy đặt tên cho nhóm của bạn",
     InfoGroup: "Thông tin nhóm",
   },
   Suggested: {

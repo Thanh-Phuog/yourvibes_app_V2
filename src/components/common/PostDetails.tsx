@@ -78,13 +78,14 @@ function PostDetails({
   } = usePostDetailsViewModel(postId, replyToCommentId);
   const [likedComment, setLikedComment] = useState({ is_liked: false });
   const [loading, setLoading] = useState(false);
+  const [loadingFetch, setLoadingFetch] = useState(false);
   const [post, setPost] = useState<PostResponseModel | null>(null);
   const parentId = replyToCommentId || replyToReplyId;
   const [isVisible, setIsVisible] = useState(false);
 
   const fetchPostDetails = async () => {
     try {
-      setLoading(true);
+      setLoadingFetch(true);
       const fetchedPost = await defaultPostRepo.getPostById(postId);
       if (!fetchedPost?.error) {
         setPost(fetchedPost?.data);
@@ -92,7 +93,7 @@ function PostDetails({
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingFetch(false);
     }
   };
 
@@ -412,11 +413,11 @@ function PostDetails({
           }
           showsVerticalScrollIndicator={false}
           onRefresh={fetchPostDetails}
-          refreshing={loading}
+          refreshing={loadingFetch}
         />
       );
     },
-    [comments, post, replyMap, loading, showMoreReplies]
+    [comments, post, replyMap, loadingFetch, showMoreReplies]
   );
 
   useEffect(() => {
@@ -464,7 +465,7 @@ function PostDetails({
           )}
 
           {/* FlatList */}
-        {loading ? (
+        {loadingFetch ? (
             <View
               style={{
                 flex: 1,
